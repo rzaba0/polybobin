@@ -1,0 +1,57 @@
+#ifndef GLMANAGER_HPP
+#define GLMANAGER_HPP
+
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+    #include <wx/wx.h>
+#endif
+#include "camera.hpp"
+#include "displaysettings.hpp"
+#include "../map/map.hpp"
+
+#include "glbackground.hpp"
+#include "glpolygons.hpp"
+#include "glscenery.hpp"
+#include "glspawnpoints.hpp"
+
+#include "outlines/gloutlinepolygons.hpp"
+#include "outlines/gloutlinescenery.hpp"
+
+#include "../selection.hpp"
+#include "glselectionpolygons.hpp"
+
+/**
+ * \brief Handles all OpenGL drawing.
+ */
+class GLManager
+{
+    public:
+        GLManager(Map map);
+
+        void Init();
+        bool IsGLReady();
+        void Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,
+                    Selection selectedPolygons, Selection selectedScenery);
+
+        void SetupShaders();
+        void SetupTextures();
+        void SetupVertices();
+
+    private:
+        bool m_glReady;
+        
+        GLBackground m_glBackground;
+        GLPolygons m_glPolygons;
+        GLScenery m_glScenery;
+        GLSpawnPoints m_glSpawnPoints;
+
+        GLOutlinePolygons m_glOutlinePolygons;
+        GLOutlineScenery m_glOutlineScenerySelection;
+        GLOutlineScenery m_glOutlineSceneryWireframe;
+
+        GLSelectionPolygons m_glSelectionPolygons;
+
+        Map m_map;
+};
+
+#endif

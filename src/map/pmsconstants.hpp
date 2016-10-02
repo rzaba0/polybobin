@@ -1,0 +1,10 @@
+#ifndef PMSCONSTANTS_HPP
+#define PMSCONSTANTS_HPP
+
+const int DESCRIPTION_MAX_LENGTH = 38,
+          SCENERY_NAME_MAX_LENGTH = 50,
+          TEXTURE_NAME_MAX_LENGTH = 24;
+
+//const int SECTORS_COUNT = 25;
+
+#endif
