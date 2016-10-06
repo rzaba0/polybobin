@@ -8,6 +8,7 @@
 #include "miniframes/displayframe.hpp"
 #include "miniframes/toolbarframe.hpp"
 #include "notebook.hpp"
+#include "settings.hpp"
 
 /**
  * \brief Main wxFrame that is going to be shown during the entire execution of the program.
@@ -16,13 +17,14 @@
 class MainFrame: public wxFrame
 {
     public:
-        MainFrame();
+        MainFrame(Settings *settings);
         ~MainFrame();
 
     private:
         DisplayFrame *m_displayFrame;
         ToolbarFrame *m_toolbarFrame;
         Notebook *m_notebook;
+        Settings *m_settings;
 
         void AddWorkspace(wxString mapPath);
 

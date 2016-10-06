@@ -8,6 +8,7 @@
 #include "gl/displaysettings.hpp"
 #include "gl/glcanvas.hpp"
 #include "map/map.hpp"
+#include "settings.hpp"
 
 /**
  * \brief Represents a page inside our Notebook class.
@@ -16,7 +17,7 @@
 class Workspace: public wxWindow
 {
     public:
-        Workspace(wxWindow *notebook, wxString mapPath);
+        Workspace(wxWindow *notebook, Settings settings, wxString mapPath);
         ~Workspace();
 
         DisplaySettings GetDisplaySettings();

@@ -4,9 +4,11 @@
 
 #include "workspace.hpp"
 
-MainFrame::MainFrame()
-    : wxFrame(NULL, wxID_ANY, WINDOW_TITLE, wxDefaultPosition, wxSize(WINDOW_WIDTH, WINDOW_HEIGHT))
+MainFrame::MainFrame(Settings *settings)
+    : wxFrame(NULL, wxID_ANY, PROGRAM_NAME, wxDefaultPosition, wxSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 {
+    m_settings = settings;
+
     CreateStatusBar();
     SetStatusText("Welcome");
 
@@ -32,7 +34,7 @@ MainFrame::MainFrame()
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
 
-    AddWorkspace(PATH_SOLDAT + "maps/ctf_Cobra.pms");
+    AddWorkspace(m_settings->GetSoldatPath() + "maps/ctf_Cobra.pms");
 }
 
 MainFrame::~MainFrame()
@@ -45,7 +47,7 @@ void MainFrame::AddWorkspace(wxString mapPath)
 {
     try
     {
-        m_notebook->AddWorkspace(mapPath);
+        m_notebook->AddWorkspace(*m_settings, mapPath);
     }
     catch (wxString errorMessage)
     {

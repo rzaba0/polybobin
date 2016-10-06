@@ -48,10 +48,10 @@ void GLPolygons::SetupShaderProgram()
     SetupShaderProgram(vertexShaderSource, fragmentShaderSource);
 }
 
-void GLPolygons::SetupTexture(wxString texturePath)
+void GLPolygons::SetupTexture(wxString texturesDirectoryPath, wxString textureFilename)
 {
     Image textureImage;
-    textureImage.OpenAndResize(texturePath);
+    textureImage.OpenAndResize(texturesDirectoryPath + textureFilename);
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

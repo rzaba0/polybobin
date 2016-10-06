@@ -8,6 +8,7 @@
 #include "camera.hpp"
 #include "displaysettings.hpp"
 #include "../map/map.hpp"
+#include "../settings.hpp"
 
 #include "glbackground.hpp"
 #include "glpolygons.hpp"
@@ -26,7 +27,7 @@
 class GLManager
 {
     public:
-        GLManager(Map map);
+        GLManager(Settings settings, Map map);
 
         void Init();
         bool IsGLReady();
@@ -39,6 +40,8 @@ class GLManager
 
     private:
         bool m_glReady;
+        Map m_map;
+        Settings m_settings;
         
         GLBackground m_glBackground;
         GLPolygons m_glPolygons;
@@ -50,8 +53,6 @@ class GLManager
         GLOutlineScenery m_glOutlineSceneryWireframe;
 
         GLSelectionPolygons m_glSelectionPolygons;
-
-        Map m_map;
 };
 
 #endif

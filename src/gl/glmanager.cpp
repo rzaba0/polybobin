@@ -4,16 +4,16 @@
 
 #include "../constants.hpp"
 
-GLManager::GLManager(Map map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
-                                                            PMSColor(176, 31, 31, 255),
-                                                            PMSColor(255, 44, 44, 255)),
-                                m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
-                                                            PMSColor(168, 168, 168, 255),
-                                                            PMSColor(210, 210, 210, 255))
+GLManager::GLManager(Settings settings, Map map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
+                                                                               PMSColor(176, 31, 31, 255),
+                                                                               PMSColor(255, 44, 44, 255)),
+                                                   m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
+                                                                               PMSColor(168, 168, 168, 255),
+                                                                               PMSColor(210, 210, 210, 255))
 {
     m_glReady = false;
-
     m_map = map;
+    m_settings = settings;
 }
 
 void GLManager::Init()
@@ -107,8 +107,8 @@ void GLManager::SetupShaders()
 
 void GLManager::SetupTextures()
 {
-    m_glPolygons.SetupTexture(PATH_SOLDAT + "textures/" + m_map.GetTextureName());
-    m_glScenery.SetupTextures(m_map.GetSceneryTypes());
+    m_glPolygons.SetupTexture(m_settings.GetSoldatPath() + "textures/", m_map.GetTextureName());
+    m_glScenery.SetupTextures(m_settings.GetSoldatPath() + "scenery-gfx/", m_map.GetSceneryTypes());
     m_glSpawnPoints.SetupTextures();
 
     m_glSelectionPolygons.SetupTexture();

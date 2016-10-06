@@ -7,6 +7,7 @@
 #endif
 #include "gl/glcanvas.hpp"
 #include <wx/glcanvas.h>
+#include "settings.hpp"
 
 /**
  * \brief Main app class.
@@ -28,6 +29,7 @@ class Polybobin: public wxApp
 
     private:
         wxGLContext *m_glContext;
+        Settings *m_settings;
 };
 
 wxDECLARE_APP(Polybobin);

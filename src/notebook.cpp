@@ -5,10 +5,10 @@ Notebook::Notebook(wxWindow *parent)
 {
 }
 
-void Notebook::AddWorkspace(wxString mapPath)
+void Notebook::AddWorkspace(Settings settings, wxString mapPath)
 {
     Workspace *workspace;
-    workspace = new Workspace(this, mapPath);
+    workspace = new Workspace(this, settings, mapPath);
 
     wxString title = mapPath.IsEmpty() ? "Untitled" : mapPath.AfterLast('/');
 

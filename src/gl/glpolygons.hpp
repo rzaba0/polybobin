@@ -11,7 +11,7 @@ class GLPolygons: GLObject
         void Render(glm::mat4 transform);
         using GLObject::SetupShaderProgram;
         void SetupShaderProgram();
-        void SetupTexture(wxString texturePath);
+        void SetupTexture(wxString texturesDirectoryPath, wxString textureFilename);
         void SetupVAO(wxVector<PMSPolygon> polygons);
 
     private:

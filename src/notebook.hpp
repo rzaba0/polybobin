@@ -9,6 +9,7 @@
 #include "gl/glcanvas.hpp"
 #include "gl/displaysettings.hpp"
 #include "workspace.hpp"
+#include "settings.hpp"
 
 /**
  * \brief Represents a notebook with multiple pages/tabs. In our notebook, pages
@@ -18,7 +19,7 @@ class Notebook: public wxNotebook
 {
     public:
         Notebook(wxWindow *parent);
-        void AddWorkspace(wxString mapPath);
+        void AddWorkspace(Settings settings, wxString mapPath);
 
         DisplaySettings GetCurrentDisplaySettings();
         void SetCurrentDisplaySetting(int setting, bool display);

@@ -23,7 +23,7 @@ class GLScenery: GLObject
 
         using GLObject::SetupShaderProgram;
         void SetupShaderProgram();
-        void SetupTextures(wxVector<PMSSceneryType> sceneryTypes);
+        void SetupTextures(wxString sceneryDirectoryPath, wxVector<PMSSceneryType> sceneryTypes);
         void SetupVAO(wxVector<PMSScenery> sceneryInstances);
 
     private:

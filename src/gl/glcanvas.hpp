@@ -12,6 +12,7 @@
 #include "glmanager.hpp"
 #include "../map/map.hpp"
 #include "../selection.hpp"
+#include "../settings.hpp"
 
 /**
  * \brief Custom implementation of OpenGL canvas.
@@ -19,7 +20,7 @@
 class GLCanvas: public wxGLCanvas
 {
     public:
-        GLCanvas(wxWindow *parent, const wxGLAttributes &glCanvasAttributes, Map *map);
+        GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map *map);
         virtual ~GLCanvas();
 
         DisplaySettings GetDisplaySettings() { return m_displaySettings; }

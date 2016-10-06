@@ -2,13 +2,13 @@
 #include "../app.hpp"
 #include "../constants.hpp"
 
-GLCanvas::GLCanvas(wxWindow *parent, const wxGLAttributes &glCanvasAttributes, Map *map)
+GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map *map)
     : wxGLCanvas(parent, glCanvasAttributes, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW | wxEXPAND)
 {
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
 
-    m_glManager = new GLManager(*map);
+    m_glManager = new GLManager(settings, *map);
 
     m_map = *map;
 

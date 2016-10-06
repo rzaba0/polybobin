@@ -9,7 +9,17 @@ bool Polybobin::OnInit()
 
     m_glContext = NULL;
 
-    MainFrame *frame = new MainFrame();
+    m_settings = new Settings();
+    try
+    {
+        m_settings->LoadSettingsFromFile();
+    }
+    catch (wxString errorMessage)
+    {
+        wxMessageBox(errorMessage, wxT("Settings"));
+    }
+
+    MainFrame *frame = new MainFrame(m_settings);
     frame->Show();
 
     return true;
@@ -18,6 +28,9 @@ bool Polybobin::OnInit()
 int Polybobin::OnExit()
 {
     delete m_glContext;
+
+    m_settings->SaveSettingsToFile();
+    delete m_settings;
 
     return wxApp::OnExit();
 }

@@ -2,3 +2,12 @@
 bin/*
 build/*
 documentation/*
+
+# Visual Studio
+*.db
+Debug/*
+*.filters
+*.opendb
+*.sln
+*.vcxproj
+.vs/*

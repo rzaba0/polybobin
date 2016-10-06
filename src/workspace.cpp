@@ -2,7 +2,7 @@
 #include "gl/glcanvas.hpp"
 #include <wx/glcanvas.h>
 
-Workspace::Workspace(wxWindow *notebook, wxString mapPath)
+Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
     : wxWindow(notebook, wxID_ANY)
 {
     wxGLAttributes glCanvasAttributes;
@@ -16,7 +16,7 @@ Workspace::Workspace(wxWindow *notebook, wxString mapPath)
 
     m_map = new Map(mapPath);
 
-    m_glCanvas = new GLCanvas(this, glCanvasAttributes, m_map);
+    m_glCanvas = new GLCanvas(this, settings, glCanvasAttributes, m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
     sizer->Add(m_glCanvas, 1, wxEXPAND);

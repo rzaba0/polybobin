@@ -6,14 +6,14 @@
     #include <wx/wx.h>
 #endif
 
-const wxString WINDOW_TITLE = wxT("Polybobin");
+const wxString PROGRAM_NAME = wxT("polybobin");
 const unsigned int WINDOW_WIDTH = 640;
 const unsigned int WINDOW_HEIGHT = 480;
 
 const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
                PATH_GFX_SELECTION_GRID = wxT("../gfx/selectiongrid.png"),
-               PATH_GFX_SPAWNPOINTS = wxT("../gfx/spawnpoints.png");
-const wxString PATH_SOLDAT = wxT("/path/to/soldat/");
+               PATH_GFX_SPAWNPOINTS = wxT("../gfx/spawnpoints.png"),
+               PATH_SETTINGS = wxT("settings.ini");
 
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
                 REMOVE_SELECTION_KEY = WXK_CONTROL;

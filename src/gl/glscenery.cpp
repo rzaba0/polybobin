@@ -62,12 +62,12 @@ void GLScenery::SetupShaderProgram()
     SetupShaderProgram(vertexShaderSource, fragmentShaderSource);
 }
 
-void GLScenery::SetupTextures(wxVector<PMSSceneryType> sceneryTypes)
+void GLScenery::SetupTextures(wxString sceneryDirectoryPath, wxVector<PMSSceneryType> sceneryTypes)
 {
     for (unsigned int i = 0; i < sceneryTypes.size(); ++i)
     {
         Image tmpImage;
-        tmpImage.OpenAndResize(PATH_SOLDAT + "scenery-gfx/" + sceneryTypes[i].name);
+        tmpImage.OpenAndResize(sceneryDirectoryPath + sceneryTypes[i].name);
 
         m_sceneryTextures.push_back(0);
         glGenTextures(1, &m_sceneryTextures[i]);
