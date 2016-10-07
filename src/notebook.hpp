@@ -33,6 +33,7 @@ class Notebook: public wxNotebook
 
     private:
         Workspace *GetCurrentWorkspace();
+        void OnPageChanged(wxBookCtrlEvent &event);
 };
 
 #endif

@@ -3,6 +3,12 @@
 Notebook::Notebook(wxWindow *parent)
     : wxNotebook(parent, wxID_ANY)
 {
+    /**
+     * Looks like on Windows instances of wxGLCanvas don't get focus by default,
+     * which means it's impossible to zoom in/out. To fix it, we give focus to
+     * current wxGLCanvas every time the user changes page in notebook.
+     */
+    Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &Notebook::OnPageChanged, this);
 }
 
 void Notebook::AddWorkspace(Settings settings, wxString mapPath)
@@ -48,4 +54,9 @@ void Notebook::SelectAll()
 Workspace *Notebook::GetCurrentWorkspace()
 {
     return (Workspace*) GetCurrentPage();
+}
+
+void Notebook::OnPageChanged(wxBookCtrlEvent &event)
+{
+    GetCurrentWorkspace()->GiveFocusToGLCanvas();
 }

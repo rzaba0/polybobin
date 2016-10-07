@@ -26,6 +26,7 @@ class Workspace: public wxWindow
         GLCanvas *GetGLCanvas() { return m_glCanvas; }
         wxPoint GetMousePositionOnMap();
 
+        void GiveFocusToGLCanvas();
         void HandleGLCanvasClick(int selectedToolId);
 
         void SelectAll();

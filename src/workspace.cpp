@@ -42,6 +42,11 @@ wxPoint Workspace::GetMousePositionOnMap()
     return m_glCanvas->GetMousePositionOnMap();
 }
 
+void Workspace::GiveFocusToGLCanvas()
+{
+    m_glCanvas->SetFocus();
+}
+
 void Workspace::HandleGLCanvasClick(int selectedToolId)
 {
     m_glCanvas->HandleClick(selectedToolId);
