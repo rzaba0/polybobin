@@ -11,6 +11,8 @@ MenuBar::MenuBar()
 
     wxMenu *menuEdit = new wxMenu;
     menuEdit->Append(ID_MENU_EDIT_SELECT_ALL, "Select all\tCtrl-A", "Select all");
+    menuEdit->AppendSeparator();
+    menuEdit->Append(ID_MENU_EDIT_PREFERENCES, "Preferences");
 
     wxMenu *menuWindows = new wxMenu;
     menuWindows->Append(ID_MENU_WINDOWS_HIDE_ALL, "Hide all", "Hide all windows");

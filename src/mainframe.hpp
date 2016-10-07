@@ -5,6 +5,7 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+#include <wx/preferences.h>
 #include "miniframes/displayframe.hpp"
 #include "miniframes/toolbarframe.hpp"
 #include "notebook.hpp"
@@ -24,6 +25,7 @@ class MainFrame: public wxFrame
         DisplayFrame *m_displayFrame;
         ToolbarFrame *m_toolbarFrame;
         Notebook *m_notebook;
+        wxPreferencesEditor *m_preferencesEditor;
         Settings *m_settings;
 
         void AddWorkspace(wxString mapPath);

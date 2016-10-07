@@ -1,12 +1,12 @@
 #include "mainframe.hpp"
 #include "constants.hpp"
 #include "menubar.hpp"
-
-#include "workspace.hpp"
+#include "preferences/preferencespagepaths.hpp"
 
 MainFrame::MainFrame(Settings *settings)
     : wxFrame(NULL, wxID_ANY, PROGRAM_NAME, wxDefaultPosition, wxSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 {
+    m_preferencesEditor = NULL;
     m_settings = settings;
 
     CreateStatusBar();
@@ -41,6 +41,11 @@ MainFrame::~MainFrame()
 {
     // Fix for segmentation fault after closing the program with at least 2 tabs opened.
     m_notebook->Unbind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
+
+    if (m_preferencesEditor)
+    {
+        m_preferencesEditor->Dismiss();
+    }
 }
 
 void MainFrame::AddWorkspace(wxString mapPath)
@@ -114,6 +119,12 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
 
         case ID_MENU_EDIT_SELECT_ALL:
             m_notebook->SelectAll();
+            break;
+
+        case ID_MENU_EDIT_PREFERENCES:
+            m_preferencesEditor = new wxPreferencesEditor();
+            m_preferencesEditor->AddPage(new PreferencesPagePaths(m_settings));
+            m_preferencesEditor->Show(this);
             break;
 
         case ID_MENU_WINDOWS_SHOW_ALL:

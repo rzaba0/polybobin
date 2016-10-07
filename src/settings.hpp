@@ -16,6 +16,10 @@ class Settings
         {
             return m_soldatPath;
         }
+        void SetSoldatPath(wxString path)
+        {
+            m_soldatPath = path;
+        }
 
         void LoadSettingsFromFile();
         void SaveSettingsToFile();
