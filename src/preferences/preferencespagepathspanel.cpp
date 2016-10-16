@@ -9,7 +9,9 @@ PreferencesPagePathsPanel::PreferencesPagePathsPanel(wxWindow *parent, Settings 
     wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->AddSpacer(10);
     sizer->Add(new wxStaticText(this, wxID_ANY, "Soldat"));
-    m_soldatPathPicker = new wxDirPickerCtrl(this, wxID_ANY, settings->GetSoldatPath());
+    m_soldatPathPicker = new wxDirPickerCtrl(this, wxID_ANY, settings->GetSoldatPath(),
+        wxDirSelectorPromptStr, wxDefaultPosition, wxDefaultSize,
+        wxDIRP_DIR_MUST_EXIST | wxDIRP_USE_TEXTCTRL);
     sizer->Add(m_soldatPathPicker);
     sizer->AddSpacer(10);
 
