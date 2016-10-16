@@ -46,6 +46,11 @@ void Notebook::HandleCurrentGLCanvasClick(int selectedToolId)
     GetCurrentWorkspace()->HandleGLCanvasClick(selectedToolId);
 }
 
+void Notebook::SaveCurrentMapAsPMS(wxString destinationPath)
+{
+    GetCurrentWorkspace()->SaveMapAsPMS(destinationPath);
+}
+
 void Notebook::SelectAll()
 {
     GetCurrentWorkspace()->SelectAll();

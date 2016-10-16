@@ -22,6 +22,8 @@ class Map
          */
         Map(wxString path);
 
+        void SaveMapAsPMS(wxString destinationPath);
+
         PMSColor GetBackgroundTopColor()
         {
             return m_backgroundTopColor;
@@ -75,7 +77,8 @@ class Map
         bool m_isPathSet;
         float m_polygonsMinX, m_polygonsMaxX,
               m_polygonsMinY, m_polygonsMaxY,
-              m_width, m_height;
+              m_width, m_height,
+              m_centerX, m_centerY;
 
         int m_version;
 
@@ -96,9 +99,9 @@ class Map
         int m_polygonsCount;
         wxVector<PMSPolygon> m_polygons;
 
-        int m_sectorsDivision;
+        int m_sectorsSize;
         int m_sectorsCount;
-        wxVector<PMSSector> m_sectors;
+        PMSSector m_sectors[SECTORS_COUNT][SECTORS_COUNT];
 
         int m_sceneryInstancesCount;
         wxVector<PMSScenery> m_sceneryInstances;
@@ -113,16 +116,14 @@ class Map
         wxVector<PMSSpawnPoint> m_spawnPoints;
 
         int m_wayPointsCount;
-        wxVector<PMSWayPoint> m_waypoints;
+        wxVector<PMSWayPoint> m_wayPoints;
 
+        void GenerateSectors();
+        // sectorX and sectorY are sector's coordinates, not sector's indexes inside grid.
+        bool IsPolygonInSector(unsigned short polygonIndex, float sectorX, float sectorY, float sectorSize);
         void LoadDefaultMap();
         void LoadMap(wxString mapPath);
         void UpdateBoundaries();
-
-        static constexpr float MAP_BOUNDARY = 100.0f;
-        static constexpr int MAX_LENGTH_MAP_DESCRIPTION = 38,
-                             MAX_LENGTH_MAP_TEXTURE_NAME = 24,
-                             MAX_LENGTH_MAP_SCENERY_NAME = 50;
 };
 
 #endif

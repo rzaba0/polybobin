@@ -29,6 +29,8 @@ class Notebook: public wxNotebook
 
         void HandleCurrentGLCanvasClick(int selectedToolId);
 
+        void SaveCurrentMapAsPMS(wxString destinationPath);
+
         void SelectAll();
 
     private:

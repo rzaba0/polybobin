@@ -115,6 +115,14 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
             break;
 
         case ID_MENU_FILE_SAVE_AS_PMS:
+            {
+                wxString path = wxFileSelector(wxT("Save as PMS"), m_settings->GetSoldatPath() + "maps/",
+                    wxEmptyString, wxT(".pms"), wxT(".pms"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+                if (!path.IsEmpty())
+                {
+                    m_notebook->SaveCurrentMapAsPMS(path);
+                }
+            }
             break;
 
         case ID_MENU_EDIT_SELECT_ALL:

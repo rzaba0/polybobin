@@ -29,6 +29,8 @@ class Workspace: public wxWindow
         void GiveFocusToGLCanvas();
         void HandleGLCanvasClick(int selectedToolId);
 
+        void SaveMapAsPMS(wxString destinationPath);
+
         void SelectAll();
 
     private:

@@ -52,6 +52,11 @@ void Workspace::HandleGLCanvasClick(int selectedToolId)
     m_glCanvas->HandleClick(selectedToolId);
 }
 
+void Workspace::SaveMapAsPMS(wxString destinationPath)
+{
+    m_map->SaveMapAsPMS(destinationPath);
+}
+
 void Workspace::SelectAll()
 {
     m_glCanvas->SelectAll();
