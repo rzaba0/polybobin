@@ -34,7 +34,7 @@ MainFrame::MainFrame(Settings *settings)
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
 
-    AddWorkspace(m_settings->GetSoldatPath() + "maps/ctf_Cobra.pms");
+    AddWorkspace(m_settings->GetSoldatPath() + "maps/test.pms");
 }
 
 MainFrame::~MainFrame()

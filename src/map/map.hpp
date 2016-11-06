@@ -22,6 +22,9 @@ class Map
          */
         Map(wxString path);
 
+        void AddPolygon(PMSPolygon polygon);
+        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
+
         void SaveMapAsPMS(wxString destinationPath);
 
         PMSColor GetBackgroundTopColor()
@@ -42,6 +45,11 @@ class Map
         wxVector<PMSPolygon> GetPolygons()
         {
             return m_polygons;
+        }
+
+        unsigned int GetPolygonsCount()
+        {
+            return m_polygons.size();
         }
 
         wxVector<PMSScenery> GetSceneryInstances()

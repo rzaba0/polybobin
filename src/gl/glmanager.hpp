@@ -29,6 +29,12 @@ class GLManager
     public:
         GLManager(Settings settings, Map map);
 
+        void AddPolygon(PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
+
+        unsigned int GetTextureWidth();
+        unsigned int GetTextureHeight();
+
         void Init();
         bool IsGLReady();
         void Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,

@@ -36,10 +36,17 @@ class GLCanvas: public wxGLCanvas
         Camera m_camera;
         DisplaySettings m_displaySettings;
         GLManager *m_glManager;
-        Map m_map;
+        Map *m_map;
         wxPoint m_mousePositionOnCanvas,
                 m_mousePositionOnMap;
         Selection m_selectedPolygons, m_selectedScenery;
+
+        // Indicates how many vertices have been set while adding a new polygon.
+        unsigned int m_addedPolygonVerticesCount;
+        // \brief Is user currently creating a new polygon?
+        bool AddingPolygon() { return m_addedPolygonVerticesCount > 0; }
+        // \brief Returns PMSVertex with coordinates of cursor on map.
+        PMSVertex CreateVertexOnMouse();
 
         void OnMouseMotion(wxMouseEvent &event);
         void OnMouseWheel(wxMouseEvent &event);

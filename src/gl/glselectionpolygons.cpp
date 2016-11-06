@@ -4,6 +4,36 @@
 #include "../utils.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+void GLSelectionPolygons::AddPolygon(PMSVertex firstVertex)
+{
+    for (unsigned int i = 0; i < GL_SELECTION_POLYGON_VERTICES_COUNT; ++i)
+    {
+        EditPolygonVertex(m_polygonsCount, i, firstVertex);
+    }
+    ++m_polygonsCount;
+}
+
+void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex)
+{
+    wxVector<GLfloat> glVertex;
+    glVertex.push_back(newVertex.x);
+    glVertex.push_back(newVertex.y);
+    glVertex.push_back(newVertex.z);
+    glVertex.push_back(1.0f); // TODO: make sure the color is set properly by passing polygon type as parameter.
+    glVertex.push_back(1.0f);
+    glVertex.push_back(1.0f);
+    glVertex.push_back(.5f);
+    glVertex.push_back(newVertex.x / m_textureWidth);
+    glVertex.push_back(newVertex.y / m_textureHeight);
+
+
+    int offset = polygonIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT +
+        vertexIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES;
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, &glVertex[0]);
+}
+
 void GLSelectionPolygons::RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedPolygonsIds)
 {
     m_shaderProgram.Use();
@@ -81,81 +111,62 @@ void GLSelectionPolygons::SetupTexture()
 void GLSelectionPolygons::SetupVAO(wxVector<PMSPolygon> polygons)
 {
     wxVector<GLfloat> vertices;
+    m_polygonsCount = polygons.size();
     unsigned int i, j;
-    for (i = 0; i < polygons.size(); ++i)
+
+    if (m_polygonsCount > MAX_POLYGONS_COUNT)
     {
+        m_polygonsCount = MAX_POLYGONS_COUNT;
+    }
+
+    for (i = 0; i < m_polygonsCount; ++i)
+    {
+        PMSColor color = Utils::GetPolygonColorByType(polygons[i].polygonType);
+
         for (j = 0; j < 3; ++j)
         {
             vertices.push_back(polygons[i].vertices[j].x);
             vertices.push_back(polygons[i].vertices[j].y);
             vertices.push_back(polygons[i].vertices[j].z);
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            vertices.push_back(.5f);
-            vertices.push_back(0.0f); //These values will be set manually later.
-            vertices.push_back(0.0f);
+            vertices.push_back((GLfloat) color.red / 255.0f);
+            vertices.push_back((GLfloat) color.green / 255.0f);
+            vertices.push_back((GLfloat) color.blue / 255.0f);
+            vertices.push_back(0.5f);
+            vertices.push_back(polygons[i].vertices[j].x / m_textureWidth);
+            vertices.push_back(polygons[i].vertices[j].y / m_textureHeight);
         }
-
-        AdjustTextureCoordinates(vertices, i * 3 * 9);
-        AdjustVertexColor(vertices, i * 3 * 9, polygons[i].polygonType);
     }
 
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
+    // Initialization of unused polygons.
+    for (i = 0; i < MAX_POLYGONS_COUNT - m_polygonsCount; ++i)
+    {
+        for (j = 0; j < 3; ++j)
+        {
+            for (unsigned int k = 0; k < GL_SELECTION_POLYGON_VERTEX_SIZE; ++k)
+            {
+                vertices.push_back(0.0f);
+            }
+        }
+    }
+    
+    glGenBuffers(1, &m_vbo);
 
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
         if (vertices.size() > 0)
         {
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, GL_SELECTION_POLYGON_VERTEX_SIZE * 3 * polygons.size(), &vertices[0], GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+            glBufferData(GL_ARRAY_BUFFER, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT * MAX_POLYGONS_COUNT,
+                &vertices[0], GL_DYNAMIC_DRAW);
         }
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE, (GLvoid*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, (GLvoid*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE, (GLvoid*)(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, (GLvoid*)(3 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE, (GLvoid*)(7 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, (GLvoid*)(7 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-}
-
-void GLSelectionPolygons::AdjustTextureCoordinates(wxVector<GLfloat> &vertices, int index)
-{
-    GLfloat polygonX[3], polygonY[3], textureX, textureY;
-    polygonX[0] = vertices[index], polygonY[0] = vertices[index+1];
-    polygonX[1] = vertices[index+ELEMENTS_PER_VERTEX], polygonY[1] = vertices[index+ELEMENTS_PER_VERTEX+1];
-    polygonX[2] = vertices[index+2*ELEMENTS_PER_VERTEX], polygonY[2] = vertices[index+2*ELEMENTS_PER_VERTEX+1];
-
-    const int INDEX_TEXTURE_X = 7, INDEX_TEXTURE_Y = 8;
-
-    vertices[index+INDEX_TEXTURE_X] = 0.0f, vertices[index+INDEX_TEXTURE_Y] = 0.0f;
-    textureX = (polygonX[1]-polygonX[0]) / (GLfloat) m_textureWidth,
-    textureY = (polygonY[1]-polygonY[0]) / (GLfloat) m_textureHeight;
-    vertices[index+ELEMENTS_PER_VERTEX+INDEX_TEXTURE_X] = textureX,
-    vertices[index+ELEMENTS_PER_VERTEX+INDEX_TEXTURE_Y] = textureY;
-
-    textureX = (polygonX[2]-polygonX[0])/(GLfloat) m_textureWidth,
-    textureY = (polygonY[2]-polygonY[0])/(GLfloat) m_textureHeight;
-    vertices[index+2*ELEMENTS_PER_VERTEX+INDEX_TEXTURE_X] = textureX,
-    vertices[index+2*ELEMENTS_PER_VERTEX+INDEX_TEXTURE_Y] = textureY;
-}
-
-void GLSelectionPolygons::AdjustVertexColor(wxVector<GLfloat> &vertices, int index, PMSPolygonType polygonType)
-{
-    PMSColor color = Utils::GetPolygonColorByType(polygonType);
-
-    const int INDEX_COLOR_R = 3,
-              INDEX_COLOR_G = 4,
-              INDEX_COLOR_B = 5;
-
-    for (int i = 0; i < 3; ++i)
-    {
-        vertices[index + i * ELEMENTS_PER_VERTEX + INDEX_COLOR_R] = (GLfloat) color.red / 255.0f,
-        vertices[index + i * ELEMENTS_PER_VERTEX + INDEX_COLOR_G] = (GLfloat) color.green / 255.0f,
-        vertices[index + i * ELEMENTS_PER_VERTEX + INDEX_COLOR_B] = (GLfloat) color.blue / 255.0f;
-    }
 }

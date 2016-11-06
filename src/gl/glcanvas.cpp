@@ -10,7 +10,9 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
 
     m_glManager = new GLManager(settings, *map);
 
-    m_map = *map;
+    m_map = map;
+
+    m_addedPolygonVerticesCount = 0;
 
     Bind(wxEVT_MOTION, &GLCanvas::OnMouseMotion, this);
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
@@ -33,10 +35,49 @@ void GLCanvas::HandleClick(int selectedToolId)
 {
     switch (selectedToolId)
     {
+        case ID_TOOL_CREATE_POLYGON:
+            {
+                PMSVertex vertex = CreateVertexOnMouse();
+                if (m_addedPolygonVerticesCount == 0)
+                {
+                    PMSVector perpendicular;
+                    perpendicular.x = 0.0f;
+                    perpendicular.y = 0.0f;
+                    perpendicular.z = 0.0f;
+
+                    PMSPolygon polygon;
+                    for (unsigned int i = 0; i < 3; ++i)
+                    {
+                        polygon.vertices[i] = vertex;
+                        polygon.perpendiculars[i] = perpendicular;
+                    }
+                    polygon.polygonType = ptNORMAL;
+
+                    m_map->AddPolygon(polygon);
+                    m_glManager->AddPolygon(vertex);
+                }
+                else
+                {
+                    unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
+                    unsigned int vertexIndex = m_addedPolygonVerticesCount;
+                    m_map->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
+                    m_glManager->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
+                }
+
+                Refresh();
+
+                ++m_addedPolygonVerticesCount;
+                if (m_addedPolygonVerticesCount == 3)
+                {
+                    m_addedPolygonVerticesCount = 0;
+                }
+            }
+            break;
+
         case ID_TOOL_SELECTION:
             {
-                wxVector<PMSPolygon> polygons = m_map.GetPolygons();
-                wxVector<PMSScenery> scenery = m_map.GetSceneryInstances();
+                wxVector<PMSPolygon> polygons = m_map->GetPolygons();
+                wxVector<PMSScenery> scenery = m_map->GetSceneryInstances();
 
                 bool addSelectionKeyPressed = wxGetKeyState(ADD_SELECTION_KEY),
                      removeSelectionKeyPressed = wxGetKeyState(REMOVE_SELECTION_KEY);
@@ -139,9 +180,25 @@ void GLCanvas::HandleClick(int selectedToolId)
 
 void GLCanvas::SelectAll()
 {
-    m_selectedPolygons.SelectAll(m_map.GetPolygons().size());
-    m_selectedScenery.SelectAll(m_map.GetSceneryInstances().size());
+    m_selectedPolygons.SelectAll(m_map->GetPolygons().size());
+    m_selectedScenery.SelectAll(m_map->GetSceneryInstances().size());
     Refresh();
+}
+
+PMSVertex GLCanvas::CreateVertexOnMouse()
+{
+    float textureWidth = (float) m_glManager->GetTextureWidth(),
+        textureHeight = (float) m_glManager->GetTextureHeight();
+
+    PMSVertex vertex;
+    vertex.x = m_mousePositionOnMap.x;
+    vertex.y = m_mousePositionOnMap.y;
+    vertex.z = 1.0f;
+    vertex.color = PMSColor();
+    vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
+    vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
+
+    return vertex;
 }
 
 void GLCanvas::OnMouseMotion(wxMouseEvent &event)
@@ -162,6 +219,20 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
     m_mousePositionOnCanvas = newMousePositionOnCanvas;
 
     m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+
+    if (AddingPolygon())
+    {
+        unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
+        PMSVertex vertex = CreateVertexOnMouse();
+
+        // Update the positions of the vertices that haven't been set yet.
+        for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
+        {
+            m_glManager->EditPolygonVertex(polygonIndex, i, vertex);
+        }
+
+        Refresh();
+    }
 }
 
 void GLCanvas::OnMouseWheel(wxMouseEvent &event)

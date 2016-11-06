@@ -13,7 +13,8 @@ class GLOutline: protected GLObject
         void SetupShaderProgram();
 
     protected:
-        static const int GL_OUTLINE_VERTEX_SIZE = 7 * sizeof(GLfloat);
+        static const int GL_OUTLINE_VERTEX_SIZE = 7;
+        static const int GL_OUTLINE_VERTEX_SIZE_BYTES = GL_OUTLINE_VERTEX_SIZE * sizeof(GLfloat);
 };
 
 #endif

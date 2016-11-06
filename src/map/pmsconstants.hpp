@@ -11,4 +11,6 @@ const int MAP_VERSION = 11;
 
 const int SECTORS_COUNT = 51; // Each map is a 51x51 grid of sectors.
 
+const unsigned int MAX_POLYGONS_COUNT = 5000;
+
 #endif

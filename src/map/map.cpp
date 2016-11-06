@@ -13,6 +13,17 @@ Map::Map(wxString path)
     }
 }
 
+void Map::AddPolygon(PMSPolygon polygon)
+{
+    m_polygons.push_back(polygon);
+    ++m_polygonsCount;
+}
+
+void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
+{
+    m_polygons[polygonIndex].vertices[vertexIndex] = vertex;
+}
+
 void Map::SaveMapAsPMS(wxString destinationPath)
 {
     wxFile file;

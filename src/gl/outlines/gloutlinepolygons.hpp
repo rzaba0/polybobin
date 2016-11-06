@@ -16,6 +16,9 @@
 class GLOutlinePolygons: public GLOutline
 {
     public:
+        void AddPolygon(PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex);
+
         /**
          * \brief Renders outline for all polygons.
          */
@@ -28,7 +31,10 @@ class GLOutlinePolygons: public GLOutline
         void SetupVAO(wxVector<PMSPolygon> polygons);
 
     private:
-        int m_polygonsVerticesCount;
+        GLuint m_vbo;
+        unsigned int m_polygonsCount;
+
+        static const int GL_OUTLINE_POLYGON_VERTICES_COUNT = 3;
 };
 
 #endif

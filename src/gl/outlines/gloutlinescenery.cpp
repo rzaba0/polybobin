@@ -91,13 +91,13 @@ void GLOutlineScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
         if (vertices.size() > 0)
         {
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferData(GL_ARRAY_BUFFER, GL_OUTLINE_VERTEX_SIZE*m_sceneryVerticesCount, &vertices[0], GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, GL_OUTLINE_VERTEX_SIZE_BYTES*m_sceneryVerticesCount, &vertices[0], GL_DYNAMIC_DRAW);
         }
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_OUTLINE_VERTEX_SIZE, (GLvoid*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_OUTLINE_VERTEX_SIZE_BYTES, (GLvoid*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, GL_OUTLINE_VERTEX_SIZE, (GLvoid*)(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, GL_OUTLINE_VERTEX_SIZE_BYTES, (GLvoid*)(3 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 }

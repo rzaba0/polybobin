@@ -13,6 +13,9 @@
 class GLSelectionPolygons: GLObject
 {
     public:
+        void AddPolygon(PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex);
+
         void RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedPolygonsIds);
         using GLObject::SetupShaderProgram;
         void SetupShaderProgram();
@@ -20,14 +23,13 @@ class GLSelectionPolygons: GLObject
         void SetupVAO(wxVector<PMSPolygon> polygons);
 
     private:
-        GLuint m_texture;
+        unsigned int m_polygonsCount;
+        GLuint m_texture, m_vbo;
         int m_textureWidth, m_textureHeight;
 
-        static const int ELEMENTS_PER_VERTEX = 9;
-        static const int GL_SELECTION_POLYGON_VERTEX_SIZE = ELEMENTS_PER_VERTEX * sizeof(GLfloat);
-
-        void AdjustTextureCoordinates(wxVector<GLfloat> &vertices, int index);
-        void AdjustVertexColor(wxVector<GLfloat> &vertices, int index, PMSPolygonType polygonType);
+        static const int GL_SELECTION_POLYGON_VERTEX_SIZE = 9;
+        static const int GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES = GL_SELECTION_POLYGON_VERTEX_SIZE * sizeof(GLfloat);
+        static const int GL_SELECTION_POLYGON_VERTICES_COUNT = 3;
 };
 
 #endif
