@@ -4,7 +4,7 @@
 
 #include "../constants.hpp"
 
-GLManager::GLManager(Settings settings, Map map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
+GLManager::GLManager(Settings settings, Map *map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
                                                                                PMSColor(176, 31, 31, 255),
                                                                                PMSColor(255, 44, 44, 255)),
                                                    m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
@@ -18,6 +18,8 @@ GLManager::GLManager(Settings settings, Map map) : m_glOutlineScenerySelection(P
 
 void GLManager::AddPolygon(PMSVertex firstVertex)
 {
+    m_glBackground.UpdateVBO(m_map->GetBackgroundTopColor(), m_map->GetBackgroundBottomColor(),
+                             m_map->GetBoundaries());
     m_glPolygons.AddPolygon(firstVertex);
     m_glOutlinePolygons.AddPolygon(firstVertex);
     m_glSelectionPolygons.AddPolygon(firstVertex);
@@ -25,6 +27,8 @@ void GLManager::AddPolygon(PMSVertex firstVertex)
 
 void GLManager::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
 {
+    m_glBackground.UpdateVBO(m_map->GetBackgroundTopColor(), m_map->GetBackgroundBottomColor(),
+                             m_map->GetBoundaries());
     m_glPolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
     m_glOutlinePolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
     m_glSelectionPolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
@@ -131,8 +135,8 @@ void GLManager::SetupShaders()
 
 void GLManager::SetupTextures()
 {
-    m_glPolygons.SetupTexture(m_settings.GetSoldatPath() + "textures/", m_map.GetTextureName());
-    m_glScenery.SetupTextures(m_settings.GetSoldatPath() + "scenery-gfx/", m_map.GetSceneryTypes());
+    m_glPolygons.SetupTexture(m_settings.GetSoldatPath() + "textures/", m_map->GetTextureName());
+    m_glScenery.SetupTextures(m_settings.GetSoldatPath() + "scenery-gfx/", m_map->GetSceneryTypes());
     m_glSpawnPoints.SetupTextures();
 
     m_glSelectionPolygons.SetupTexture();
@@ -140,16 +144,16 @@ void GLManager::SetupTextures()
 
 void GLManager::SetupVertices()
 {
-    m_glBackground.SetupVAO(m_map.GetBackgroundTopColor(),
-                            m_map.GetBackgroundBottomColor(),
-                            m_map.GetBoundaries());
-    m_glPolygons.SetupVAO(m_map.GetPolygons());
-    m_glScenery.SetupVAO(m_map.GetSceneryInstances());
-    m_glSpawnPoints.SetupVAO(m_map.GetSpawnPoints());
+    m_glBackground.SetupVAO(m_map->GetBackgroundTopColor(),
+                            m_map->GetBackgroundBottomColor(),
+                            m_map->GetBoundaries());
+    m_glPolygons.SetupVAO(m_map->GetPolygons());
+    m_glScenery.SetupVAO(m_map->GetSceneryInstances());
+    m_glSpawnPoints.SetupVAO(m_map->GetSpawnPoints());
 
-    m_glOutlinePolygons.SetupVAO(m_map.GetPolygons());
-    m_glOutlineScenerySelection.SetupVAO(m_map.GetSceneryInstances());
-    m_glOutlineSceneryWireframe.SetupVAO(m_map.GetSceneryInstances());
+    m_glOutlinePolygons.SetupVAO(m_map->GetPolygons());
+    m_glOutlineScenerySelection.SetupVAO(m_map->GetSceneryInstances());
+    m_glOutlineSceneryWireframe.SetupVAO(m_map->GetSceneryInstances());
 
-    m_glSelectionPolygons.SetupVAO(m_map.GetPolygons());
+    m_glSelectionPolygons.SetupVAO(m_map->GetPolygons());
 }

@@ -1,4 +1,5 @@
 #include "map.hpp"
+#include "../constants.hpp"
 #include <wx/file.h>
 
 Map::Map(wxString path)
@@ -17,11 +18,52 @@ void Map::AddPolygon(PMSPolygon polygon)
 {
     m_polygons.push_back(polygon);
     ++m_polygonsCount;
+
+    for (unsigned int i = 0; i < 3; ++i)
+    {
+        if (polygon.vertices[i].x < m_polygonsMinX)
+        {
+            m_polygonsMinX = polygon.vertices[i].x;
+        }
+        if (polygon.vertices[i].x > m_polygonsMaxX)
+        {
+            m_polygonsMaxX = polygon.vertices[i].x;
+        }
+        if (polygon.vertices[i].y < m_polygonsMinY)
+        {
+            m_polygonsMinY = polygon.vertices[i].y;
+        }
+        if (polygon.vertices[i].y > m_polygonsMaxY)
+        {
+            m_polygonsMaxY = polygon.vertices[i].y;
+        }
+    }
+
+    UpdateBoundaries();
 }
 
 void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
 {
     m_polygons[polygonIndex].vertices[vertexIndex] = vertex;
+
+    if (vertex.x < m_polygonsMinX)
+    {
+        m_polygonsMinX = vertex.x;
+    }
+    if (vertex.x > m_polygonsMaxX)
+    {
+        m_polygonsMaxX = vertex.x;
+    }
+    if (vertex.y < m_polygonsMinY)
+    {
+        m_polygonsMinY = vertex.y;
+    }
+    if (vertex.y > m_polygonsMaxY)
+    {
+        m_polygonsMaxY = vertex.y;
+    }
+
+    UpdateBoundaries();
 }
 
 void Map::SaveMapAsPMS(wxString destinationPath)
@@ -58,17 +100,63 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     unsigned int i, j;
     for (i = 0; i < m_polygonsCount; ++i)
     {
+        PMSPolygon polygon = m_polygons[i];
+
+        // Polygons' vertices have to be arranged in clock-wise order.
+        if (!polygon.AreVerticesClockwise())
+        {
+            PMSVertex tmp = polygon.vertices[1];
+            polygon.vertices[1] = polygon.vertices[2];
+            polygon.vertices[2] = tmp;
+        }
+
         for (j = 0; j < 3; ++j)
         {
-            m_polygons[i].vertices[j].x -= m_centerX;
-            m_polygons[i].vertices[j].y -= m_centerY;
-            file.Write(&m_polygons[i].vertices[j], sizeof(PMSVertex));
+            polygon.vertices[j].x -= m_centerX;
+            polygon.vertices[j].y -= m_centerY;
+            polygon.vertices[j].z = 1.0f;
+
+            file.Write(&polygon.vertices[j], sizeof(PMSVertex));
         }
         for (j = 0; j < 3; ++j)
         {
-            file.Write(&m_polygons[i].perpendiculars[j], sizeof(PMSVector));
+            unsigned int k = j + 1;
+            if (k > 2)
+            {
+                k = 0;
+            }
+
+            float diffX = polygon.vertices[k].x - polygon.vertices[j].x;
+            float diffY = polygon.vertices[j].y - polygon.vertices[k].y;
+            float length;
+            if (fabs(diffX) < EPSILON && fabs(diffY) < EPSILON)
+            {
+                length = 1.0f;
+            }
+            else
+            {
+                length = hypotf(diffX, diffY);
+            }
+
+            if (polygon.polygonType == ptBOUNCY)
+            {
+                if (polygon.perpendiculars[j].z < 1.0f)
+                {
+                    polygon.perpendiculars[j].z = 1.0f;
+                }
+            }
+            else
+            {
+                polygon.perpendiculars[j].z = 1.0f;
+            }
+
+            polygon.perpendiculars[j].x = (diffY / length) * polygon.perpendiculars[j].z;
+            polygon.perpendiculars[j].y = (diffX / length) * polygon.perpendiculars[j].z;
+            polygon.perpendiculars[j].z = 1.0f;
+
+            file.Write(&polygon.perpendiculars[j], sizeof(PMSVector));
         }
-        file.Write(&m_polygons[i].polygonType, sizeof(m_polygons[i].polygonType));
+        file.Write(&polygon.polygonType, sizeof(polygon.polygonType));
     }
 
     GenerateSectors();
@@ -96,9 +184,10 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     file.Write(&m_sceneryInstancesCount, sizeof(m_sceneryInstancesCount));
     for (i = 0; i < m_sceneryInstancesCount; ++i)
     {
-        m_sceneryInstances[i].x -= m_centerX;
-        m_sceneryInstances[i].y -= m_centerY;
-        file.Write(&m_sceneryInstances[i], sizeof(m_sceneryInstances[i]));
+        PMSScenery sceneryInstance = m_sceneryInstances[i];
+        sceneryInstance.x -= m_centerX;
+        sceneryInstance.y -= m_centerY;
+        file.Write(&sceneryInstance, sizeof(sceneryInstance));
     }
 
     file.Write(&m_sceneryTypesCount, sizeof(m_sceneryTypesCount));
@@ -113,25 +202,28 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     file.Write(&m_collidersCount, sizeof(m_collidersCount));
     for (i = 0; i < m_collidersCount; ++i)
     {
-        m_colliders[i].x -= m_centerX;
-        m_colliders[i].y -= m_centerY;
-        file.Write(&m_colliders[i], sizeof(m_colliders[i]));
+        PMSCollider collider = m_colliders[i];
+        collider.x -= m_centerX;
+        collider.y -= m_centerY;
+        file.Write(&collider, sizeof(collider));
     }
 
     file.Write(&m_spawnPointsCount, sizeof(m_spawnPointsCount));
     for (i = 0; i < m_spawnPointsCount; ++i)
     {
-        m_spawnPoints[i].x -= m_centerX;
-        m_spawnPoints[i].y -= m_centerY;
-        file.Write(&m_spawnPoints[i], sizeof(m_spawnPoints[i]));
+        PMSSpawnPoint spawnPoint = m_spawnPoints[i];
+        spawnPoint.x -= m_centerX;
+        spawnPoint.y -= m_centerY;
+        file.Write(&spawnPoint, sizeof(spawnPoint));
     }
 
     file.Write(&m_wayPointsCount, sizeof(m_wayPointsCount));
     for (i = 0; i < m_wayPointsCount; ++i)
     {
-        m_wayPoints[i].x -= m_centerX;
-        m_wayPoints[i].y -= m_centerY;
-        file.Write(&m_wayPoints[i], sizeof(m_wayPoints[i]));
+        PMSWayPoint wayPoint = m_wayPoints[i];
+        wayPoint.x -= m_centerX;
+        wayPoint.y -= m_centerY;
+        file.Write(&wayPoint, sizeof(wayPoint));
     }
 
     file.Close();
@@ -160,8 +252,8 @@ void Map::GenerateSectors()
             for (int i = 0; i < m_polygonsCount; ++i)
             {
                 if (IsPolygonInSector(i,
-                                      floor(m_sectorsSize * (x - floor(m_sectorsCount / 2) - 0.5) - 1),
-                                      floor(m_sectorsSize * (y - floor(m_sectorsCount / 2) - 0.5) - 1),
+                                      floor((float) m_sectorsSize * ((float) x - floor(m_sectorsCount / 2) - 0.5f) - 1.0f + m_centerX),
+                                      floor((float) m_sectorsSize * ((float) y - floor(m_sectorsCount / 2) - 0.5f) - 1.0f + m_centerY),
                                       m_sectorsSize + 2))
                 {
                     // TODO: add polygons' count limit.
@@ -293,13 +385,10 @@ void Map::LoadDefaultMap()
     m_spawnPointsCount = 0;
     m_wayPointsCount = 0;
 
-    m_polygonsMinX = -MAP_BOUNDARY;
-    m_polygonsMaxX = MAP_BOUNDARY;
-    m_polygonsMinY = -MAP_BOUNDARY;
-    m_polygonsMaxY = MAP_BOUNDARY;
-
-    m_width = fabs(m_polygonsMaxX - m_polygonsMinX);
-    m_height = fabs(m_polygonsMaxY - m_polygonsMinY);
+    m_polygonsMinX = 0.0f;
+    m_polygonsMaxX = 0.0f;
+    m_polygonsMinY = 0.0f;
+    m_polygonsMaxY = 0.0f;
 
     UpdateBoundaries();
 }
@@ -381,6 +470,7 @@ void Map::LoadMap(wxString mapPath)
             file.Read(static_cast<void*>(&tmp.perpendiculars[j]), sizeof(PMSVector));
         }
         file.Read(static_cast<void*>(&tmp.polygonType), sizeof(PMSPolygonType));
+
         m_polygons.push_back(tmp);
     }
 
@@ -455,12 +545,6 @@ void Map::LoadMap(wxString mapPath)
         m_wayPoints.push_back(tmp);
     }
 
-    m_width = fabs(m_polygonsMaxX - m_polygonsMinX);
-    m_height = fabs(m_polygonsMaxY - m_polygonsMinY);
-
-    m_centerX = floor((m_polygonsMinX + m_polygonsMaxX) / 2.0);
-    m_centerY = floor((m_polygonsMinY + m_polygonsMaxY) / 2.0);
-
     UpdateBoundaries();
     
     file.Close();
@@ -468,6 +552,12 @@ void Map::LoadMap(wxString mapPath)
 
 void Map::UpdateBoundaries()
 {
+    m_width = fabs(m_polygonsMaxX - m_polygonsMinX);
+    m_height = fabs(m_polygonsMaxY - m_polygonsMinY);
+
+    m_centerX = floor((m_polygonsMinX + m_polygonsMaxX) / 2.0);
+    m_centerY = floor((m_polygonsMinY + m_polygonsMaxY) / 2.0);
+
     m_boundariesXY[TOP_BOUNDARY] = m_polygonsMinY;
     m_boundariesXY[BOTTOM_BOUNDARY] = m_polygonsMaxY;
     m_boundariesXY[LEFT_BOUNDARY] = m_polygonsMinX;

@@ -18,6 +18,8 @@ const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
                 REMOVE_SELECTION_KEY = WXK_CONTROL;
 
+const float EPSILON = 0.00001f;
+
 enum WxWidgetsId
 {
     ID_MENU_FILE_NEW = 1,

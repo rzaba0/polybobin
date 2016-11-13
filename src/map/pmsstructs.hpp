@@ -63,6 +63,28 @@ struct PMSPolygon
     PMSPolygonType polygonType;
 
     /**
+     * \brief Checks if the vertices are arranged in clock-wise order.
+     * http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
+     */
+    bool AreVerticesClockwise()
+    {
+        float sum = 0.0f;
+
+        for (unsigned int i = 0; i < 3; ++i)
+        {
+            unsigned int j = i + 1;
+            if (j > 2)
+            {
+                j = 0;
+            }
+
+            sum += (vertices[j].x - vertices[i].x) * (vertices[j].y + vertices[i].y);
+        }
+
+        return sum < 0.0f;
+    }
+
+    /**
      * \brief Checks if the point at given coordinates is inside the polygon.
      */
     bool Contains(float x, float y)

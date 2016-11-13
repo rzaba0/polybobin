@@ -8,7 +8,7 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
 
-    m_glManager = new GLManager(settings, *map);
+    m_glManager = new GLManager(settings, map);
 
     m_map = map;
 
@@ -43,7 +43,7 @@ void GLCanvas::HandleClick(int selectedToolId)
                     PMSVector perpendicular;
                     perpendicular.x = 0.0f;
                     perpendicular.y = 0.0f;
-                    perpendicular.z = 0.0f;
+                    perpendicular.z = 2.0f;
 
                     PMSPolygon polygon;
                     for (unsigned int i = 0; i < 3; ++i)
@@ -194,6 +194,7 @@ PMSVertex GLCanvas::CreateVertexOnMouse()
     vertex.x = m_mousePositionOnMap.x;
     vertex.y = m_mousePositionOnMap.y;
     vertex.z = 1.0f;
+    vertex.rhw = 1.0f;
     vertex.color = PMSColor();
     vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
     vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
