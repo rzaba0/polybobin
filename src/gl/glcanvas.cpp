@@ -64,13 +64,13 @@ void GLCanvas::HandleClick(int selectedToolId)
                     m_glManager->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
                 }
 
-                Refresh();
-
                 ++m_addedPolygonVerticesCount;
                 if (m_addedPolygonVerticesCount == 3)
                 {
                     m_addedPolygonVerticesCount = 0;
                 }
+
+                Refresh();
             }
             break;
 
@@ -264,7 +264,8 @@ void GLCanvas::OnPaint(wxPaintEvent &event)
     wxGetApp().GetGLContext(this);
 
     m_glManager->Render(m_camera, this->GetSize(), m_displaySettings,
-                        m_selectedPolygons, m_selectedScenery);
+                        m_selectedPolygons, m_selectedScenery,
+                        AddingPolygon());
     SwapBuffers();
 }
 

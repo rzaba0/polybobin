@@ -38,7 +38,8 @@ class GLManager
         void Init();
         bool IsGLReady();
         void Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,
-                    Selection selectedPolygons, Selection selectedScenery);
+                    Selection selectedPolygons, Selection selectedScenery,
+                    bool addingPolygon);
 
         void SetupShaders();
         void SetupTextures();

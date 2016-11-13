@@ -60,7 +60,8 @@ bool GLManager::IsGLReady()
 }
 
 void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,
-                       Selection selectedPolygons, Selection selectedScenery)
+                       Selection selectedPolygons, Selection selectedScenery,
+                       bool addingPolygon)
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -116,6 +117,14 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
     if (selectedSceneryIds.size() > 0)
     {
         m_glOutlineScenerySelection.RenderSelected(transform, selectedSceneryIds);
+    }
+
+    // We draw outline around the polygon that is currently being added.
+    if (addingPolygon)
+    {
+        wxVector<unsigned int> newPolygonId;
+        newPolygonId.push_back(m_map->GetPolygonsCount() - 1);
+        m_glOutlinePolygons.RenderSelected(transform, newPolygonId);
     }
 }
 
