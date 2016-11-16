@@ -13,8 +13,9 @@
 class GLSelectionPolygons: GLObject
 {
     public:
-        void AddPolygon(PMSVertex firstVertex);
-        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex);
+        void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                               unsigned int vertexIndex, PMSVertex newVertex);
 
         void RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedPolygonsIds);
         using GLObject::SetupShaderProgram;

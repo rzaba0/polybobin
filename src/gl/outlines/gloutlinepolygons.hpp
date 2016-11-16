@@ -16,8 +16,9 @@
 class GLOutlinePolygons: public GLOutline
 {
     public:
-        void AddPolygon(PMSVertex firstVertex);
-        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex);
+        void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                               unsigned int vertexIndex, PMSVertex newVertex);
 
         /**
          * \brief Renders outline for all polygons.

@@ -51,17 +51,17 @@ void GLCanvas::HandleClick(int selectedToolId)
                         polygon.vertices[i] = vertex;
                         polygon.perpendiculars[i] = perpendicular;
                     }
-                    polygon.polygonType = ptNORMAL;
+                    polygon.polygonType = ptNO_COLLIDE;
 
                     m_map->AddPolygon(polygon);
-                    m_glManager->AddPolygon(vertex);
+                    m_glManager->AddPolygon(polygon.polygonType, vertex);
                 }
                 else
                 {
                     unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
                     unsigned int vertexIndex = m_addedPolygonVerticesCount;
                     m_map->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-                    m_glManager->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
+                    m_glManager->EditPolygonVertex(polygonIndex, ptNO_COLLIDE, vertexIndex, vertex);
                 }
 
                 ++m_addedPolygonVerticesCount;
@@ -195,6 +195,7 @@ PMSVertex GLCanvas::CreateVertexOnMouse()
     vertex.y = m_mousePositionOnMap.y;
     vertex.z = 1.0f;
     vertex.rhw = 1.0f;
+    // TODO: color should depend on current choice in color picker.
     vertex.color = PMSColor();
     vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
     vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
@@ -229,7 +230,7 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
         // Update the positions of the vertices that haven't been set yet.
         for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
         {
-            m_glManager->EditPolygonVertex(polygonIndex, i, vertex);
+            m_glManager->EditPolygonVertex(polygonIndex, ptNO_COLLIDE, i, vertex);
         }
 
         Refresh();

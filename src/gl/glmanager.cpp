@@ -16,22 +16,23 @@ GLManager::GLManager(Settings settings, Map *map) : m_glOutlineScenerySelection(
     m_settings = settings;
 }
 
-void GLManager::AddPolygon(PMSVertex firstVertex)
+void GLManager::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
     m_glBackground.UpdateVBO(m_map->GetBackgroundTopColor(), m_map->GetBackgroundBottomColor(),
                              m_map->GetBoundaries());
     m_glPolygons.AddPolygon(firstVertex);
-    m_glOutlinePolygons.AddPolygon(firstVertex);
-    m_glSelectionPolygons.AddPolygon(firstVertex);
+    m_glOutlinePolygons.AddPolygon(polygonType, firstVertex);
+    m_glSelectionPolygons.AddPolygon(polygonType, firstVertex);
 }
 
-void GLManager::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
+void GLManager::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                                  unsigned int vertexIndex, PMSVertex vertex)
 {
     m_glBackground.UpdateVBO(m_map->GetBackgroundTopColor(), m_map->GetBackgroundBottomColor(),
                              m_map->GetBoundaries());
     m_glPolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-    m_glOutlinePolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-    m_glSelectionPolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
+    m_glOutlinePolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
+    m_glSelectionPolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
 }
 
 unsigned int GLManager::GetTextureWidth()

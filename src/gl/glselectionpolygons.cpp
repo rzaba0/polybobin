@@ -4,25 +4,28 @@
 #include "../utils.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-void GLSelectionPolygons::AddPolygon(PMSVertex firstVertex)
+void GLSelectionPolygons::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
     for (unsigned int i = 0; i < GL_SELECTION_POLYGON_VERTICES_COUNT; ++i)
     {
-        EditPolygonVertex(m_polygonsCount, i, firstVertex);
+        EditPolygonVertex(m_polygonsCount, polygonType, i, firstVertex);
     }
     ++m_polygonsCount;
 }
 
-void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex)
+void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                                            unsigned int vertexIndex, PMSVertex newVertex)
 {
     wxVector<GLfloat> glVertex;
     glVertex.push_back(newVertex.x);
     glVertex.push_back(newVertex.y);
     glVertex.push_back(newVertex.z);
-    glVertex.push_back(1.0f); // TODO: make sure the color is set properly by passing polygon type as parameter.
-    glVertex.push_back(1.0f);
-    glVertex.push_back(1.0f);
-    glVertex.push_back(.5f);
+
+    PMSColor color = Utils::GetPolygonColorByType(polygonType);
+    glVertex.push_back((GLfloat)color.red / 255.0f);
+    glVertex.push_back((GLfloat)color.green / 255.0f);
+    glVertex.push_back((GLfloat)color.blue / 255.0f);
+    glVertex.push_back(0.5f);
     glVertex.push_back(newVertex.x / m_textureWidth);
     glVertex.push_back(newVertex.y / m_textureHeight);
 

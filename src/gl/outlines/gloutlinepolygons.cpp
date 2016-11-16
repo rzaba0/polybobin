@@ -2,25 +2,28 @@
 #include "../../utils.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-void GLOutlinePolygons::AddPolygon(PMSVertex firstVertex)
+void GLOutlinePolygons::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
     for (unsigned int i = 0; i < GL_OUTLINE_POLYGON_VERTICES_COUNT; ++i)
     {
-        EditPolygonVertex(m_polygonsCount, i, firstVertex);
+        EditPolygonVertex(m_polygonsCount, polygonType, i, firstVertex);
     }
     ++m_polygonsCount;
 }
 
-void GLOutlinePolygons::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex newVertex)
+void GLOutlinePolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                                          unsigned int vertexIndex, PMSVertex newVertex)
 {
     wxVector<GLfloat> glVertex;
     glVertex.push_back(newVertex.x);
     glVertex.push_back(newVertex.y);
     glVertex.push_back(newVertex.z);
-    glVertex.push_back((GLfloat)newVertex.color.red / 255.0f); // TODO: make sure color depends on polygon type.
-    glVertex.push_back((GLfloat)newVertex.color.green / 255.0f);
-    glVertex.push_back((GLfloat)newVertex.color.blue / 255.0f);
-    glVertex.push_back((GLfloat)newVertex.color.alpha / 255.0f);
+
+    PMSColor color = Utils::GetPolygonColorByType(polygonType);
+    glVertex.push_back((GLfloat)color.red / 255.0f);
+    glVertex.push_back((GLfloat)color.green / 255.0f);
+    glVertex.push_back((GLfloat)color.blue / 255.0f);
+    glVertex.push_back((GLfloat)color.alpha / 255.0f);
 
     int offset = polygonIndex * GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT +
         vertexIndex * GL_OUTLINE_VERTEX_SIZE_BYTES;
@@ -71,13 +74,14 @@ void GLOutlinePolygons::SetupVAO(wxVector<PMSPolygon> polygons)
 
     for (i = 0; i < m_polygonsCount; ++i)
     {
+        PMSColor color = Utils::GetPolygonColorByType(polygons[i].polygonType);
+
         for (j = 0; j < 3; ++j)
         {
             vertices.push_back((GLfloat)polygons[i].vertices[j].x);
             vertices.push_back((GLfloat)polygons[i].vertices[j].y);
             vertices.push_back((GLfloat)polygons[i].vertices[j].z);
 
-            PMSColor color = Utils::GetPolygonColorByType(polygons[i].polygonType);
             vertices.push_back((GLfloat)color.red / 255.0f);
             vertices.push_back((GLfloat)color.green / 255.0f);
             vertices.push_back((GLfloat)color.blue / 255.0f);

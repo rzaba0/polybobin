@@ -29,8 +29,9 @@ class GLManager
     public:
         GLManager(Settings settings, Map *map);
 
-        void AddPolygon(PMSVertex firstVertex);
-        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
+        void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
+                               unsigned int vertexIndex, PMSVertex vertex);
 
         unsigned int GetTextureWidth();
         unsigned int GetTextureHeight();
