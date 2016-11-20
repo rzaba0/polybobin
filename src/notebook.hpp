@@ -27,7 +27,7 @@ class Notebook: public wxNotebook
         GLCanvas *GetCurrentGLCanvas();
         wxPoint GetCurrentMousePositionOnMap();
 
-        void HandleCurrentGLCanvasClick(int selectedToolId);
+        void HandleCurrentGLCanvasLeftMouseButtonClick(int selectedToolId);
         void HandleCurrentGLCanvasRightMouseButtonRelease(int selectedToolId);
 
         void SaveCurrentMapAsPMS(wxString destinationPath);

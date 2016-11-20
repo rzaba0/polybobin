@@ -31,7 +31,7 @@ void GLCanvas::SetDisplaySetting(int setting, bool display)
     Refresh();
 }
 
-void GLCanvas::HandleClick(int selectedToolId)
+void GLCanvas::HandleLeftMouseButtonClick(int selectedToolId)
 {
     switch (selectedToolId)
     {

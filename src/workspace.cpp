@@ -47,9 +47,9 @@ void Workspace::GiveFocusToGLCanvas()
     m_glCanvas->SetFocus();
 }
 
-void Workspace::HandleGLCanvasClick(int selectedToolId)
+void Workspace::HandleGLCanvasLeftMouseButtonClick(int selectedToolId)
 {
-    m_glCanvas->HandleClick(selectedToolId);
+    m_glCanvas->HandleLeftMouseButtonClick(selectedToolId);
 }
 
 void Workspace::HandleGLCanvasRightMouseButtonRelease(int selectedToolId)

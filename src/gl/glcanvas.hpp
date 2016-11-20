@@ -28,7 +28,7 @@ class GLCanvas: public wxGLCanvas
 
         wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
 
-        void HandleClick(int selectedToolId);
+        void HandleLeftMouseButtonClick(int selectedToolId);
         void HandleRightMouseButtonRelease(int selectedToolId);
 
         void SelectAll();

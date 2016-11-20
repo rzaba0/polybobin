@@ -31,7 +31,7 @@ class MainFrame: public wxFrame
         void AddWorkspace(wxString mapPath);
 
         void OnDisplayFrameCheckBoxClicked(wxCommandEvent &event);
-        void OnGLCanvasMouseClicked(wxMouseEvent &event);
+        void OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event);
         void OnGLCanvasMouseMotion(wxMouseEvent &event);
         void OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event);
         void OnMenuBarItemClicked(wxCommandEvent &event);
