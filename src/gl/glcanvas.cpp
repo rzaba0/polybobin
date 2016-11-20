@@ -13,6 +13,7 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     m_map = map;
 
     m_addedPolygonVerticesCount = 0;
+    m_newPolygonType = ptNORMAL;
 
     Bind(wxEVT_MOTION, &GLCanvas::OnMouseMotion, this);
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
@@ -189,9 +190,11 @@ void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
             wxMenu *newPolygonTypeSelection = new wxMenu();
             for (unsigned int i = 0; i < POLYGON_TYPES_COUNT; ++i)
             {
-                newPolygonTypeSelection->Append(ID_POLYGON_TYPE_NORMAL + i, POLYGON_TYPES_NAMES[i]);
+                newPolygonTypeSelection->AppendCheckItem(ID_POLYGON_TYPE_NORMAL + i, POLYGON_TYPES_NAMES[i]);
             }
             newPolygonTypeSelection->Bind(wxEVT_MENU, &GLCanvas::OnNewPolygonTypeSelected, this);
+            newPolygonTypeSelection->Check(ID_POLYGON_TYPE_NORMAL + (int) m_newPolygonType, true);
+
             wxWindow::PopupMenu(newPolygonTypeSelection);
 
             break;
