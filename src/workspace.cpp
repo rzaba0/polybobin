@@ -47,9 +47,14 @@ void Workspace::GiveFocusToGLCanvas()
     m_glCanvas->SetFocus();
 }
 
-void Workspace::HandleGLCanvasClick(int selectedToolId)
+void Workspace::HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
 {
-    m_glCanvas->HandleClick(selectedToolId);
+    m_glCanvas->HandleLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+}
+
+void Workspace::HandleGLCanvasRightMouseButtonRelease(int selectedToolId)
+{
+    m_glCanvas->HandleRightMouseButtonRelease(selectedToolId);
 }
 
 void Workspace::SaveMapAsPMS(wxString destinationPath)

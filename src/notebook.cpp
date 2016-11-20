@@ -41,9 +41,14 @@ wxPoint Notebook::GetCurrentMousePositionOnMap()
     return GetCurrentWorkspace()->GetMousePositionOnMap();
 }
 
-void Notebook::HandleCurrentGLCanvasClick(int selectedToolId)
+void Notebook::HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
 {
-    GetCurrentWorkspace()->HandleGLCanvasClick(selectedToolId);
+    GetCurrentWorkspace()->HandleGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+}
+
+void Notebook::HandleCurrentGLCanvasRightMouseButtonRelease(int selectedToolId)
+{
+    GetCurrentWorkspace()->HandleGLCanvasRightMouseButtonRelease(selectedToolId);
 }
 
 void Notebook::SaveCurrentMapAsPMS(wxString destinationPath)

@@ -28,7 +28,8 @@ class GLCanvas: public wxGLCanvas
 
         wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
 
-        void HandleClick(int selectedToolId);
+        void HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId);
+        void HandleRightMouseButtonRelease(int selectedToolId);
 
         void SelectAll();
 
@@ -43,6 +44,7 @@ class GLCanvas: public wxGLCanvas
 
         // Indicates how many vertices have been set while adding a new polygon.
         unsigned int m_addedPolygonVerticesCount;
+        PMSPolygonType m_newPolygonType;
         // \brief Is user currently creating a new polygon?
         bool AddingPolygon() { return m_addedPolygonVerticesCount > 0; }
         // \brief Returns PMSVertex with coordinates of cursor on map.
@@ -50,6 +52,7 @@ class GLCanvas: public wxGLCanvas
 
         void OnMouseMotion(wxMouseEvent &event);
         void OnMouseWheel(wxMouseEvent &event);
+        void OnNewPolygonTypeSelected(wxCommandEvent &event);
         void OnPaint(wxPaintEvent &event);
         void OnResize(wxSizeEvent &event);
 
