@@ -31,8 +31,11 @@ void GLCanvas::SetDisplaySetting(int setting, bool display)
     Refresh();
 }
 
-void GLCanvas::HandleLeftMouseButtonClick(int selectedToolId)
+void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
 {
+    m_mousePositionOnCanvas = mousePositionOnCanvas;
+    m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+
     switch (selectedToolId)
     {
         case ID_TOOL_CREATE_POLYGON:

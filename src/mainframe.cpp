@@ -81,7 +81,8 @@ void MainFrame::OnDisplayFrameCheckBoxClicked(wxCommandEvent &event)
 void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
 {
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
-    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(selectedToolId);
+    wxPoint mousePositionOnCanvas = event.GetPosition();
+    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
 }
 
 void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
