@@ -51,7 +51,7 @@ void GLCanvas::HandleClick(int selectedToolId)
                         polygon.vertices[i] = vertex;
                         polygon.perpendiculars[i] = perpendicular;
                     }
-                    polygon.polygonType = ptNO_COLLIDE;
+                    polygon.polygonType = m_newPolygonType;
 
                     m_map->AddPolygon(polygon);
                     m_glManager->AddPolygon(polygon.polygonType, vertex);
@@ -61,7 +61,7 @@ void GLCanvas::HandleClick(int selectedToolId)
                     unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
                     unsigned int vertexIndex = m_addedPolygonVerticesCount;
                     m_map->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-                    m_glManager->EditPolygonVertex(polygonIndex, ptNO_COLLIDE, vertexIndex, vertex);
+                    m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, vertexIndex, vertex);
                 }
 
                 ++m_addedPolygonVerticesCount;
@@ -178,6 +178,23 @@ void GLCanvas::HandleClick(int selectedToolId)
     }
 }
 
+void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
+{
+    switch (selectedToolId)
+    {
+        case ID_TOOL_CREATE_POLYGON:
+            wxMenu *newPolygonTypeSelection = new wxMenu();
+            for (unsigned int i = 0; i < POLYGON_TYPES_COUNT; ++i)
+            {
+                newPolygonTypeSelection->Append(ID_POLYGON_TYPE_NORMAL + i, POLYGON_TYPES_NAMES[i]);
+            }
+            newPolygonTypeSelection->Bind(wxEVT_MENU, &GLCanvas::OnNewPolygonTypeSelected, this);
+            wxWindow::PopupMenu(newPolygonTypeSelection);
+
+            break;
+    }
+}
+
 void GLCanvas::SelectAll()
 {
     m_selectedPolygons.SelectAll(m_map->GetPolygons().size());
@@ -230,7 +247,7 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
         // Update the positions of the vertices that haven't been set yet.
         for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
         {
-            m_glManager->EditPolygonVertex(polygonIndex, ptNO_COLLIDE, i, vertex);
+            m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, i, vertex);
         }
 
         Refresh();
@@ -250,6 +267,15 @@ void GLCanvas::OnMouseWheel(wxMouseEvent &event)
     {
         m_camera.ZoomOut();
         Refresh();
+    }
+}
+
+void GLCanvas::OnNewPolygonTypeSelected(wxCommandEvent &event)
+{
+    if (!AddingPolygon())
+    {
+        int selectedPolygonType = event.GetId() - ID_POLYGON_TYPE_NORMAL;
+        m_newPolygonType = (PMSPolygonType) selectedPolygonType;
     }
 }
 

@@ -33,6 +33,7 @@ class MainFrame: public wxFrame
         void OnDisplayFrameCheckBoxClicked(wxCommandEvent &event);
         void OnGLCanvasMouseClicked(wxMouseEvent &event);
         void OnGLCanvasMouseMotion(wxMouseEvent &event);
+        void OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event);
         void OnMenuBarItemClicked(wxCommandEvent &event);
         void OnNotebookPageChanged(wxBookCtrlEvent &event);
 

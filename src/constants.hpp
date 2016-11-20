@@ -53,6 +53,31 @@ enum WxWidgetsId
     ID_TOOL_DEPTH_MAP,
 
     ID_GL_CANVAS,
+
+    ID_POLYGON_TYPE_NORMAL = 0,
+    ID_POLYGON_TYPE_ONLY_BULLETS_COLLIDE,
+    ID_POLYGON_TYPE_ONLY_PLAYERS_COLLIDE,
+    ID_POLYGON_TYPE_NO_COLLIDE,
+    ID_POLYGON_TYPE_ICE,
+    ID_POLYGON_TYPE_DEADLY,
+    ID_POLYGON_TYPE_BLOODY_DEADLY,
+    ID_POLYGON_TYPE_HURTS,
+    ID_POLYGON_TYPE_REGENERATES,
+    ID_POLYGON_TYPE_LAVA,
+    ID_POLYGON_TYPE_ALPHABULLETS,
+    ID_POLYGON_TYPE_ALPHAPLAYERS,
+    ID_POLYGON_TYPE_BRAVOBULLETS,
+    ID_POLYGON_TYPE_BRAVOPLAYERS,
+    ID_POLYGON_TYPE_CHARLIEBULLETS,
+    ID_POLYGON_TYPE_CHARLIEPLAYERS,
+    ID_POLYGON_TYPE_DELTABULLETS,
+    ID_POLYGON_TYPE_DELTAPLAYERS,
+    ID_POLYGON_TYPE_BOUNCY,
+    ID_POLYGON_TYPE_EXPLOSIVE,
+    ID_POLYGON_TYPE_HURTFLAGGERS,
+    ID_POLYGON_TYPE_FLAGGERCOLLIDES,
+    ID_POLYGON_TYPE_NONFLAGGERCOLLIDES,
+    ID_POLYGON_TYPE_FLAGCOLLIDES
 };
 
 const unsigned int DISPLAY_SETTINGS_COUNT = 5;
@@ -68,6 +93,34 @@ enum
     DISPLAY_SCENERY,
     DISPLAY_SPAWNPOINTS,
     DISPLAY_WIREFRAME
+};
+
+const wxString POLYGON_TYPES_NAMES[] =
+{
+    "Normal",
+    "Only bullets collide",
+    "Only players collide",
+    "Doesn't collide",
+    "Ice",
+    "Deadly",
+    "Bloody deadly",
+    "Hurts",
+    "Regenerates",
+    "Lava",
+    "Alpha bullets collide",
+    "Alpha players collide",
+    "Bravo bullets collide",
+    "Bravo players collide",
+    "Charlie bullets collide",
+    "Charlie players collide",
+    "Delta bullets collide",
+    "Delta players collide",
+    "Bouncy",
+    "Explosive",
+    "Hurts flaggers",
+    "Flaggers collide",
+    "Non-flaggers collide",
+    "Flag collides"
 };
 
 #endif

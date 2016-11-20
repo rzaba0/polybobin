@@ -64,6 +64,8 @@ void MainFrame::AddWorkspace(wxString mapPath)
 
     // We handle click events from main frame, since we can know which tool is currently selected.
     m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnGLCanvasMouseClicked, this);
+    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_RIGHT_UP, &MainFrame::OnGLCanvasRightMouseButtonReleased, this);
+
     // Needed to update cursor coordinates in status bar.
     m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_MOTION, &MainFrame::OnGLCanvasMouseMotion, this);
 }
@@ -91,6 +93,12 @@ void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
     SetStatusText(statusText);
 
     event.Skip();
+}
+
+void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)
+{
+    int selectedToolId = m_toolbarFrame->GetSelectedToolId();
+    m_notebook->HandleCurrentGLCanvasRightMouseButtonRelease(selectedToolId);
 }
 
 void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
