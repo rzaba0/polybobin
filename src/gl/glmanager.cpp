@@ -35,6 +35,13 @@ void GLManager::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType poly
     m_glSelectionPolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
 }
 
+void GLManager::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
+{
+    m_glScenery.EditScenery(sceneryIndex, scenery);
+    m_glOutlineScenerySelection.EditScenery(sceneryIndex, scenery);
+    m_glOutlineSceneryWireframe.EditScenery(sceneryIndex, scenery);
+}
+
 unsigned int GLManager::GetTextureWidth()
 {
     return m_glPolygons.GetTextureWidth();

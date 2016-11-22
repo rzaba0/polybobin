@@ -66,6 +66,11 @@ void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex,
     UpdateBoundaries();
 }
 
+void Map::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
+{
+    m_sceneryInstances[sceneryIndex] = scenery;
+}
+
 void Map::SaveMapAsPMS(wxString destinationPath)
 {
     wxFile file;
