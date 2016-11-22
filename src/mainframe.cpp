@@ -23,6 +23,10 @@ MainFrame::MainFrame(Settings *settings)
     // When a checkbox belonging to this frame gets (un)checked, we want to update what is being drawn in the current workspace.
     m_displayFrame->Bind(wxEVT_CHECKBOX, &MainFrame::OnDisplayFrameCheckBoxClicked, this);
 
+    m_paletteFrame = new PaletteFrame(this);
+    m_paletteFrame->Show();
+    m_paletteFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
+
     m_toolbarFrame = new ToolbarFrame(this);
     m_toolbarFrame->Show();
     m_toolbarFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
@@ -156,6 +160,10 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
             m_displayFrame->ToggleVisibility();
             break;
 
+        case ID_MENU_WINDOWS_PALETTE:
+            m_paletteFrame->ToggleVisibility();
+            break;
+
         case ID_MENU_WINDOWS_TOOLBAR:
             m_toolbarFrame->ToggleVisibility();
             break;
@@ -174,5 +182,6 @@ void MainFrame::OnNotebookPageChanged(wxBookCtrlEvent &event)
 void MainFrame::ShowAllMiniFrames(bool show)
 {
     m_displayFrame->Show(show);
+    m_paletteFrame->Show(show);
     m_toolbarFrame->Show(show);
 }

@@ -7,6 +7,7 @@
 #endif
 #include <wx/preferences.h>
 #include "miniframes/displayframe.hpp"
+#include "miniframes/paletteframe.hpp"
 #include "miniframes/toolbarframe.hpp"
 #include "notebook.hpp"
 #include "settings.hpp"
@@ -23,7 +24,9 @@ class MainFrame: public wxFrame
 
     private:
         DisplayFrame *m_displayFrame;
+        PaletteFrame *m_paletteFrame;
         ToolbarFrame *m_toolbarFrame;
+
         Notebook *m_notebook;
         wxPreferencesEditor *m_preferencesEditor;
         Settings *m_settings;

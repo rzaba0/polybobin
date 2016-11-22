@@ -1,5 +1,5 @@
-#ifndef MINIFRAME_H
-#define MINIFRAME_H
+#ifndef MINIFRAME_HPP
+#define MINIFRAME_HPP
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
