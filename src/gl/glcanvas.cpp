@@ -14,7 +14,7 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     
     m_addedPolygonVerticesCount = 0;
     m_newPolygonType = ptNORMAL;
-    m_movingSelection = false;
+    m_movingSelected = false;
 
     Bind(wxEVT_MOTION, &GLCanvas::OnMouseMotion, this);
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
@@ -86,17 +86,16 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
                 
                 bool addSelectionKeyPressed = wxGetKeyState(ADD_SELECTION_KEY),
                      removeSelectionKeyPressed = wxGetKeyState(REMOVE_SELECTION_KEY),
-                     moveSelectionKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
+                     moveSelectedKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
                 bool skippedPolygon = false,
                      skippedScenery = false;
                 unsigned int skippedPolygonId,
                              skippedSceneryId;
                 unsigned int i;
 
-                if (moveSelectionKeyPressed)
+                if (moveSelectedKeyPressed)
                 {
-                    m_movingSelection = true;
-                    Refresh();
+                    m_movingSelected = true;
                     return;
                 }
 
@@ -251,18 +250,19 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
         Refresh();
     }
 
-    if (m_movingSelection)
+    if (m_movingSelected)
     {
-        bool moveSelectionKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
+        bool moveSelectedKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
 
-        if (!event.LeftIsDown() || !moveSelectionKeyPressed)
+        if (!event.LeftIsDown() || !moveSelectedKeyPressed)
         {
-            m_movingSelection = false;
+            m_movingSelected = false;
         }
 
         if (event.LeftIsDown() && event.Dragging())
-        {            
-            wxPoint positionVector = newMousePositionOnMap - oldMousePositionOnMap;
+        {
+            float mouseDiffX = newMousePositionOnMap.x - oldMousePositionOnMap.x;
+            float mouseDiffY = newMousePositionOnMap.y - oldMousePositionOnMap.y;
             wxVector<PMSPolygon> polygons = m_map->GetPolygons();
             wxVector<PMSScenery> sceneries = m_map->GetSceneryInstances();
             wxVector<unsigned int> selectedPolygons = m_selectedPolygons.GetSelectedIds();
@@ -275,8 +275,8 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
                 for (unsigned int j = 0; j < 3; ++j)
                 {
                     PMSVertex vertex = polygon.vertices[j];
-                    vertex.x += positionVector.x;
-                    vertex.y += positionVector.y;
+                    vertex.x += mouseDiffX;
+                    vertex.y += mouseDiffY;
                     m_map->EditPolygonVertex(polygonId, j, vertex);
                     m_glManager->EditPolygonVertex(polygonId, polygon.polygonType, j, vertex);
                 }
@@ -286,8 +286,8 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
             {
                 unsigned int sceneryId = selectedSceneries.at(i);
                 PMSScenery scenery = sceneries.at(sceneryId);
-                scenery.x += positionVector.x;
-                scenery.y += positionVector.y;
+                scenery.x += mouseDiffX;
+                scenery.y += mouseDiffY;
                 m_map->EditScenery(sceneryId, scenery);
                 m_glManager->EditScenery(sceneryId, scenery);
             }

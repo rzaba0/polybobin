@@ -25,7 +25,7 @@ class Map
         void AddPolygon(PMSPolygon polygon);
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
 
-        void EditScenery(unsigned int sceneryIndex, PMSScenery);
+        void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
         
         void SaveMapAsPMS(wxString destinationPath);
 
