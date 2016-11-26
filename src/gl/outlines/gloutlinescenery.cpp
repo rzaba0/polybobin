@@ -10,6 +10,11 @@ GLOutlineScenery::GLOutlineScenery(PMSColor behindAllColor,
     m_verticesColor[lBEHIND_NONE] = behindNoneColor;
 }
 
+void GLOutlineScenery::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
+{
+    m_sceneryInstances[sceneryIndex] = scenery;
+}
+
 void GLOutlineScenery::RenderAll(glm::mat4 transform)
 {
     m_shaderProgram.Use();

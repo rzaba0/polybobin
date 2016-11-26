@@ -3,6 +3,11 @@
 #include "../constants.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+void GLScenery::EditScenery(unsigned int sceneryIndex, PMSScenery newScenery)
+{
+    m_sceneryInstances[sceneryIndex] = newScenery;
+}
+
 void GLScenery::Render(glm::mat4 transform, PMSSceneryLevel targetLevel)
 {
     m_shaderProgram.Use();

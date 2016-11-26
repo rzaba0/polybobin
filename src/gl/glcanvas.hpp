@@ -41,6 +41,7 @@ class GLCanvas: public wxGLCanvas
         wxPoint m_mousePositionOnCanvas,
                 m_mousePositionOnMap;
         Selection m_selectedPolygons, m_selectedScenery;
+        bool m_movingSelected;
 
         // Indicates how many vertices have been set while adding a new polygon.
         unsigned int m_addedPolygonVerticesCount;

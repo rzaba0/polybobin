@@ -16,6 +16,8 @@
 class GLScenery: GLObject
 {
     public:
+        void EditScenery(unsigned int sceneryIndex, PMSScenery newScenery);
+
         /**
          * \brief Renders all scenerys whose level is equal to targetLevel.
          */

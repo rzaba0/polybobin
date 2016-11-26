@@ -15,6 +15,8 @@ class GLOutlineScenery: public GLOutline
                          PMSColor behindMapColor,
                          PMSColor behindNoneColor);
 
+        void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
+        
         /**
          * \brief Renders outline for all scenery.
          */
