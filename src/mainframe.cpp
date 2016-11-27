@@ -84,9 +84,11 @@ void MainFrame::OnDisplayFrameCheckBoxClicked(wxCommandEvent &event)
 
 void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
 {
+    wxColor selectedColor = m_paletteFrame->GetColor();
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
     wxPoint mousePositionOnCanvas = event.GetPosition();
-    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
+                                                          selectedColor);
 }
 
 void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
@@ -97,7 +99,8 @@ void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
     sprintf(statusText, "%d %d", mousePositionOnMap.x, mousePositionOnMap.y);
     SetStatusText(statusText);
 
-    event.Skip();
+    wxColor selectedColor = m_paletteFrame->GetColor();
+    m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
 }
 
 void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)

@@ -15,7 +15,6 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     m_addedPolygonVerticesCount = 0;
     m_newPolygonType = ptNORMAL;
 
-    Bind(wxEVT_MOTION, &GLCanvas::OnMouseMotion, this);
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
     Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
     Bind(wxEVT_SIZE, &GLCanvas::OnResize, this);
@@ -32,7 +31,8 @@ void GLCanvas::SetDisplaySetting(int setting, bool display)
     Refresh();
 }
 
-void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
+void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
+                                          wxColor selectedColor)
 {
     m_mousePositionOnCanvas = mousePositionOnCanvas;
     m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
@@ -41,7 +41,7 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
     {
         case ID_TOOL_CREATE_POLYGON:
             {
-                PMSVertex vertex = CreateVertexOnMouse();
+                PMSVertex vertex = CreateVertexOnMouse(selectedColor);
                 if (m_addedPolygonVerticesCount == 0)
                 {
                     PMSVector perpendicular;
@@ -182,6 +182,40 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
     }
 }
 
+void GLCanvas::HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor)
+{
+    wxPoint newMousePositionOnCanvas = event.GetPosition();
+
+    if (event.MiddleIsDown() && event.Dragging())
+    {
+        wxPoint oldMousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+        wxPoint newMousePositionOnMap = GetMousePositionOnMap(newMousePositionOnCanvas);
+
+        m_camera.ScrollX((float)(oldMousePositionOnMap.x - newMousePositionOnMap.x));
+        m_camera.ScrollY((float)(oldMousePositionOnMap.y - newMousePositionOnMap.y));
+
+        Refresh();
+    }
+
+    m_mousePositionOnCanvas = newMousePositionOnCanvas;
+
+    m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+
+    if (AddingPolygon())
+    {
+        unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
+        PMSVertex vertex = CreateVertexOnMouse(selectedColor);
+
+        // Update the positions of the vertices that haven't been set yet.
+        for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
+        {
+            m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, i, vertex);
+        }
+
+        Refresh();
+    }
+}
+
 void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
 {
     switch (selectedToolId)
@@ -208,7 +242,7 @@ void GLCanvas::SelectAll()
     Refresh();
 }
 
-PMSVertex GLCanvas::CreateVertexOnMouse()
+PMSVertex GLCanvas::CreateVertexOnMouse(wxColor color)
 {
     float textureWidth = (float) m_glManager->GetTextureWidth(),
         textureHeight = (float) m_glManager->GetTextureHeight();
@@ -218,46 +252,11 @@ PMSVertex GLCanvas::CreateVertexOnMouse()
     vertex.y = m_mousePositionOnMap.y;
     vertex.z = 1.0f;
     vertex.rhw = 1.0f;
-    // TODO: color should depend on current choice in color picker.
-    vertex.color = PMSColor();
+    vertex.color = PMSColor(color.Red(), color.Green(), color.Blue(), color.Alpha());
     vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
     vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
 
     return vertex;
-}
-
-void GLCanvas::OnMouseMotion(wxMouseEvent &event)
-{
-    wxPoint newMousePositionOnCanvas = event.GetPosition();
-
-    if (event.MiddleIsDown() && event.Dragging())
-    {
-        wxPoint oldMousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
-        wxPoint newMousePositionOnMap = GetMousePositionOnMap(newMousePositionOnCanvas);
-
-        m_camera.ScrollX((float) (oldMousePositionOnMap.x - newMousePositionOnMap.x));
-        m_camera.ScrollY((float) (oldMousePositionOnMap.y - newMousePositionOnMap.y));
-
-        Refresh();
-    }
-
-    m_mousePositionOnCanvas = newMousePositionOnCanvas;
-
-    m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
-
-    if (AddingPolygon())
-    {
-        unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
-        PMSVertex vertex = CreateVertexOnMouse();
-
-        // Update the positions of the vertices that haven't been set yet.
-        for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
-        {
-            m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, i, vertex);
-        }
-
-        Refresh();
-    }
 }
 
 void GLCanvas::OnMouseWheel(wxMouseEvent &event)

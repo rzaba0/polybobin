@@ -47,9 +47,15 @@ void Workspace::GiveFocusToGLCanvas()
     m_glCanvas->SetFocus();
 }
 
-void Workspace::HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
+void Workspace::HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
+                                                   wxColor selectedColor)
 {
-    m_glCanvas->HandleLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+    m_glCanvas->HandleLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId, selectedColor);
+}
+
+void Workspace::HandleGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor)
+{
+    m_glCanvas->HandleMouseMotion(event, selectedColor);
 }
 
 void Workspace::HandleGLCanvasRightMouseButtonRelease(int selectedToolId)

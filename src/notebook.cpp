@@ -41,9 +41,16 @@ wxPoint Notebook::GetCurrentMousePositionOnMap()
     return GetCurrentWorkspace()->GetMousePositionOnMap();
 }
 
-void Notebook::HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
+void Notebook::HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
+                                                         wxColor selectedColor)
 {
-    GetCurrentWorkspace()->HandleGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+    GetCurrentWorkspace()->HandleGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
+                                                              selectedColor);
+}
+
+void Notebook::HandleCurrentGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor)
+{
+    GetCurrentWorkspace()->HandleGLCanvasMouseMotion(event, selectedColor);
 }
 
 void Notebook::HandleCurrentGLCanvasRightMouseButtonRelease(int selectedToolId)
