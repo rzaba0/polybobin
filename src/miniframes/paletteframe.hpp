@@ -20,6 +20,11 @@ class PaletteFrame: public MiniFrame
 
     private:
         wxColourPickerCtrl *m_colorPicker;
+        wxSlider *m_opacitySlider;
+        wxTextCtrl *m_opacityText;
+
+        void OnOpacitySliderMoved(wxCommandEvent &event);
+        void OnOpacityTextChanged(wxCommandEvent &event);
 };
 
 #endif
