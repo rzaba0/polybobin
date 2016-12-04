@@ -18,7 +18,7 @@ PaletteFrame::PaletteFrame(wxWindow *parent)
         wxSize(40, 20), 0L, opacityTextValidator);
     Bind(wxEVT_TEXT, &PaletteFrame::OnOpacityTextChanged, this);
 
-    opacitySizer->Add(m_opacitySlider);
+    opacitySizer->Add(m_opacitySlider, 1, wxEXPAND);
     opacitySizer->Add(m_opacityText);
 
     const unsigned int PALETTE_WIDTH = 12,
@@ -33,7 +33,7 @@ PaletteFrame::PaletteFrame(wxWindow *parent)
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(m_colorPicker, 1, wxALIGN_CENTER_HORIZONTAL);
     sizer->AddSpacer(20);
-    sizer->Add(opacitySizer, 0, wxALIGN_CENTER_HORIZONTAL);
+    sizer->Add(opacitySizer, 0, wxEXPAND);
     sizer->AddSpacer(20);
     sizer->Add(m_palette);
 

@@ -1,4 +1,5 @@
 #include "palette.hpp"
+#include <wx/platinfo.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
@@ -19,8 +20,13 @@ Palette::Palette(wxWindow *parent, unsigned int rows, unsigned int columns, wxSt
 
         wxColor color(wxAtoi(r), wxAtoi(g), wxAtoi(b), 255);
 
+        long buttonStyle;
+        // wxBORDER_NONE doesn't seem to work in wxGTK.
+        buttonStyle = wxPlatformInfo::Get().GetPortId() == wxPORT_GTK
+            ? 0L
+            : wxBORDER_NONE;
         wxButton *item = new wxButton(parent, i++, wxEmptyString, wxDefaultPosition,
-                                      wxSize(20, 20), wxBORDER_NONE);
+                                      wxSize(20, 20), buttonStyle);
         item->SetBackgroundColour(color);
 
         Add(item);
