@@ -21,10 +21,21 @@ PaletteFrame::PaletteFrame(wxWindow *parent)
     opacitySizer->Add(m_opacitySlider);
     opacitySizer->Add(m_opacityText);
 
+    const unsigned int PALETTE_WIDTH = 12,
+                       PALETTE_HEIGHT = 6;
+    m_palette = new Palette(this, PALETTE_HEIGHT, PALETTE_WIDTH, PATH_PALETTES_DIRECTORY + "default.txt");
+    for (unsigned int i = 0; i < m_palette->GetItemCount(); ++i)
+    {
+        m_palette->GetItem(i)->Bind(wxEVT_LEFT_DOWN, &PaletteFrame::OnPaletteItemLeftMouseButtonClicked, this);
+        m_palette->GetItem(i)->Bind(wxEVT_RIGHT_DOWN, &PaletteFrame::OnPaletteItemRightMouseButtonClicked, this);
+    }
+
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(m_colorPicker, 1, wxALIGN_CENTER_HORIZONTAL);
     sizer->AddSpacer(20);
-    sizer->Add(opacitySizer);
+    sizer->Add(opacitySizer, 0, wxALIGN_CENTER_HORIZONTAL);
+    sizer->AddSpacer(20);
+    sizer->Add(m_palette);
 
     SetSizerAndFit(sizer);
 }
@@ -50,4 +61,14 @@ void PaletteFrame::OnOpacityTextChanged(wxCommandEvent &event)
     long newValue;
     newText.ToLong(&newValue);
     m_opacitySlider->SetValue(newValue);
+}
+
+void PaletteFrame::OnPaletteItemLeftMouseButtonClicked(wxMouseEvent &event)
+{
+    m_colorPicker->SetColour(m_palette->GetItemColor(event.GetId()));
+}
+
+void PaletteFrame::OnPaletteItemRightMouseButtonClicked(wxMouseEvent &event)
+{
+    m_palette->SetItemColor(event.GetId(), m_colorPicker->GetColour());
 }

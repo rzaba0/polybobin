@@ -13,6 +13,7 @@ const unsigned int WINDOW_HEIGHT = 480;
 const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
                PATH_GFX_SELECTION_GRID = wxT("../gfx/selectiongrid.png"),
                PATH_GFX_SPAWNPOINTS = wxT("../gfx/spawnpoints.png"),
+               PATH_PALETTES_DIRECTORY = wxT("../palettes/"),
                PATH_SETTINGS = wxT("settings.ini");
 
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
