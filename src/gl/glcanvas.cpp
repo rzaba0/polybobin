@@ -16,7 +16,6 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     m_newPolygonType = ptNORMAL;
     m_movingSelected = false;
 
-    Bind(wxEVT_MOTION, &GLCanvas::OnMouseMotion, this);
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
     Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
     Bind(wxEVT_SIZE, &GLCanvas::OnResize, this);
@@ -33,7 +32,8 @@ void GLCanvas::SetDisplaySetting(int setting, bool display)
     Refresh();
 }
 
-void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId)
+void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
+                                          wxColor selectedColor)
 {
     m_mousePositionOnCanvas = mousePositionOnCanvas;
     m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
@@ -42,7 +42,7 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
     {
         case ID_TOOL_CREATE_POLYGON:
             {
-                PMSVertex vertex = CreateVertexOnMouse();
+                PMSVertex vertex = CreateVertexOnMouse(selectedColor);
                 if (m_addedPolygonVerticesCount == 0)
                 {
                     PMSVector perpendicular;
@@ -190,52 +190,7 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
     }
 }
 
-void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
-{
-    switch (selectedToolId)
-    {
-        case ID_TOOL_CREATE_POLYGON:
-            wxMenu *newPolygonTypeSelection = new wxMenu();
-            for (unsigned int i = 0; i < POLYGON_TYPES_COUNT; ++i)
-            {
-                newPolygonTypeSelection->AppendCheckItem(ID_POLYGON_TYPE_NORMAL + i, POLYGON_TYPES_NAMES[i]);
-            }
-            newPolygonTypeSelection->Bind(wxEVT_MENU, &GLCanvas::OnNewPolygonTypeSelected, this);
-            newPolygonTypeSelection->Check(ID_POLYGON_TYPE_NORMAL + (int) m_newPolygonType, true);
-
-            wxWindow::PopupMenu(newPolygonTypeSelection);
-
-            break;
-            
-    }
-}
-
-void GLCanvas::SelectAll()
-{
-    m_selectedPolygons.SelectAll(m_map->GetPolygons().size());
-    m_selectedScenery.SelectAll(m_map->GetSceneryInstances().size());
-    Refresh();
-}
-
-PMSVertex GLCanvas::CreateVertexOnMouse()
-{
-    float textureWidth = (float) m_glManager->GetTextureWidth(),
-        textureHeight = (float) m_glManager->GetTextureHeight();
-
-    PMSVertex vertex;
-    vertex.x = m_mousePositionOnMap.x;
-    vertex.y = m_mousePositionOnMap.y;
-    vertex.z = 1.0f;
-    vertex.rhw = 1.0f;
-    // TODO: color should depend on current choice in color picker.
-    vertex.color = PMSColor();
-    vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
-    vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
-
-    return vertex;
-}
-
-void GLCanvas::OnMouseMotion(wxMouseEvent &event)
+void GLCanvas::HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor)
 {
     wxPoint newMousePositionOnCanvas = event.GetPosition();
 
@@ -302,7 +257,7 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
     if (AddingPolygon())
     {
         unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
-        PMSVertex vertex = CreateVertexOnMouse();
+        PMSVertex vertex = CreateVertexOnMouse(selectedColor);
 
         // Update the positions of the vertices that haven't been set yet.
         for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
@@ -312,6 +267,50 @@ void GLCanvas::OnMouseMotion(wxMouseEvent &event)
 
         Refresh();
     }
+}
+
+void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
+{
+    switch (selectedToolId)
+    {
+        case ID_TOOL_CREATE_POLYGON:
+            wxMenu *newPolygonTypeSelection = new wxMenu();
+            for (unsigned int i = 0; i < POLYGON_TYPES_COUNT; ++i)
+            {
+                newPolygonTypeSelection->AppendCheckItem(ID_POLYGON_TYPE_NORMAL + i, POLYGON_TYPES_NAMES[i]);
+            }
+            newPolygonTypeSelection->Bind(wxEVT_MENU, &GLCanvas::OnNewPolygonTypeSelected, this);
+            newPolygonTypeSelection->Check(ID_POLYGON_TYPE_NORMAL + (int) m_newPolygonType, true);
+
+            wxWindow::PopupMenu(newPolygonTypeSelection);
+
+            break;
+            
+    }
+}
+
+void GLCanvas::SelectAll()
+{
+    m_selectedPolygons.SelectAll(m_map->GetPolygons().size());
+    m_selectedScenery.SelectAll(m_map->GetSceneryInstances().size());
+    Refresh();
+}
+
+PMSVertex GLCanvas::CreateVertexOnMouse(wxColor color)
+{
+    float textureWidth = (float) m_glManager->GetTextureWidth(),
+        textureHeight = (float) m_glManager->GetTextureHeight();
+
+    PMSVertex vertex;
+    vertex.x = m_mousePositionOnMap.x;
+    vertex.y = m_mousePositionOnMap.y;
+    vertex.z = 1.0f;
+    vertex.rhw = 1.0f;
+    vertex.color = PMSColor(color.Red(), color.Green(), color.Blue(), color.Alpha());
+    vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
+    vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
+
+    return vertex;
 }
 
 void GLCanvas::OnMouseWheel(wxMouseEvent &event)

@@ -13,6 +13,7 @@ const unsigned int WINDOW_HEIGHT = 480;
 const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
                PATH_GFX_SELECTION_GRID = wxT("../gfx/selectiongrid.png"),
                PATH_GFX_SPAWNPOINTS = wxT("../gfx/spawnpoints.png"),
+               PATH_PALETTES_DIRECTORY = wxT("../palettes/"),
                PATH_SETTINGS = wxT("settings.ini");
 
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
@@ -33,9 +34,11 @@ enum WxWidgetsId
     ID_MENU_WINDOWS_HIDE_ALL,
     ID_MENU_WINDOWS_SHOW_ALL,
     ID_MENU_WINDOWS_DISPLAY,
+    ID_MENU_WINDOWS_PALETTE,
     ID_MENU_WINDOWS_TOOLBAR,
 
     ID_FRAME_DISPLAY,
+    ID_FRAME_PALETTE,
     ID_FRAME_TOOLBAR,
 
     ID_TOOL_TRANSFORM,
@@ -78,7 +81,9 @@ enum WxWidgetsId
     ID_POLYGON_TYPE_HURTFLAGGERS,
     ID_POLYGON_TYPE_FLAGGERCOLLIDES,
     ID_POLYGON_TYPE_NONFLAGGERCOLLIDES,
-    ID_POLYGON_TYPE_FLAGCOLLIDES
+    ID_POLYGON_TYPE_FLAGCOLLIDES,
+
+    ID_COLOR_PICKER
 };
 
 const unsigned int DISPLAY_SETTINGS_COUNT = 5;

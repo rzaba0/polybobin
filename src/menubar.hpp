@@ -23,6 +23,7 @@ class MenuBar: public wxMenuBar
 
     private:
         wxMenuItem *m_menuItemWindowsDisplay,
+                   *m_menuItemWindowsPalette,
                    *m_menuItemWindowsToolbar;
 
         void CheckAllMenuItems(bool check);

@@ -20,6 +20,8 @@ MenuBar::MenuBar()
     menuWindows->AppendSeparator();
     m_menuItemWindowsDisplay = menuWindows->AppendCheckItem(ID_MENU_WINDOWS_DISPLAY, "Display", "Show/hide display");
     m_menuItemWindowsDisplay->Check(true);
+    m_menuItemWindowsPalette = menuWindows->AppendCheckItem(ID_MENU_WINDOWS_PALETTE, "Palette", "Show/hide palette");
+    m_menuItemWindowsPalette->Check(true);
     m_menuItemWindowsToolbar = menuWindows->AppendCheckItem(ID_MENU_WINDOWS_TOOLBAR, "Toolbar", "Show/hide toolbar");
     m_menuItemWindowsToolbar->Check(true);
 
@@ -38,12 +40,16 @@ void MenuBar::OnFrameClosed(wxCloseEvent &event)
 
     switch (frameId)
     {
-        case ID_FRAME_TOOLBAR:
-            m_menuItemWindowsToolbar->Check(false);
-            break;
-
         case ID_FRAME_DISPLAY:
             m_menuItemWindowsDisplay->Check(false);
+            break;
+
+        case ID_FRAME_PALETTE:
+            m_menuItemWindowsPalette->Check(false);
+            break;
+
+        case ID_FRAME_TOOLBAR:
+            m_menuItemWindowsToolbar->Check(false);
             break;
     }
 
@@ -53,8 +59,9 @@ void MenuBar::OnFrameClosed(wxCloseEvent &event)
 
 void MenuBar::CheckAllMenuItems(bool check)
 {
-    m_menuItemWindowsToolbar->Check(check);
     m_menuItemWindowsDisplay->Check(check);
+    m_menuItemWindowsPalette->Check(check);
+    m_menuItemWindowsToolbar->Check(check);
 }
 
 void MenuBar::OnHideAllWindows(wxCommandEvent &event)

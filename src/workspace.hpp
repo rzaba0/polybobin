@@ -27,7 +27,9 @@ class Workspace: public wxWindow
         wxPoint GetMousePositionOnMap();
 
         void GiveFocusToGLCanvas();
-        void HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId);
+        void HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
+                                                wxColor selectedColor);
+        void HandleGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor);
         void HandleGLCanvasRightMouseButtonRelease(int selectedToolId);
 
         void SaveMapAsPMS(wxString destinationPath);

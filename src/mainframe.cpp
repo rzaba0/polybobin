@@ -23,6 +23,10 @@ MainFrame::MainFrame(Settings *settings)
     // When a checkbox belonging to this frame gets (un)checked, we want to update what is being drawn in the current workspace.
     m_displayFrame->Bind(wxEVT_CHECKBOX, &MainFrame::OnDisplayFrameCheckBoxClicked, this);
 
+    m_paletteFrame = new PaletteFrame(this);
+    m_paletteFrame->Show();
+    m_paletteFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
+
     m_toolbarFrame = new ToolbarFrame(this);
     m_toolbarFrame->Show();
     m_toolbarFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
@@ -80,9 +84,11 @@ void MainFrame::OnDisplayFrameCheckBoxClicked(wxCommandEvent &event)
 
 void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
 {
+    wxColor selectedColor = m_paletteFrame->GetColor();
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
     wxPoint mousePositionOnCanvas = event.GetPosition();
-    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId);
+    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
+                                                          selectedColor);
 }
 
 void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
@@ -93,7 +99,8 @@ void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
     sprintf(statusText, "%d %d", mousePositionOnMap.x, mousePositionOnMap.y);
     SetStatusText(statusText);
 
-    event.Skip();
+    wxColor selectedColor = m_paletteFrame->GetColor();
+    m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
 }
 
 void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)
@@ -156,6 +163,10 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
             m_displayFrame->ToggleVisibility();
             break;
 
+        case ID_MENU_WINDOWS_PALETTE:
+            m_paletteFrame->ToggleVisibility();
+            break;
+
         case ID_MENU_WINDOWS_TOOLBAR:
             m_toolbarFrame->ToggleVisibility();
             break;
@@ -174,5 +185,6 @@ void MainFrame::OnNotebookPageChanged(wxBookCtrlEvent &event)
 void MainFrame::ShowAllMiniFrames(bool show)
 {
     m_displayFrame->Show(show);
+    m_paletteFrame->Show(show);
     m_toolbarFrame->Show(show);
 }
