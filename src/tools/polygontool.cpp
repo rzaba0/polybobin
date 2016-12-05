@@ -67,7 +67,7 @@ void PolygonTool::OnCanvasMouseMotion(const wxMouseEvent &event)
     }
 }
 
-void PolygonTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
+void PolygonTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 {
     wxMenu *newPolygonTypeSelection = new wxMenu();
     for (unsigned int i = 0; i < POLYGON_TYPES_COUNT; ++i)
@@ -77,6 +77,10 @@ void PolygonTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
     newPolygonTypeSelection->Bind(wxEVT_MENU, &PolygonTool::OnNewPolygonTypeSelected, this);
     newPolygonTypeSelection->Check(ID_POLYGON_TYPE_NORMAL + (int)m_newPolygonType, true);
     m_canvas.PopupMenu(newPolygonTypeSelection);
+}
+
+void OnCanvasKeyPress(const wxKeyEvent &event)
+{
 }
 
 void PolygonTool::OnTimerTick()

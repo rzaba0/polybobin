@@ -33,6 +33,20 @@ void GLPolygons::EditPolygonVertex(unsigned int polygonIndex, unsigned int verte
     glBufferSubData(GL_ARRAY_BUFFER, offset, GL_POLYGON_VERTEX_SIZE_BYTES, glVertex);
 }
 
+void GLPolygons::ResetPolygons(wxVector<PMSPolygon> polygons)
+{
+    wxVector<GLfloat> vertices;
+    GenerateGLBufferVertices(polygons, vertices);
+    m_polygonsCount = polygons.size();
+
+    if (vertices.size() > 0)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+            GL_POLYGON_VERTEX_SIZE_BYTES * MAX_POLYGONS_COUNT * GL_POLYGON_VERTICES_COUNT, &vertices[0]);
+    }
+}
+
 unsigned int GLPolygons::GetTextureWidth()
 {
     return m_textureWidth;
@@ -129,44 +143,9 @@ void GLPolygons::SetupTexture(wxString texturesDirectoryPath, wxString textureFi
 void GLPolygons::SetupVAO(wxVector<PMSPolygon> polygons)
 {
     wxVector<GLfloat> vertices;
+    GenerateGLBufferVertices(polygons, vertices);
     m_polygonsCount = polygons.size();
-    unsigned int i, j;
 
-    // Trim down polygons' count.
-    if (m_polygonsCount > MAX_POLYGONS_COUNT)
-    {
-        m_polygonsCount = MAX_POLYGONS_COUNT;
-    }
-
-    for (i = 0; i < m_polygonsCount; ++i)
-    {
-        for (j = 0; j < 3; ++j)
-        {
-            vertices.push_back((GLfloat)polygons[i].vertices[j].x);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].y);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].z);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].color.red / 255.0);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].color.green / 255.0);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].color.blue / 255.0);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].color.alpha / 255.0);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].textureS);
-            vertices.push_back((GLfloat)polygons[i].vertices[j].textureT);
-        }
-    }
-
-    // Initialization of unused polygons.
-    for (i = 0; i < MAX_POLYGONS_COUNT - m_polygonsCount; ++i)
-    {
-        for (j = 0; j < 3; ++j)
-        {
-            for (unsigned int k = 0; k < GL_POLYGON_VERTEX_SIZE; ++k)
-            {
-                vertices.push_back(0.0f);
-            }
-        }
-    }
-
-    //GLuint vbo;
     glGenBuffers(1, &m_vbo);
     glGenVertexArrays(1, &m_vao);
 
@@ -188,4 +167,44 @@ void GLPolygons::SetupVAO(wxVector<PMSPolygon> polygons)
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, GL_POLYGON_VERTEX_SIZE_BYTES, (GLvoid*)(7 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
+}
+
+void GLPolygons::GenerateGLBufferVertices(wxVector<PMSPolygon> &polygons, wxVector<GLfloat> &vertices)
+{
+    unsigned int polygonsCount = polygons.size();
+    unsigned int i, j;
+
+    // Trim down polygons' count.
+    if (polygonsCount > MAX_POLYGONS_COUNT)
+    {
+        polygonsCount = MAX_POLYGONS_COUNT;
+    }
+
+    for (i = 0; i < polygonsCount; ++i)
+    {
+        for (j = 0; j < 3; ++j)
+        {
+            vertices.push_back((GLfloat)polygons[i].vertices[j].x);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].y);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].z);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].color.red / 255.0);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].color.green / 255.0);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].color.blue / 255.0);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].color.alpha / 255.0);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].textureS);
+            vertices.push_back((GLfloat)polygons[i].vertices[j].textureT);
+        }
+    }
+
+    // Initialization of unused polygons.
+    for (i = 0; i < MAX_POLYGONS_COUNT - polygonsCount; ++i)
+    {
+        for (j = 0; j < 3; ++j)
+        {
+            for (unsigned int k = 0; k < GL_POLYGON_VERTEX_SIZE; ++k)
+            {
+                vertices.push_back(0.0f);
+            }
+        }
+    }
 }

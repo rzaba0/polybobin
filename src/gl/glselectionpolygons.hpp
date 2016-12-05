@@ -15,6 +15,7 @@ class GLSelectionPolygons: GLObject
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex newVertex);
+        void ResetPolygons(wxVector<PMSPolygon> polygons);
         void ApplySelection(const PolygonSelection& selectedPolygons);
         void RenderSelected(const glm::mat4& transform, const PolygonSelection& selectedPolygonsIds);
         using GLObject::SetupShaderProgram;
@@ -33,4 +34,6 @@ class GLSelectionPolygons: GLObject
         static constexpr int GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES = GL_SELECTION_POLYGON_VERTEX_SIZE * sizeof(GLfloat);
         static constexpr int GL_SELECTION_POLYGON_VERTICES_COUNT = 3;
         static constexpr GLfloat GL_SELECTION_ALPHA = 0.6f;
+
+        void GenerateGLBufferVertices(wxVector<PMSPolygon> &polygons, wxVector<GLfloat> &vertices);
 };

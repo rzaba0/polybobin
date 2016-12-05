@@ -52,7 +52,11 @@ void VertexSelectionTool::OnCanvasMouseMotion(const wxMouseEvent &event)
     m_mousePositionOnMap = m_canvas.GetMousePositionOnMap(event.GetPosition());
 }
 
-void VertexSelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
+void VertexSelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
+{
+}
+
+void OnCanvasKeyPress(const wxKeyEvent &event)
 {
 }
 

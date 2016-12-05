@@ -35,10 +35,13 @@ class GLManager
 
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex vertex);
+
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
         void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint);
 
         void ResetSpawnPoints(wxVector<PMSSpawnPoint> spawnPoints);
+        void ResetPolygons(wxVector<PMSPolygon> polygons);
+        void ResetSceneries(wxVector<PMSScenery> sceneryInstances);
 
         void ApplyPolygonSelection(const PolygonSelection& selectedPolygons);
 
@@ -62,7 +65,7 @@ class GLManager
         bool m_glReady;
         Map &m_map;
         Settings m_settings;
-        
+
         GLBackground m_glBackground;
         GLPolygons m_glPolygons;
         GLScenery m_glScenery;

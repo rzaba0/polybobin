@@ -29,7 +29,9 @@ class Map
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
         void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint);
 
+        void RemovePolygons(wxVector<unsigned int> polygonIndexes);
         void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes);
+        void RemoveSceneries(wxVector<unsigned int> sceneryIndexes);
 
         void SaveMapAsPMS(const wxString& destinationPath);
 

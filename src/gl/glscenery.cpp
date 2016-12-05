@@ -8,6 +8,30 @@ void GLScenery::EditScenery(unsigned int sceneryIndex, PMSScenery newScenery)
     m_sceneryInstances[sceneryIndex] = newScenery;
 }
 
+void GLScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)
+{
+    m_sceneryInstances = sceneryInstances;
+
+    int sceneryInstancesCount = sceneryInstances.size();
+
+    wxVector<GLfloat> vertices;
+    wxVector<GLuint> indices;
+
+    GenerateGLBufferVertices(sceneryInstances, vertices);
+    GenerateGLBufferIndices(sceneryInstances, indices);
+
+    if (vertices.size() > 0)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0], GL_STATIC_DRAW);
+    }
+    if (indices.size() > 0)
+    {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0], GL_STATIC_DRAW);
+    }
+}
+
 void GLScenery::Render(glm::mat4 transform, PMSSceneryLevel targetLevel)
 {
     m_shaderProgram.Use();
@@ -96,9 +120,44 @@ void GLScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
 {
     m_sceneryInstances = sceneryInstances;
 
+    int sceneryInstancesCount = sceneryInstances.size();
+
     wxVector<GLfloat> vertices;
-    int sceneryInstancesCount = sceneryInstances.size(), i, j;
     wxVector<GLuint> indices;
+
+    GenerateGLBufferVertices(sceneryInstances, vertices);
+    GenerateGLBufferIndices(sceneryInstances, indices);
+
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ebo);
+
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+        if (vertices.size() > 0)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0], GL_STATIC_DRAW);
+        }
+        if (indices.size() > 0)
+        {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0], GL_STATIC_DRAW);
+        }
+
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+        glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(2);
+    glBindVertexArray(0);
+}
+
+void GLScenery::GenerateGLBufferVertices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLfloat> &vertices)
+{
+    unsigned int sceneryInstancesCount = sceneryInstances.size(), i, j;
 
     for (i = 0; i < sceneryInstancesCount; ++i)
     {
@@ -132,7 +191,15 @@ void GLScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
         vertices[i*8*4+25] = sceneryInstances[i].height;
         vertices[i*8*4+30] = 1.0f;
         vertices[i*8*4+31] = 1.0f;
+    }
+}
 
+void GLScenery::GenerateGLBufferIndices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLuint> &indices)
+{
+    unsigned int sceneryInstancesCount = sceneryInstances.size(), i;
+
+    for (i = 0; i < sceneryInstancesCount; ++i)
+    {
         indices.push_back(i*4+0);
         indices.push_back(i*4+1);
         indices.push_back(i*4+2);
@@ -140,31 +207,4 @@ void GLScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
         indices.push_back(i*4+3);
         indices.push_back(i*4+2);
     }
-
-    GLuint vbo, ebo;
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
-
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
-        if (vertices.size() > 0)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0], GL_STATIC_DRAW);
-        }
-        if (indices.size() > 0)
-        {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0], GL_STATIC_DRAW);
-        }
-
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-        glEnableVertexAttribArray(1);
-
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-        glEnableVertexAttribArray(2);
-    glBindVertexArray(0);
 }

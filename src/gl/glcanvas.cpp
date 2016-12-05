@@ -24,6 +24,7 @@ GLCanvas::GLCanvas(wxWindow *parent,
 {
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
+
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
     Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
     Bind(wxEVT_SIZE, &GLCanvas::OnResize, this);
@@ -34,6 +35,12 @@ int GLCanvas::AddPolygon(PMSPolygon polygon, PMSVertex firstVertex)
     auto id = m_map.AddPolygon(polygon);
     m_glManager.AddPolygon(polygon.polygonType, firstVertex);
     return id;
+}
+
+void GLCanvas::RemovePolygons(const wxVector<unsigned int> &polygons)
+{
+    m_map.RemovePolygons(polygons);
+    m_glManager.ResetPolygons(m_map.GetPolygons());
 }
 
 int GLCanvas::AddSpawnPoint(PMSSpawnPoint spawnPoint)
@@ -67,6 +74,12 @@ const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
     return m_map.GetPolygons()[polygonIndex];
 }
 
+void GLCanvas::RemoveSceneries(const wxVector<unsigned int> &sceneries)
+{
+    m_map.RemoveSceneries(sceneries);
+    m_glManager.ResetSceneries(m_map.GetSceneryInstances());
+}
+
 void GLCanvas::PopupMenu(wxMenu* menu)
 {
     wxWindow::PopupMenu(menu);
@@ -92,6 +105,10 @@ void GLCanvas::HandleMouseMotion(const wxMouseEvent &event)
 }
 
 void GLCanvas::HandleRightMouseButtonRelease(const wxMouseEvent &event)
+{
+}
+
+void GLCanvas::HandleKeyPress(const wxKeyEvent &event)
 {
 }
 

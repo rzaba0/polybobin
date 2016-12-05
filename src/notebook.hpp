@@ -23,7 +23,7 @@ class Notebook: public wxNotebook
     public:
         Notebook(wxWindow *parent, MainFrame& mainFrame);
         void AddWorkspace(Settings settings, wxString mapPath);
-       
+
         const DisplaySettings& GetCurrentDisplaySettings();
         GLCanvas& GetCurrentGLCanvas();
         Map& GetCurrentMap();

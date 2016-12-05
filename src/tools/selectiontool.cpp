@@ -45,8 +45,16 @@ void SelectionTool::OnCanvasMouseMotion(const wxMouseEvent &event)
     m_mousePositionOnMap = m_canvas.GetMousePositionOnMap(event.GetPosition());
 }
 
-void SelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
+void SelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 {
+}
+
+void OnCanvasKeyPress(const wxKeyEvent &event)
+{
+    if (event.GetUnicodeKey() == REMOVE_SELECTED_KEY)
+    {
+        m_selectionManager.RemoveSelection();
+    }
 }
 
 void SelectionTool::OnTimerTick()
