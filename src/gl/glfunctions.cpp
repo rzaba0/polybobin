@@ -14,8 +14,23 @@
         #undef WIN32_LEAN_AND_MEAN
         #undef LE_ME_ISDEF
     #endif
+
+	HMODULE dll_handle = NULL;
+
+	void* glGetProcAddress(const char* functionName)
+	{
+		void* result = (void*)wglGetProcAddress(functionName);
+		if (result) return result;
+		return GetProcAddress(dll_handle, functionName);
+	}
+
+	void glWinInit()
+	{
+		dll_handle = LoadLibraryA("opengl32.dll");
+	}
+
     //our macro
-    #define MyGetProcAddress(name) wglGetProcAddress((LPCSTR)name)
+    #define MyGetProcAddress(name) glGetProcAddress((LPCSTR)name)
 #else //Linux
     //GLX_ARB_get_proc_address
     //glXGetProcAddressARB is statically exported by all libGL implementations,
@@ -92,6 +107,9 @@ bool InitGLPointers()
 #ifdef __APPLE__
     return true;
 #else
+#if defined(_WIN32) || defined(__WIN32__)
+	glWinInit();
+#endif
     GETANDTEST(PFNGLACTIVETEXTUREPROC, glActiveTexture)
     GETANDTEST(PFNGLATTACHSHADERPROC, glAttachShader)
     GETANDTEST(PFNGLBINDATTRIBLOCATIONPROC, glBindAttribLocation)
