@@ -5,14 +5,14 @@ ToolbarFrame::ToolbarFrame(wxWindow *parent)
     : MiniFrame(parent, ID_FRAME_TOOLBAR, "Toolbar", wxDefaultPosition, wxDefaultSize)
 {
     wxImage::AddHandler(new wxPNGHandler);
-    wxImage *toolsImage = new wxImage(PATH_GFX_TOOLS, wxBITMAP_TYPE_PNG);
+    wxImage toolsImage(PATH_GFX_TOOLS, wxBITMAP_TYPE_PNG);
 
     wxGridSizer *gridSizer = new wxGridSizer(TOOLBAR_COLUMNS_COUNT);
 
     wxBitmap tmpBitmap;
     for (int i = 0; i < TOOLBAR_TOOLS_COUNT; ++i)
     {
-        tmpBitmap = wxBitmap(toolsImage->GetSubImage(wxRect(0, i * TOOLBAR_TILE_HEIGHT,
+        tmpBitmap = wxBitmap(toolsImage.GetSubImage(wxRect(0, i * TOOLBAR_TILE_HEIGHT,
                                                             TOOLBAR_TILE_WIDTH, TOOLBAR_TILE_HEIGHT)));
 
         // ID_TOOL_TRANSFORM is the first, so we use it as reference.
