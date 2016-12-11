@@ -15,21 +15,21 @@
         #undef LE_ME_ISDEF
     #endif
 
-	HMODULE dll_handle = NULL;
+    //Fix for some Windows devices
+    HMODULE glDllHandle = NULL;
+    void* glGetProcAddress(const char* functionName)
+    {
+        void* result = (void*)wglGetProcAddress(functionName);
+        return result
+            ? result
+            : GetProcAddress(glDllHandle, functionName);
+    }
 
-	void* glGetProcAddress(const char* functionName)
-	{
-		void* result = (void*)wglGetProcAddress(functionName);
-		if (result) return result;
-		return GetProcAddress(dll_handle, functionName);
-	}
+    void glWinInit()
+    {
+        glDllHandle = LoadLibraryA("opengl32.dll");
+    }
 
-	void glWinInit()
-	{
-		dll_handle = LoadLibraryA("opengl32.dll");
-	}
-
-    //our macro
     #define MyGetProcAddress(name) glGetProcAddress((LPCSTR)name)
 #else //Linux
     //GLX_ARB_get_proc_address
@@ -108,7 +108,7 @@ bool InitGLPointers()
     return true;
 #else
 #if defined(_WIN32) || defined(__WIN32__)
-	glWinInit();
+    glWinInit();
 #endif
     GETANDTEST(PFNGLACTIVETEXTUREPROC, glActiveTexture)
     GETANDTEST(PFNGLATTACHSHADERPROC, glAttachShader)
