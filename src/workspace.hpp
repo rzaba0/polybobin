@@ -9,6 +9,7 @@
 #include "gl/glcanvas.hpp"
 #include "map/map.hpp"
 #include "settings.hpp"
+#include <memory>
 
 /**
  * \brief Represents a page inside our Notebook class.
@@ -18,7 +19,7 @@ class Workspace: public wxWindow
 {
     public:
         Workspace(wxWindow *notebook, Settings settings, wxString mapPath);
-        ~Workspace();
+		~Workspace() = default;
 
         DisplaySettings GetDisplaySettings();
         void SetDisplaySetting(int setting, bool display);
@@ -38,7 +39,7 @@ class Workspace: public wxWindow
 
     private:
         GLCanvas *m_glCanvas;
-        Map *m_map;
+        std::unique_ptr<Map> m_map;
 };
 
 #endif

@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c --std=c++11 -Wall
+CFLAGS=-c --std=c++14 -Wall
 
 # The flags below have to be used after specifying source file.
 WXCONFIG_FLAGS=`wx-config --cxxflags --libs all`

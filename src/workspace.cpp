@@ -11,20 +11,15 @@ Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
     bool accepted = wxGLCanvas::IsDisplaySupported(glCanvasAttributes);
     if (!accepted)
     {
-        throw (wxString) wxT("OpenGL display attributes are not supported. The program will quit now.");
+        throw std::runtime_error("OpenGL display attributes are not supported. The program will quit now.");
     }
 
-    m_map = new Map(mapPath);
+    m_map = std::make_unique<Map>(mapPath);
 
-    m_glCanvas = new GLCanvas(this, settings, glCanvasAttributes, m_map);
+    m_glCanvas = new GLCanvas(this, settings, glCanvasAttributes, *m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
-}
-
-Workspace::~Workspace()
-{
-    delete m_map;
 }
 
 DisplaySettings Workspace::GetDisplaySettings()

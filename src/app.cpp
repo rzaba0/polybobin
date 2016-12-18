@@ -14,9 +14,9 @@ bool Polybobin::OnInit()
     {
         m_settings->LoadSettingsFromFile();
     }
-    catch (wxString errorMessage)
+    catch (const std::exception& error)
     {
-        wxMessageBox(errorMessage, wxT("Settings"));
+        wxMessageBox(error.what(), "Settings");
     }
 
     MainFrame *frame = new MainFrame(m_settings);

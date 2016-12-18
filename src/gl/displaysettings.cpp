@@ -1,11 +1,9 @@
 #include "displaysettings.hpp"
+#include <algorithm>
 
 DisplaySettings::DisplaySettings()
 {
-    for (unsigned int i = 0; i < DISPLAY_SETTINGS_COUNT; ++i)
-    {
-        m_settings[i] = true;
-    }
+    std::fill(m_settings, m_settings + DISPLAY_SETTINGS_COUNT, true);
 }
 
 void DisplaySettings::SetDisplaySetting(int setting, bool display)

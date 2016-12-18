@@ -28,12 +28,12 @@ class Camera
          */
         float m_zoom;
 
-        static constexpr float EPSILON = 0.000001;
+        static constexpr float EPSILON = 0.000001f;
 
-        static constexpr float ZOOM_DELTA = 10.0;
+        static constexpr float ZOOM_DELTA = 10.0f;
 
-        static constexpr float ZOOM_LOWER_BOUND = -500.0;
-        static constexpr float ZOOM_UPPER_BOUND = 100.0;
+        static constexpr float ZOOM_LOWER_BOUND = -500.0f;
+        static constexpr float ZOOM_UPPER_BOUND = 100.0f;
 };
 
 #endif

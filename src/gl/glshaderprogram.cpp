@@ -1,4 +1,5 @@
 #include "glshaderprogram.hpp"
+#include <system_error>
 
 void GLShaderProgram::AddShader(GLenum type, const GLchar *code)
 {
@@ -13,25 +14,23 @@ GLuint GLShaderProgram::GetUniformLocation(const GLchar *name)
 
 void GLShaderProgram::Init()
 {
-    wxVector<GLShader>::iterator it;
-    
-    for (it = m_shaders.begin(); it != m_shaders.end(); ++it)
+    for (auto& shader : m_shaders)
     {
-        it->Create();
-        it->Compile();
+        shader.Create();
+        shader.Compile();
     }
     
     m_id = glCreateProgram();
-    for (it = m_shaders.begin(); it != m_shaders.end(); ++it)
+    for (auto& shader : m_shaders)
     {
-        glAttachShader(m_id, it->GetId());
+        glAttachShader(m_id, shader.GetId());
     }
     
     Link();
     
-    for (it = m_shaders.begin(); it != m_shaders.end(); ++it)
+    for (auto& shader : m_shaders)
     {
-        it->Delete();
+        shader.Delete();
     }
 }
 
@@ -56,8 +55,6 @@ void GLShaderProgram::Link()
     if (!success)
     {
         glGetProgramInfoLog(m_id, sizeof(infoLog), NULL, infoLog);
-        wxString errorMessage = "An error occurred when linking an OpenGL shader program:\n"+
-                                wxString(infoLog);
-        throw errorMessage;
+        throw std::runtime_error("An error occurred when linking an OpenGL shader program : \n" + std::string(infoLog));
     }
 }

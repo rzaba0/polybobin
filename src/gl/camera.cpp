@@ -1,10 +1,7 @@
 #include "camera.hpp"
 
-Camera::Camera()
+Camera::Camera(): m_x(), m_y(), m_zoom()
 {
-    m_x = 0.0;
-    m_y = 0.0;
-    m_zoom = 0.0f;
 }
 
 bool Camera::CanZoomIn()

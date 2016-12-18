@@ -66,7 +66,7 @@ struct PMSPolygon
      * \brief Checks if the vertices are arranged in clock-wise order.
      * http://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
      */
-    bool AreVerticesClockwise()
+    bool AreVerticesClockwise() const
     {
         float sum = 0.0f;
 
@@ -87,7 +87,7 @@ struct PMSPolygon
     /**
      * \brief Checks if the point at given coordinates is inside the polygon.
      */
-    bool Contains(float x, float y)
+    bool Contains(float x, float y) const
     {
         bool b1, b2, b3;
 
@@ -122,7 +122,7 @@ struct PMSScenery
     /**
      * \brief Checks if the point at given coordinates is inside the scenery.
      */
-    bool Contains(float x, float y)
+    bool Contains(float x, float y) const
     {
         float rectX[4], rectY[4];
 

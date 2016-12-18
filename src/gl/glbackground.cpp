@@ -45,7 +45,6 @@ void GLBackground::SetupShaderProgram()
 void GLBackground::SetupVAO(PMSColor backgroundTopColor, PMSColor backgroundBottomColor,
                             float *backgroundSquareBoundaries)
 {
-    int i;
     GLfloat vertices[GL_BACKGROUND_VERTICES_COUNT][GL_BACKGROUND_VERTEX_SIZE];
     SetupVerticesArray(vertices, backgroundTopColor, backgroundBottomColor, backgroundSquareBoundaries);
 

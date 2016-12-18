@@ -3,6 +3,8 @@
 
 #include "glfunctions.hpp"
 #include <wx/string.h>
+#include <memory>
+#include <vector>
 
 /**
  * \brief Helper class for drawing images from files.
@@ -10,10 +12,9 @@
 class Image
 {
     public:
-        ~Image();
-        GLubyte *GetData()
+        const GLubyte* GetData() const
         {
-            return m_data;
+            return m_data.data();
         }
 
         int GetWidth()
@@ -34,7 +35,7 @@ class Image
         void OpenAndResize(wxString path);
 
     private:
-        GLubyte *m_data = NULL;
+        std::vector<GLubyte> m_data;
         bool m_hasAlpha;
         int m_width, m_height;
 };

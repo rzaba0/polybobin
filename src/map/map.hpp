@@ -49,6 +49,11 @@ class Map
             return m_polygons;
         }
 
+        const wxVector<PMSPolygon>& GetPolygons() const
+        {
+            return m_polygons;
+        }
+
         unsigned int GetPolygonsCount()
         {
             return m_polygons.size();
@@ -59,12 +64,27 @@ class Map
             return m_sceneryInstances;
         }
 
+        const wxVector<PMSScenery>& GetSceneryInstances() const
+        {
+            return m_sceneryInstances;
+        }
+
         wxVector<PMSSceneryType> GetSceneryTypes()
         {
             return m_sceneryTypes;
         }
 
+        const wxVector<PMSSceneryType>& GetSceneryTypes() const
+        {
+            return m_sceneryTypes;
+        }
+
         wxVector <PMSSpawnPoint> GetSpawnPoints()
+        {
+            return m_spawnPoints;
+        }
+
+        const wxVector <PMSSpawnPoint> GetSpawnPoints() const 
         {
             return m_spawnPoints;
         }

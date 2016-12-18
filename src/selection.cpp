@@ -1,16 +1,9 @@
 #include "selection.hpp"
+#include <algorithm>
 
 bool Selection::IsSelected(unsigned int id)
 {
-    for (unsigned int i = 0; i < m_selectedIds.size(); ++i)
-    {
-        if (m_selectedIds[i] == id)
-        {
-            return true;
-        }
-    }
-
-    return false;
+	return (std::find(m_selectedIds.begin(), m_selectedIds.end(), id) != m_selectedIds.end());
 }
 
 void Selection::Select(unsigned int id)
@@ -21,7 +14,7 @@ void Selection::Select(unsigned int id)
 void Selection::SelectAll(unsigned int elementsCount)
 {
     UnselectAll();
-
+    m_selectedIds.reserve(elementsCount);
     for (unsigned int i = 0; i < elementsCount; ++i)
     {
         m_selectedIds.push_back(i);
@@ -30,14 +23,7 @@ void Selection::SelectAll(unsigned int elementsCount)
 
 void Selection::Unselect(unsigned int id)
 {
-    for (unsigned int i = 0; i < m_selectedIds.size(); ++i)
-    {
-        if (m_selectedIds[i] == id)
-        {
-            m_selectedIds.erase(m_selectedIds.begin() + i);
-            return;
-        }
-    }
+    m_selectedIds.erase(std::remove(m_selectedIds.begin(), m_selectedIds.end(), id), m_selectedIds.end());
 }
 
 void Selection::UnselectAll()
