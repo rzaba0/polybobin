@@ -72,3 +72,13 @@ void Workspace::SelectAll()
 {
     m_glCanvas->SelectAll();
 }
+
+void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
+{
+    m_glCanvas->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
+}
+
+void Workspace::SetPolygonsTexture(wxString textureFilename)
+{
+    m_glCanvas->SetPolygonsTexture(textureFilename);
+}

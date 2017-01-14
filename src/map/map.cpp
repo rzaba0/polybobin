@@ -88,6 +88,7 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     file.Write(m_description, m_descriptionLength * sizeof(char));
     file.Write(filler, (DESCRIPTION_MAX_LENGTH - m_descriptionLength) * sizeof(char));
 
+    m_textureNameLength = strlen(m_textureName);
     file.Write(&m_textureNameLength, sizeof(m_textureNameLength));
     file.Write(m_textureName, m_textureNameLength * sizeof(char));
     file.Write(filler, (TEXTURE_NAME_MAX_LENGTH - m_textureNameLength) * sizeof(char));

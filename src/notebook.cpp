@@ -36,6 +36,11 @@ GLCanvas *Notebook::GetCurrentGLCanvas()
     return GetCurrentWorkspace()->GetGLCanvas();
 }
 
+Map *Notebook::GetCurrentMap()
+{
+    return GetCurrentWorkspace()->GetMap();
+}
+
 wxPoint Notebook::GetCurrentMousePositionOnMap()
 {
     return GetCurrentWorkspace()->GetMousePositionOnMap();
@@ -66,6 +71,16 @@ void Notebook::SaveCurrentMapAsPMS(wxString destinationPath)
 void Notebook::SelectAll()
 {
     GetCurrentWorkspace()->SelectAll();
+}
+
+void Notebook::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
+{
+    GetCurrentWorkspace()->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
+}
+
+void Notebook::SetPolygonsTexture(wxString textureFilename)
+{
+    GetCurrentWorkspace()->SetPolygonsTexture(textureFilename);
 }
 
 Workspace *Notebook::GetCurrentWorkspace()

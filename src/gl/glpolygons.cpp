@@ -53,6 +53,21 @@ void GLPolygons::Render(glm::mat4 transform)
     glBindVertexArray(0);
 }
 
+void GLPolygons::ReplaceTexture(wxString texturesDirectoryPath, wxString textureFilename)
+{
+    Image textureImage;
+    textureImage.OpenAndResize(texturesDirectoryPath + textureFilename);
+    m_textureWidth = (unsigned int) textureImage.GetWidth();
+    m_textureHeight = (unsigned int) textureImage.GetHeight();
+
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    GLint format = textureImage.HasAlpha() ? GL_RGBA : GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, format,
+                 m_textureWidth, m_textureHeight,
+                 0, format, GL_UNSIGNED_BYTE, textureImage.GetData());
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void GLPolygons::SetupShaderProgram()
 {
     const GLchar *vertexShaderSource =

@@ -8,8 +8,9 @@
 #include <wx/notebook.h>
 #include "gl/glcanvas.hpp"
 #include "gl/displaysettings.hpp"
-#include "workspace.hpp"
+#include "map/map.hpp"
 #include "settings.hpp"
+#include "workspace.hpp"
 
 /**
  * \brief Represents a notebook with multiple pages/tabs. In our notebook, pages
@@ -25,6 +26,7 @@ class Notebook: public wxNotebook
         void SetCurrentDisplaySetting(int setting, bool display);
 
         GLCanvas *GetCurrentGLCanvas();
+        Map *GetCurrentMap();
         wxPoint GetCurrentMousePositionOnMap();
 
         void HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
@@ -35,6 +37,9 @@ class Notebook: public wxNotebook
         void SaveCurrentMapAsPMS(wxString destinationPath);
 
         void SelectAll();
+
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
+        void SetPolygonsTexture(wxString textureFilename);
 
     private:
         Workspace *GetCurrentWorkspace();

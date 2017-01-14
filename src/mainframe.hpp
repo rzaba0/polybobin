@@ -6,6 +6,7 @@
     #include <wx/wx.h>
 #endif
 #include <wx/preferences.h>
+#include "mapsettingsdialog.hpp"
 #include "miniframes/displayframe.hpp"
 #include "miniframes/paletteframe.hpp"
 #include "miniframes/toolbarframe.hpp"
@@ -23,6 +24,8 @@ class MainFrame: public wxFrame
         ~MainFrame();
 
     private:
+        MapSettingsDialog *m_mapSettingsDialog;
+
         DisplayFrame *m_displayFrame;
         PaletteFrame *m_paletteFrame;
         ToolbarFrame *m_toolbarFrame;
@@ -33,12 +36,14 @@ class MainFrame: public wxFrame
 
         void AddWorkspace(wxString mapPath);
 
+        void OnBackgroundColorChanged(wxColourPickerEvent &event);
         void OnDisplayFrameCheckBoxClicked(wxCommandEvent &event);
         void OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event);
         void OnGLCanvasMouseMotion(wxMouseEvent &event);
         void OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event);
         void OnMenuBarItemClicked(wxCommandEvent &event);
         void OnNotebookPageChanged(wxBookCtrlEvent &event);
+        void OnPolygonsTextureChanged(wxCommandEvent &event);
 
         void ShowAllMiniFrames(bool show);
 };

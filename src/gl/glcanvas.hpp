@@ -35,6 +35,9 @@ class GLCanvas: public wxGLCanvas
 
         void SelectAll();
 
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
+        void SetPolygonsTexture(wxString textureFilename);
+
     private:
         Camera m_camera;
         DisplaySettings m_displaySettings;

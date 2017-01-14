@@ -296,6 +296,18 @@ void GLCanvas::SelectAll()
     Refresh();
 }
 
+void GLCanvas::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
+{
+    m_glManager->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
+    Refresh();
+}
+
+void GLCanvas::SetPolygonsTexture(wxString textureFilename)
+{
+    m_glManager->SetPolygonsTexture(textureFilename);
+    Refresh();
+}
+
 PMSVertex GLCanvas::CreateVertexOnMouse(wxColor color)
 {
     float textureWidth = (float) m_glManager->GetTextureWidth(),

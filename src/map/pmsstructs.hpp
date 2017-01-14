@@ -35,7 +35,7 @@ struct PMSColor
         red = 255, green = 255, blue = 255, alpha = 255;
     }
 
-    PMSColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+    PMSColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
     {
         red = r, green = g, blue = b, alpha = a;
     }

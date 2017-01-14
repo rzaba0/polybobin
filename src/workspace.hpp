@@ -24,6 +24,7 @@ class Workspace: public wxWindow
         void SetDisplaySetting(int setting, bool display);
 
         GLCanvas *GetGLCanvas() { return m_glCanvas; }
+        Map *GetMap() { return m_map; }
         wxPoint GetMousePositionOnMap();
 
         void GiveFocusToGLCanvas();
@@ -35,6 +36,9 @@ class Workspace: public wxWindow
         void SaveMapAsPMS(wxString destinationPath);
 
         void SelectAll();
+
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
+        void SetPolygonsTexture(wxString textureFilename);
 
     private:
         GLCanvas *m_glCanvas;

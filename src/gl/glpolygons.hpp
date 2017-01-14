@@ -19,6 +19,7 @@ class GLPolygons: GLObject
         unsigned int GetTextureHeight();
 
         void Render(glm::mat4 transform);
+        void ReplaceTexture(wxString texturesDirectoryPath, wxString textureFilename);
         using GLObject::SetupShaderProgram;
         void SetupShaderProgram();
         void SetupTexture(wxString texturesDirectoryPath, wxString textureFilename);

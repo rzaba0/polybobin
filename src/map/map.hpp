@@ -29,50 +29,48 @@ class Map
         
         void SaveMapAsPMS(wxString destinationPath);
 
-        PMSColor GetBackgroundTopColor()
+        PMSColor GetBackgroundBottomColor() { return m_backgroundBottomColor; }
+        void SetBackgroundBottomColor(PMSColor color) { m_backgroundBottomColor = color; }
+
+        PMSColor GetBackgroundTopColor() { return m_backgroundTopColor; }
+        void SetBackgroundTopColor(PMSColor color) { m_backgroundTopColor = color; }
+
+        float *GetBoundaries() { return m_boundariesXY; }
+
+        wxString GetDescription() { return m_description; }
+        void SetDescription(wxString description) { strcpy(m_description, description.c_str()); }
+
+        unsigned char GetGrenadesCount() { return m_grenadesCount; }
+        void SetGrenadesCount(unsigned char grenadesCount) { m_grenadesCount = grenadesCount; }
+
+        int GetJetCount() { return m_jetCount; }
+        void SetJetCount(int jetCount) { m_jetCount = jetCount; }
+
+        unsigned char GetMedikitsCount() { return m_medikitsCount; }
+        void SetMedikitsCount(unsigned char medikitsCount) { m_medikitsCount = medikitsCount; }
+
+        wxVector<PMSPolygon> GetPolygons() { return m_polygons; }
+        unsigned int GetPolygonsCount() { return m_polygons.size(); }
+
+        wxVector<PMSScenery> GetSceneryInstances() { return m_sceneryInstances; }
+        wxVector<PMSSceneryType> GetSceneryTypes() { return m_sceneryTypes; }
+
+        wxVector <PMSSpawnPoint> GetSpawnPoints() { return m_spawnPoints; }
+
+        PMSStepType GetStepType() { return m_stepType; }
+        void SetStepType(PMSStepType stepType) { m_stepType = stepType; }
+
+        char *GetTextureName() { return m_textureName; }
+        void SetTextureName(const char *textureName)
         {
-            return m_backgroundTopColor;
+            if (strlen(textureName) <= TEXTURE_NAME_MAX_LENGTH)
+            {
+                strcpy(m_textureName, textureName);
+            }
         }
 
-        PMSColor GetBackgroundBottomColor()
-        {
-            return m_backgroundBottomColor;
-        }
-
-        float *GetBoundaries()
-        {
-            return m_boundariesXY;
-        }
-
-        wxVector<PMSPolygon> GetPolygons()
-        {
-            return m_polygons;
-        }
-
-        unsigned int GetPolygonsCount()
-        {
-            return m_polygons.size();
-        }
-
-        wxVector<PMSScenery> GetSceneryInstances()
-        {
-            return m_sceneryInstances;
-        }
-
-        wxVector<PMSSceneryType> GetSceneryTypes()
-        {
-            return m_sceneryTypes;
-        }
-
-        wxVector <PMSSpawnPoint> GetSpawnPoints()
-        {
-            return m_spawnPoints;
-        }
-
-        char *GetTextureName()
-        {
-            return m_textureName;
-        }
+        PMSWeatherType GetWeatherType() { return m_weatherType; }
+        void SetWeatherType(PMSWeatherType weatherType) { m_weatherType = weatherType; }
 
         enum MapBoundary
         {

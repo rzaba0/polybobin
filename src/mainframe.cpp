@@ -74,6 +74,12 @@ void MainFrame::AddWorkspace(wxString mapPath)
     m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_MOTION, &MainFrame::OnGLCanvasMouseMotion, this);
 }
 
+void MainFrame::OnBackgroundColorChanged(wxColourPickerEvent &event)
+{
+    m_notebook->SetBackgroundColors(m_mapSettingsDialog->GetBackgroundBottomColor(),
+                                    m_mapSettingsDialog->GetBackgroundTopColor());
+}
+
 void MainFrame::OnDisplayFrameCheckBoxClicked(wxCommandEvent &event)
 {
     int displaySetting = event.GetId();
@@ -145,6 +151,20 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
             m_notebook->SelectAll();
             break;
 
+        case ID_MENU_EDIT_MAP_SETTINGS:
+            {
+                m_mapSettingsDialog = new MapSettingsDialog(this, m_notebook->GetCurrentMap(),
+                                                            m_settings->GetSoldatPath());
+                m_mapSettingsDialog->GetBackgroundBottomColorPicker()->Bind(wxEVT_COLOURPICKER_CHANGED,
+                    &MainFrame::OnBackgroundColorChanged, this);
+                m_mapSettingsDialog->GetBackgroundTopColorPicker()->Bind(wxEVT_COLOURPICKER_CHANGED,
+                    &MainFrame::OnBackgroundColorChanged, this);
+                m_mapSettingsDialog->GetTextureChoice()->Bind(wxEVT_CHOICE,
+                    &MainFrame::OnPolygonsTextureChanged, this);
+                m_mapSettingsDialog->ShowModal();
+            }
+            break;
+
         case ID_MENU_EDIT_PREFERENCES:
             m_preferencesEditor = new wxPreferencesEditor();
             m_preferencesEditor->AddPage(new PreferencesPagePaths(m_settings));
@@ -180,6 +200,12 @@ void MainFrame::OnNotebookPageChanged(wxBookCtrlEvent &event)
 {
     m_displayFrame->UpdateCheckBoxes(m_notebook->GetCurrentDisplaySettings());
     event.Skip();
+}
+
+void MainFrame::OnPolygonsTextureChanged(wxCommandEvent &event)
+{
+    wxString textureFilename = event.GetString();
+    m_notebook->SetPolygonsTexture(textureFilename);
 }
 
 void MainFrame::ShowAllMiniFrames(bool show)

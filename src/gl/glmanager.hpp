@@ -44,6 +44,9 @@ class GLManager
                     Selection selectedPolygons, Selection selectedScenery,
                     bool addingPolygon);
 
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
+        void SetPolygonsTexture(wxString textureFilename);
+
         void SetupShaders();
         void SetupTextures();
         void SetupVertices();

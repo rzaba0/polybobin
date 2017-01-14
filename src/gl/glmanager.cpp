@@ -136,6 +136,18 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
     }
 }
 
+void GLManager::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
+{
+    m_glBackground.UpdateVBO(PMSColor(backgroundTopColor.Red(), backgroundTopColor.Green(), backgroundTopColor.Blue()),
+                             PMSColor(backgroundBottomColor.Red(), backgroundBottomColor.Green(), backgroundBottomColor.Blue()),
+                             m_map->GetBoundaries());
+}
+
+void GLManager::SetPolygonsTexture(wxString textureFilename)
+{
+    m_glPolygons.ReplaceTexture(m_settings.GetSoldatPath() + "textures/", textureFilename);
+}
+
 void GLManager::SetupShaders()
 {
     m_glBackground.SetupShaderProgram();

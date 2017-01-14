@@ -9,6 +9,8 @@ Image::~Image()
 void Image::OpenAndResize(wxString path)
 {
     wxImage image;
+    wxImage::AddHandler(new wxJPEGHandler);
+    wxImage::AddHandler(new wxPNGHandler);
     if (!image.LoadFile(path))
     {
         /**
