@@ -27,7 +27,7 @@
 class GLManager
 {
     public:
-        GLManager(Settings settings, Map& map);
+        GLManager(Settings settings, Map &map);
 
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
@@ -50,7 +50,7 @@ class GLManager
 
     private:
         bool m_glReady;
-        Map& m_map;
+        Map &m_map;
         Settings m_settings;
         
         GLBackground m_glBackground;

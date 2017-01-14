@@ -49,7 +49,7 @@ class Map
             return m_polygons;
         }
 
-        const wxVector<PMSPolygon>& GetPolygons() const
+        const wxVector<PMSPolygon> &GetPolygons() const
         {
             return m_polygons;
         }
@@ -64,7 +64,7 @@ class Map
             return m_sceneryInstances;
         }
 
-        const wxVector<PMSScenery>& GetSceneryInstances() const
+        const wxVector<PMSScenery> &GetSceneryInstances() const
         {
             return m_sceneryInstances;
         }
@@ -74,7 +74,7 @@ class Map
             return m_sceneryTypes;
         }
 
-        const wxVector<PMSSceneryType>& GetSceneryTypes() const
+        const wxVector<PMSSceneryType> &GetSceneryTypes() const
         {
             return m_sceneryTypes;
         }

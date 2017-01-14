@@ -19,7 +19,7 @@ class Workspace: public wxWindow
 {
     public:
         Workspace(wxWindow *notebook, Settings settings, wxString mapPath);
-		~Workspace() = default;
+        ~Workspace() = default;
 
         DisplaySettings GetDisplaySettings();
         void SetDisplaySetting(int setting, bool display);

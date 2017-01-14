@@ -4,13 +4,13 @@
 
 #include "../constants.hpp"
 
-GLManager::GLManager(Settings settings, Map& map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
-                                                                               PMSColor(176, 31, 31, 255),
-                                                                               PMSColor(255, 44, 44, 255)),
-                                                   m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
-                                                                               PMSColor(168, 168, 168, 255),
-                                                                               PMSColor(210, 210, 210, 255)),
-                                                   m_map(map)
+GLManager::GLManager(Settings settings, Map &map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
+                                                                                PMSColor(176, 31, 31, 255),
+                                                                                PMSColor(255, 44, 44, 255)),
+                                                    m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
+                                                                                PMSColor(168, 168, 168, 255),
+                                                                                PMSColor(210, 210, 210, 255)),
+                                                    m_map(map)
 {
     m_glReady = false;
     m_settings = settings;
@@ -114,14 +114,14 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
         m_glOutlineSceneryWireframe.RenderAll(transform);
     }
 
-    const auto& selectedPolygonsIds = selectedPolygons.GetSelectedIds();
+    const auto &selectedPolygonsIds = selectedPolygons.GetSelectedIds();
     if (selectedPolygonsIds.size() > 0)
     {
         m_glOutlinePolygons.RenderSelected(transform, selectedPolygonsIds);
         m_glSelectionPolygons.RenderSelected(transform, selectedPolygonsIds);
     }
 
-	const auto& selectedSceneryIds = selectedScenery.GetSelectedIds();
+    const auto &selectedSceneryIds = selectedScenery.GetSelectedIds();
     if (selectedSceneryIds.size() > 0)
     {
         m_glOutlineScenerySelection.RenderSelected(transform, selectedSceneryIds);

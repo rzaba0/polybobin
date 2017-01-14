@@ -14,10 +14,10 @@ public:
             return m_selectedIds;
         }
 
-		const wxVector<unsigned int>& GetSelectedIds() const
-		{
-			return m_selectedIds;
-		}
+        const wxVector<unsigned int> &GetSelectedIds() const
+        {
+            return m_selectedIds;
+        }
 
         bool IsSelected(unsigned int id);
 

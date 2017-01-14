@@ -2,7 +2,7 @@
 #include "../app.hpp"
 #include "../constants.hpp"
 
-GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map& map)
+GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map)
     : wxGLCanvas(parent, glCanvasAttributes, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW | wxEXPAND)
     , m_map(map)
     , m_glManager(settings, map)
@@ -75,8 +75,8 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
 
         case ID_TOOL_SELECTION:
         {
-            const auto& polygons = m_map.GetPolygons();
-            const auto& scenery = m_map.GetSceneryInstances();
+            const auto &polygons = m_map.GetPolygons();
+            const auto &scenery = m_map.GetSceneryInstances();
 
             bool addSelectionKeyPressed = wxGetKeyState(ADD_SELECTION_KEY),
                 removeSelectionKeyPressed = wxGetKeyState(REMOVE_SELECTION_KEY),
@@ -211,10 +211,10 @@ void GLCanvas::HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor)
         {
             float mouseDiffX = newMousePositionOnMap.x - oldMousePositionOnMap.x;
             float mouseDiffY = newMousePositionOnMap.y - oldMousePositionOnMap.y;
-            const auto& polygons = m_map.GetPolygons();
-            const auto& sceneries = m_map.GetSceneryInstances();
-			const auto& selectedPolygons = m_selectedPolygons.GetSelectedIds();
-			const auto& selectedSceneries = m_selectedScenery.GetSelectedIds();
+            const auto &polygons = m_map.GetPolygons();
+            const auto &sceneries = m_map.GetSceneryInstances();
+            const auto &selectedPolygons = m_selectedPolygons.GetSelectedIds();
+            const auto &selectedSceneries = m_selectedScenery.GetSelectedIds();
 
             for (size_t i = 0; i < selectedPolygons.size(); ++i)
             {
@@ -398,7 +398,7 @@ void GLCanvas::InitGL()
         m_glManager.SetupShaders();
         m_glManager.SetupTextures();
     }
-    catch (const std::exception& error)
+    catch (const std::exception &error)
     {
         // TODO: handle properly.
     }

@@ -14,21 +14,21 @@ GLuint GLShaderProgram::GetUniformLocation(const GLchar *name)
 
 void GLShaderProgram::Init()
 {
-    for (auto& shader : m_shaders)
+    for (auto &shader : m_shaders)
     {
         shader.Create();
         shader.Compile();
     }
     
     m_id = glCreateProgram();
-    for (auto& shader : m_shaders)
+    for (auto &shader : m_shaders)
     {
         glAttachShader(m_id, shader.GetId());
     }
     
     Link();
     
-    for (auto& shader : m_shaders)
+    for (auto &shader : m_shaders)
     {
         shader.Delete();
     }

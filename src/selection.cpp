@@ -3,7 +3,7 @@
 
 bool Selection::IsSelected(unsigned int id)
 {
-	return (std::find(m_selectedIds.begin(), m_selectedIds.end(), id) != m_selectedIds.end());
+    return (std::find(m_selectedIds.begin(), m_selectedIds.end(), id) != m_selectedIds.end());
 }
 
 void Selection::Select(unsigned int id)

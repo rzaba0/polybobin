@@ -384,7 +384,7 @@ void Map::LoadDefaultMap()
     m_randomId = 12345;
 
     m_polygonsCount = 0;
-	m_sceneryInstances = {};
+    m_sceneryInstances = {};
     m_sceneryTypesCount = 0;
     m_collidersCount = 0;
     m_spawnPointsCount = 0;

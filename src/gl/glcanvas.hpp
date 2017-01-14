@@ -20,7 +20,7 @@
 class GLCanvas: public wxGLCanvas
 {
     public:
-        GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map& map);
+        GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map);
         virtual ~GLCanvas() = default;
 
         DisplaySettings GetDisplaySettings() { return m_displaySettings; }
@@ -39,7 +39,7 @@ class GLCanvas: public wxGLCanvas
         Camera m_camera;
         DisplaySettings m_displaySettings;
         GLManager m_glManager;
-        Map& m_map;
+        Map &m_map;
         wxPoint m_mousePositionOnCanvas,
                 m_mousePositionOnMap;
         Selection m_selectedPolygons, m_selectedScenery;
