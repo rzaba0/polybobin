@@ -11,7 +11,7 @@
 class MapSettingsDialog: public wxDialog
 {
     public:
-        MapSettingsDialog(wxWindow *parent, Map *map, wxString soldatDirectoryPath);
+        MapSettingsDialog(wxWindow *parent, Map &map, wxString soldatDirectoryPath);
 
         wxColor GetBackgroundBottomColor() { return m_backgroundBottomColorPicker->GetColour(); }
         wxColor GetBackgroundTopColor() { return m_backgroundTopColorPicker->GetColour(); }
@@ -22,7 +22,7 @@ class MapSettingsDialog: public wxDialog
         wxChoice *GetTextureChoice() { return m_textureChoice; }
 
     private:
-        Map *m_map;
+        Map &m_map;
 
         wxColourPickerCtrl *m_backgroundBottomColorPicker, *m_backgroundTopColorPicker;
         wxTextCtrl *m_descriptionTextCtrl;

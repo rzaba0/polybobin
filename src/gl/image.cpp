@@ -1,11 +1,6 @@
 #include "image.hpp"
 #include <wx/image.h>
 
-Image::~Image()
-{
-    delete[] m_data;
-}
-
 void Image::OpenAndResize(wxString path)
 {
     wxImage image;
@@ -21,7 +16,7 @@ void Image::OpenAndResize(wxString path)
 
          if (!image.LoadFile(path))
          {
-             throw wxString("Could not load image ") + path;
+             throw std::runtime_error(std::string("Could not load image ") + path);
          }
     }
     
@@ -89,7 +84,7 @@ void Image::OpenAndResize(wxString path)
     GLubyte *imageAlpha = image.GetAlpha();
     int bytesPerPixel = m_hasAlpha ? 4 : 3;
     int imageSize = m_width * m_height * bytesPerPixel;
-    m_data = new GLubyte[imageSize];
+    m_data = std::vector<GLubyte>(imageSize);
 
     for (y = 0; y < m_height; ++y)
     {

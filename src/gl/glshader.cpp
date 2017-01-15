@@ -1,11 +1,9 @@
 #include "glshader.hpp"
 #include <wx/string.h>
+#include <exception>
 
-GLShader::GLShader(GLenum type, const GLchar *code)
+GLShader::GLShader(GLenum type, const GLchar *code) : m_id(), m_type(type), m_code(code)
 {
-    m_id = 0;
-    m_type = type;
-    m_code = code;
 }
 
 void GLShader::Compile()
@@ -19,9 +17,8 @@ void GLShader::Compile()
     if (!success)
     {
         glGetShaderInfoLog(m_id, sizeof(infoLog), NULL, infoLog);
-        wxString errorMessage = "An error occurred when compiling an OpenGL shader:\n"+
-                                wxString(infoLog);
-        throw errorMessage;
+        throw std::runtime_error(
+            std::string("An error occurred when compiling an OpenGL shader : \n") + infoLog);
     }
 }
 

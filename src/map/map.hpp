@@ -38,7 +38,13 @@ class Map
         float *GetBoundaries() { return m_boundariesXY; }
 
         wxString GetDescription() { return m_description; }
-        void SetDescription(wxString description) { strcpy(m_description, description.c_str()); }
+        void SetDescription(const char *description)
+        {
+            if (strlen(description) <= DESCRIPTION_MAX_LENGTH)
+            {
+                strcpy(m_description, description);
+            }
+        }
 
         unsigned char GetGrenadesCount() { return m_grenadesCount; }
         void SetGrenadesCount(unsigned char grenadesCount) { m_grenadesCount = grenadesCount; }
@@ -49,13 +55,13 @@ class Map
         unsigned char GetMedikitsCount() { return m_medikitsCount; }
         void SetMedikitsCount(unsigned char medikitsCount) { m_medikitsCount = medikitsCount; }
 
-        wxVector<PMSPolygon> GetPolygons() { return m_polygons; }
+        const wxVector<PMSPolygon> &GetPolygons() const { return m_polygons; }
         unsigned int GetPolygonsCount() { return m_polygons.size(); }
 
-        wxVector<PMSScenery> GetSceneryInstances() { return m_sceneryInstances; }
-        wxVector<PMSSceneryType> GetSceneryTypes() { return m_sceneryTypes; }
+        const wxVector<PMSScenery> &GetSceneryInstances() const { return m_sceneryInstances; }
+        const wxVector<PMSSceneryType> &GetSceneryTypes() const { return m_sceneryTypes; }
 
-        wxVector <PMSSpawnPoint> GetSpawnPoints() { return m_spawnPoints; }
+        const wxVector <PMSSpawnPoint> GetSpawnPoints() const  { return m_spawnPoints; }
 
         PMSStepType GetStepType() { return m_stepType; }
         void SetStepType(PMSStepType stepType) { m_stepType = stepType; }

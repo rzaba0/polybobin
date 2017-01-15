@@ -36,7 +36,7 @@ GLCanvas *Notebook::GetCurrentGLCanvas()
     return GetCurrentWorkspace()->GetGLCanvas();
 }
 
-Map *Notebook::GetCurrentMap()
+Map &Notebook::GetCurrentMap()
 {
     return GetCurrentWorkspace()->GetMap();
 }

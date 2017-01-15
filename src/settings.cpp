@@ -10,7 +10,7 @@ void Settings::LoadSettingsFromFile()
     if (!settingsFile.Read("SoldatPath", &m_soldatPath))
     {
         LoadDefaultSettings();
-        throw wxT("Your " + PROGRAM_NAME + " settings file either doesn't exist " +
+        throw std::runtime_error(std::string("Your ") + PROGRAM_NAME + " settings file either doesn't exist " +
             "or is corrupted. Default settings will be used.");
     }
 

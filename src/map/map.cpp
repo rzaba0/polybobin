@@ -76,7 +76,7 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     wxFile file;
     if (!file.Open(destinationPath, wxFile::write))
     {
-        throw wxT("Could not open output file");
+        throw std::runtime_error("Could not open output file");
     }
 
     char filler[64];
@@ -84,6 +84,7 @@ void Map::SaveMapAsPMS(wxString destinationPath)
 
     file.Write(&m_version, sizeof(m_version));
 
+    m_descriptionLength = strlen(m_description);
     file.Write(&m_descriptionLength, sizeof(m_descriptionLength));
     file.Write(m_description, m_descriptionLength * sizeof(char));
     file.Write(filler, (DESCRIPTION_MAX_LENGTH - m_descriptionLength) * sizeof(char));
@@ -103,7 +104,7 @@ void Map::SaveMapAsPMS(wxString destinationPath)
     file.Write(&m_randomId, sizeof(m_randomId));
 
     file.Write(&m_polygonsCount, sizeof(m_polygonsCount));
-    unsigned int i, j;
+    int i, j;
     for (i = 0; i < m_polygonsCount; ++i)
     {
         PMSPolygon polygon = m_polygons[i];
@@ -385,7 +386,7 @@ void Map::LoadDefaultMap()
     m_randomId = 12345;
 
     m_polygonsCount = 0;
-    m_sceneryInstances = 0;
+    m_sceneryInstances = {};
     m_sceneryTypesCount = 0;
     m_collidersCount = 0;
     m_spawnPointsCount = 0;
@@ -406,7 +407,7 @@ void Map::LoadMap(wxString mapPath)
     wxFile file;
     if (!file.Open(mapPath))
     {
-        throw wxString("Could not open map ") + mapPath;
+        throw std::runtime_error(std::string("Could not open map ") + mapPath);
     }
 
     int i, j;

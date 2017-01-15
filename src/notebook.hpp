@@ -26,7 +26,7 @@ class Notebook: public wxNotebook
         void SetCurrentDisplaySetting(int setting, bool display);
 
         GLCanvas *GetCurrentGLCanvas();
-        Map *GetCurrentMap();
+        Map &GetCurrentMap();
         wxPoint GetCurrentMousePositionOnMap();
 
         void HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,

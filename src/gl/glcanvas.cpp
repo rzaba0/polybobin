@@ -2,15 +2,13 @@
 #include "../app.hpp"
 #include "../constants.hpp"
 
-GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map *map)
+GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map)
     : wxGLCanvas(parent, glCanvasAttributes, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW | wxEXPAND)
+    , m_map(map)
+    , m_glManager(settings, map)
 {
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
-
-    m_glManager = new GLManager(settings, map);
-
-    m_map = map;
     
     m_addedPolygonVerticesCount = 0;
     m_newPolygonType = ptNORMAL;
@@ -21,10 +19,6 @@ GLCanvas::GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &gl
     Bind(wxEVT_SIZE, &GLCanvas::OnResize, this);
 }
 
-GLCanvas::~GLCanvas()
-{
-    delete m_glManager;
-}
 
 void GLCanvas::SetDisplaySetting(int setting, bool display)
 {
@@ -41,152 +35,151 @@ void GLCanvas::HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int sel
     switch (selectedToolId)
     {
         case ID_TOOL_CREATE_POLYGON:
+        {
+            PMSVertex vertex = CreateVertexOnMouse(selectedColor);
+            if (m_addedPolygonVerticesCount == 0)
             {
-                PMSVertex vertex = CreateVertexOnMouse(selectedColor);
-                if (m_addedPolygonVerticesCount == 0)
+                PMSVector perpendicular;
+                perpendicular.x = 0.0f;
+                perpendicular.y = 0.0f;
+                perpendicular.z = 2.0f;
+
+                PMSPolygon polygon;
+                for (unsigned int i = 0; i < 3; ++i)
                 {
-                    PMSVector perpendicular;
-                    perpendicular.x = 0.0f;
-                    perpendicular.y = 0.0f;
-                    perpendicular.z = 2.0f;
-
-                    PMSPolygon polygon;
-                    for (unsigned int i = 0; i < 3; ++i)
-                    {
-                        polygon.vertices[i] = vertex;
-                        polygon.perpendiculars[i] = perpendicular;
-                    }
-                    polygon.polygonType = m_newPolygonType;
-
-                    m_map->AddPolygon(polygon);
-                    m_glManager->AddPolygon(polygon.polygonType, vertex);
+                    polygon.vertices[i] = vertex;
+                    polygon.perpendiculars[i] = perpendicular;
                 }
-                else
-                {
-                    unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
-                    unsigned int vertexIndex = m_addedPolygonVerticesCount;
-                    m_map->EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-                    m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, vertexIndex, vertex);
-                }
+                polygon.polygonType = m_newPolygonType;
 
-                ++m_addedPolygonVerticesCount;
-                if (m_addedPolygonVerticesCount == 3)
-                {
-                    m_addedPolygonVerticesCount = 0;
-                }
-
-                Refresh();
+                m_map.AddPolygon(polygon);
+                m_glManager.AddPolygon(polygon.polygonType, vertex);
             }
-            break;
+            else
+            {
+                unsigned int polygonIndex = m_map.GetPolygonsCount() - 1;
+                unsigned int vertexIndex = m_addedPolygonVerticesCount;
+                m_map.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
+                m_glManager.EditPolygonVertex(polygonIndex, m_newPolygonType, vertexIndex, vertex);
+            }
+
+            ++m_addedPolygonVerticesCount;
+            if (m_addedPolygonVerticesCount == 3)
+            {
+                m_addedPolygonVerticesCount = 0;
+            }
+
+            Refresh();
+        }
+        break;
 
         case ID_TOOL_SELECTION:
+        {
+            const auto &polygons = m_map.GetPolygons();
+            const auto &scenery = m_map.GetSceneryInstances();
+
+            bool addSelectionKeyPressed = wxGetKeyState(ADD_SELECTION_KEY),
+                removeSelectionKeyPressed = wxGetKeyState(REMOVE_SELECTION_KEY),
+                moveSelectedKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
+            bool skippedPolygon = false,
+                skippedScenery = false;
+            unsigned int skippedPolygonId,
+                skippedSceneryId;
+
+            if (moveSelectedKeyPressed)
             {
-                wxVector<PMSPolygon> polygons = m_map->GetPolygons();
-                wxVector<PMSScenery> scenery = m_map->GetSceneryInstances();
-                
-                bool addSelectionKeyPressed = wxGetKeyState(ADD_SELECTION_KEY),
-                     removeSelectionKeyPressed = wxGetKeyState(REMOVE_SELECTION_KEY),
-                     moveSelectedKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
-                bool skippedPolygon = false,
-                     skippedScenery = false;
-                unsigned int skippedPolygonId,
-                             skippedSceneryId;
-                unsigned int i;
-
-                if (moveSelectedKeyPressed)
-                {
-                    m_movingSelected = true;
-                    return;
-                }
-
-                for (i = 0; i < polygons.size(); ++i)
-                {
-                    if (polygons.at(i).Contains((float) m_mousePositionOnMap.x,
-                                                (float) m_mousePositionOnMap.y))
-                    {
-                        if (m_selectedPolygons.IsSelected(i))
-                        {
-                            if (removeSelectionKeyPressed)
-                            {
-                                m_selectedPolygons.Unselect(i);
-                                Refresh();
-                                return;
-                            }
-                            skippedPolygon = true;
-                            skippedPolygonId = i;
-                        }
-                        else
-                        {
-                            if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
-                            {
-                                m_selectedPolygons.UnselectAll();
-                                m_selectedScenery.UnselectAll();
-                            }
-
-                            if (!removeSelectionKeyPressed)
-                            {
-                                m_selectedPolygons.Select(i);
-                            }
-
-                            Refresh();
-                            return;
-                        }
-                    }
-                }
-
-                for (i = 0; i < scenery.size(); ++i)
-                {
-                    if (scenery.at(i).Contains((float) m_mousePositionOnMap.x,
-                                               (float) m_mousePositionOnMap.y))
-                    {
-                        if (m_selectedScenery.IsSelected(i))
-                        {
-                            if (removeSelectionKeyPressed)
-                            {
-                                m_selectedScenery.Unselect(i);
-                                Refresh();
-                                return;
-                            }
-                            skippedScenery = true;
-                            skippedSceneryId = i;
-                        }
-                        else
-                        {
-                            if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
-                            {
-                                m_selectedPolygons.UnselectAll();
-                                m_selectedScenery.UnselectAll();
-                            }
-
-                            if (!removeSelectionKeyPressed)
-                            {
-                                m_selectedScenery.Select(i);
-                            }
-
-                            Refresh();
-                            return;
-                        }
-                    }
-                }
-
-                if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
-                {
-                    m_selectedPolygons.UnselectAll();
-                    m_selectedScenery.UnselectAll();
-                }
-
-                if (!skippedPolygon && skippedScenery && !addSelectionKeyPressed)
-                {
-                    m_selectedScenery.Select(skippedSceneryId);
-                }
-
-                if (skippedPolygon && !skippedScenery && !addSelectionKeyPressed)
-                {
-                    m_selectedPolygons.Select(skippedPolygonId);
-                }
-                Refresh();
+                m_movingSelected = true;
+                return;
             }
-            break;
+
+            for (size_t i = 0; i < polygons.size(); ++i)
+            {
+                if (polygons[i].Contains((float)m_mousePositionOnMap.x,
+                    (float)m_mousePositionOnMap.y))
+                {
+                    if (m_selectedPolygons.IsSelected(i))
+                    {
+                        if (removeSelectionKeyPressed)
+                        {
+                            m_selectedPolygons.Unselect(i);
+                            Refresh();
+                            return;
+                        }
+                        skippedPolygon = true;
+                        skippedPolygonId = i;
+                    }
+                    else
+                    {
+                        if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
+                        {
+                            m_selectedPolygons.UnselectAll();
+                            m_selectedScenery.UnselectAll();
+                        }
+
+                        if (!removeSelectionKeyPressed)
+                        {
+                            m_selectedPolygons.Select(i);
+                        }
+
+                        Refresh();
+                        return;
+                    }
+                }
+            }
+
+            for (size_t i = 0; i < scenery.size(); ++i)
+            {
+                if (scenery[i].Contains((float)m_mousePositionOnMap.x,
+                    (float)m_mousePositionOnMap.y))
+                {
+                    if (m_selectedScenery.IsSelected(i))
+                    {
+                        if (removeSelectionKeyPressed)
+                        {
+                            m_selectedScenery.Unselect(i);
+                            Refresh();
+                            return;
+                        }
+                        skippedScenery = true;
+                        skippedSceneryId = i;
+                    }
+                    else
+                    {
+                        if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
+                        {
+                            m_selectedPolygons.UnselectAll();
+                            m_selectedScenery.UnselectAll();
+                        }
+
+                        if (!removeSelectionKeyPressed)
+                        {
+                            m_selectedScenery.Select(i);
+                        }
+
+                        Refresh();
+                        return;
+                    }
+                }
+            }
+
+            if (!addSelectionKeyPressed && !removeSelectionKeyPressed)
+            {
+                m_selectedPolygons.UnselectAll();
+                m_selectedScenery.UnselectAll();
+            }
+
+            if (!skippedPolygon && skippedScenery && !addSelectionKeyPressed)
+            {
+                m_selectedScenery.Select(skippedSceneryId);
+            }
+
+            if (skippedPolygon && !skippedScenery && !addSelectionKeyPressed)
+            {
+                m_selectedPolygons.Select(skippedPolygonId);
+            }
+            Refresh();
+        }
+        break;
     }
 }
 
@@ -218,33 +211,33 @@ void GLCanvas::HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor)
         {
             float mouseDiffX = newMousePositionOnMap.x - oldMousePositionOnMap.x;
             float mouseDiffY = newMousePositionOnMap.y - oldMousePositionOnMap.y;
-            wxVector<PMSPolygon> polygons = m_map->GetPolygons();
-            wxVector<PMSScenery> sceneries = m_map->GetSceneryInstances();
-            wxVector<unsigned int> selectedPolygons = m_selectedPolygons.GetSelectedIds();
-            wxVector<unsigned int> selectedSceneries = m_selectedScenery.GetSelectedIds();
+            const auto &polygons = m_map.GetPolygons();
+            const auto &sceneries = m_map.GetSceneryInstances();
+            const auto &selectedPolygons = m_selectedPolygons.GetSelectedIds();
+            const auto &selectedSceneries = m_selectedScenery.GetSelectedIds();
 
-            for (unsigned int i = 0; i < selectedPolygons.size(); ++i)
+            for (size_t i = 0; i < selectedPolygons.size(); ++i)
             {
-                unsigned int polygonId = selectedPolygons.at(i);
+                unsigned int polygonId = selectedPolygons[i];
                 PMSPolygon polygon = polygons.at(polygonId);
-                for (unsigned int j = 0; j < 3; ++j)
+                for (unsigned j = 0; j < 3; ++j)
                 {
                     PMSVertex vertex = polygon.vertices[j];
                     vertex.x += mouseDiffX;
                     vertex.y += mouseDiffY;
-                    m_map->EditPolygonVertex(polygonId, j, vertex);
-                    m_glManager->EditPolygonVertex(polygonId, polygon.polygonType, j, vertex);
+                    m_map.EditPolygonVertex(polygonId, j, vertex);
+                    m_glManager.EditPolygonVertex(polygonId, polygon.polygonType, j, vertex);
                 }
             }
 
-            for (unsigned int i = 0; i < selectedSceneries.size(); ++i)
+            for (size_t i = 0; i < selectedSceneries.size(); ++i)
             {
-                unsigned int sceneryId = selectedSceneries.at(i);
+                unsigned int sceneryId = selectedSceneries[i];
                 PMSScenery scenery = sceneries.at(sceneryId);
                 scenery.x += mouseDiffX;
                 scenery.y += mouseDiffY;
-                m_map->EditScenery(sceneryId, scenery);
-                m_glManager->EditScenery(sceneryId, scenery);
+                m_map.EditScenery(sceneryId, scenery);
+                m_glManager.EditScenery(sceneryId, scenery);
             }
             Refresh();
         }
@@ -256,13 +249,13 @@ void GLCanvas::HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor)
 
     if (AddingPolygon())
     {
-        unsigned int polygonIndex = m_map->GetPolygonsCount() - 1;
+        unsigned int polygonIndex = m_map.GetPolygonsCount() - 1;
         PMSVertex vertex = CreateVertexOnMouse(selectedColor);
 
         // Update the positions of the vertices that haven't been set yet.
-        for (unsigned int i = m_addedPolygonVerticesCount; i < 3; ++i)
+        for (unsigned i = m_addedPolygonVerticesCount; i < 3; ++i)
         {
-            m_glManager->EditPolygonVertex(polygonIndex, m_newPolygonType, i, vertex);
+            m_glManager.EditPolygonVertex(polygonIndex, m_newPolygonType, i, vertex);
         }
 
         Refresh();
@@ -291,27 +284,27 @@ void GLCanvas::HandleRightMouseButtonRelease(int selectedToolId)
 
 void GLCanvas::SelectAll()
 {
-    m_selectedPolygons.SelectAll(m_map->GetPolygons().size());
-    m_selectedScenery.SelectAll(m_map->GetSceneryInstances().size());
+    m_selectedPolygons.SelectAll(m_map.GetPolygons().size());
+    m_selectedScenery.SelectAll(m_map.GetSceneryInstances().size());
     Refresh();
 }
 
 void GLCanvas::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
 {
-    m_glManager->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
+    m_glManager.SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
     Refresh();
 }
 
 void GLCanvas::SetPolygonsTexture(wxString textureFilename)
 {
-    m_glManager->SetPolygonsTexture(textureFilename);
+    m_glManager.SetPolygonsTexture(textureFilename);
     Refresh();
 }
 
 PMSVertex GLCanvas::CreateVertexOnMouse(wxColor color)
 {
-    float textureWidth = (float) m_glManager->GetTextureWidth(),
-        textureHeight = (float) m_glManager->GetTextureHeight();
+    float textureWidth = (float) m_glManager.GetTextureWidth(),
+        textureHeight = (float) m_glManager.GetTextureHeight();
 
     PMSVertex vertex;
     vertex.x = m_mousePositionOnMap.x;
@@ -354,14 +347,14 @@ void GLCanvas::OnPaint(wxPaintEvent &event)
 {
     wxPaintDC(this);
 
-    if (!m_glManager->IsGLReady())
+    if (!m_glManager.IsGLReady())
     {
         InitGL();
     }
 
     wxGetApp().GetGLContext(this);
 
-    m_glManager->Render(m_camera, this->GetSize(), m_displaySettings,
+    m_glManager.Render(m_camera, this->GetSize(), m_displaySettings,
                         m_selectedPolygons, m_selectedScenery,
                         AddingPolygon());
     SwapBuffers();
@@ -376,7 +369,7 @@ void GLCanvas::OnResize(wxSizeEvent &event)
         return;
     }
 
-    if (!m_glManager->IsGLReady())
+    if (!m_glManager.IsGLReady())
     {
         InitGL();
     }
@@ -413,14 +406,14 @@ void GLCanvas::InitGL()
 
     try
     {
-        m_glManager->Init();
-        m_glManager->SetupShaders();
-        m_glManager->SetupTextures();
+        m_glManager.Init();
+        m_glManager.SetupShaders();
+        m_glManager.SetupTextures();
     }
-    catch (wxString errorMessage)
+    catch (const std::exception &error)
     {
         // TODO: handle properly.
     }
 
-    m_glManager->SetupVertices();
+    m_glManager.SetupVertices();
 }

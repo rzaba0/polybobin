@@ -58,9 +58,9 @@ void MainFrame::AddWorkspace(wxString mapPath)
     {
         m_notebook->AddWorkspace(*m_settings, mapPath);
     }
-    catch (wxString errorMessage)
+    catch (const std::runtime_error& error)
     {
-        wxMessageBox(errorMessage, wxT("Workspace construction failed."));
+        wxMessageBox(error.what(), "Workspace construction failed.");
         Close(true);
 
         return;

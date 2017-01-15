@@ -7,11 +7,10 @@
 const wxString MapSettingsDialog::JET_COUNT_NAMES[] = { "None", "Minimal", "Very low", "Low", "Normal", "High", "Very high", "Infinite", "Custom" };
 const wxString MapSettingsDialog::JET_COUNT_VALUES[] = { "0", "12", "45", "95", "190", "320", "800", "25000" };
 
-MapSettingsDialog::MapSettingsDialog(wxWindow *parent, Map *map, wxString soldatDirectoryPath)
+MapSettingsDialog::MapSettingsDialog(wxWindow *parent, Map &map, wxString soldatDirectoryPath)
     : wxDialog(parent, wxID_ANY, "Map settings")
+    , m_map(map)
 {
-    m_map = map;
-
     wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
     wxSizer *descriptionSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -154,45 +153,45 @@ void MapSettingsDialog::OnJetCountTextChanged(wxCommandEvent &event)
 bool MapSettingsDialog::TransferDataFromWindow()
 {
     wxColor backgroundBottomColor = m_backgroundBottomColorPicker->GetColour();
-    m_map->SetBackgroundBottomColor(PMSColor(backgroundBottomColor.Red(),
-                                             backgroundBottomColor.Green(),
-                                             backgroundBottomColor.Blue()));
+    m_map.SetBackgroundBottomColor(PMSColor(backgroundBottomColor.Red(),
+                                            backgroundBottomColor.Green(),
+                                            backgroundBottomColor.Blue()));
 
     wxColor backgroundTopColor = m_backgroundTopColorPicker->GetColour();
-    m_map->SetBackgroundTopColor(PMSColor(backgroundTopColor.Red(),
-                                          backgroundTopColor.Green(),
-                                          backgroundTopColor.Blue()));
+    m_map.SetBackgroundTopColor(PMSColor(backgroundTopColor.Red(),
+                                         backgroundTopColor.Green(),
+                                         backgroundTopColor.Blue()));
 
-    m_map->SetDescription(m_descriptionTextCtrl->GetValue());
-    m_map->SetGrenadesCount(m_grenadesCountChoice->GetSelection());
-    m_map->SetJetCount(wxAtoi(m_jetCountTextCtrl->GetValue()));
-    m_map->SetMedikitsCount(m_medikitsCountChoice->GetSelection());
-    m_map->SetStepType((PMSStepType) m_stepTypeChoice->GetSelection());
-    m_map->SetTextureName(m_textureChoice->GetStringSelection().mb_str());
-    m_map->SetWeatherType((PMSWeatherType) m_weatherTypeChoice->GetSelection());
+    m_map.SetDescription(m_descriptionTextCtrl->GetValue().mb_str());
+    m_map.SetGrenadesCount(m_grenadesCountChoice->GetSelection());
+    m_map.SetJetCount(wxAtoi(m_jetCountTextCtrl->GetValue()));
+    m_map.SetMedikitsCount(m_medikitsCountChoice->GetSelection());
+    m_map.SetStepType((PMSStepType) m_stepTypeChoice->GetSelection());
+    m_map.SetTextureName(m_textureChoice->GetStringSelection().mb_str());
+    m_map.SetWeatherType((PMSWeatherType) m_weatherTypeChoice->GetSelection());
 
     return true;
 }
 
 bool MapSettingsDialog::TransferDataToWindow()
 {
-    PMSColor backgroundBottomColor = m_map->GetBackgroundBottomColor();
+    PMSColor backgroundBottomColor = m_map.GetBackgroundBottomColor();
     m_backgroundBottomColorPicker->SetColour(wxColor(backgroundBottomColor.red,
                                                      backgroundBottomColor.green,
                                                      backgroundBottomColor.blue));
 
-    PMSColor backgroundTopColor = m_map->GetBackgroundTopColor();
+    PMSColor backgroundTopColor = m_map.GetBackgroundTopColor();
     m_backgroundTopColorPicker->SetColour(wxColor(backgroundTopColor.red,
                                                   backgroundTopColor.green,
                                                   backgroundTopColor.blue));
 
-    m_descriptionTextCtrl->SetValue(m_map->GetDescription());
-    m_grenadesCountChoice->SetSelection(m_map->GetGrenadesCount());
-    m_jetCountTextCtrl->SetValue(wxString::Format("%d", m_map->GetJetCount()));
-    m_medikitsCountChoice->SetSelection(m_map->GetMedikitsCount());
-    m_stepTypeChoice->SetSelection(m_map->GetStepType());
-    m_textureChoice->SetStringSelection(m_map->GetTextureName());
-    m_weatherTypeChoice->SetSelection(m_map->GetWeatherType());
+    m_descriptionTextCtrl->SetValue(m_map.GetDescription());
+    m_grenadesCountChoice->SetSelection(m_map.GetGrenadesCount());
+    m_jetCountTextCtrl->SetValue(wxString::Format("%d", m_map.GetJetCount()));
+    m_medikitsCountChoice->SetSelection(m_map.GetMedikitsCount());
+    m_stepTypeChoice->SetSelection(m_map.GetStepType());
+    m_textureChoice->SetStringSelection(m_map.GetTextureName());
+    m_weatherTypeChoice->SetSelection(m_map.GetWeatherType());
 
     return true;
 }
