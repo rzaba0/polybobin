@@ -1,7 +1,7 @@
 #include "workspace.hpp"
 #include "gl/glcanvas.hpp"
+#include "eventdispatcherfactory.hpp"
 #include <wx/glcanvas.h>
-#include "tools/toolset.hpp"
 
 Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath)
     : wxWindow(notebook, wxID_ANY)
@@ -20,6 +20,7 @@ Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
+    m_eventDispatcher = MakeEventDispatcher(*m_glCanvas, mainFrame);
 }
 
 DisplaySettings Workspace::GetDisplaySettings()

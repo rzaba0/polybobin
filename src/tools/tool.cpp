@@ -1,6 +1,7 @@
 #include "tool.hpp"
+#include "../mainframe.hpp"
 
 Tool::Tool(GLCanvas& canvas)
-    : canvas{canvas}
+    : m_canvas{canvas}
 {
 }

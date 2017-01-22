@@ -1,10 +1,5 @@
 #include "selectiontool.hpp"
 
-SelectionTool::SelectionTool(GLCanvas& canvas)
-    : Tool{ canvas }
-{
-}
-
 void SelectionTool::OnSelect()
 {
 
@@ -25,6 +20,11 @@ void SelectionTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 
 }
 void SelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
+{
+
+}
+
+void SelectionTool::OnTimerTick()
 {
 
 }

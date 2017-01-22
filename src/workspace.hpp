@@ -9,6 +9,7 @@
 #include "gl/glcanvas.hpp"
 #include "map/map.hpp"
 #include "settings.hpp"
+#include "eventdispatcher.hpp"
 
 /**
  * \brief Represents a page inside our Notebook class.
@@ -40,6 +41,7 @@ class Workspace: public wxWindow
     private:
         GLCanvas* m_glCanvas;
         Map m_map;
+        std::unique_ptr<EventDispatcher> m_eventDispatcher;
 };
 
 #endif
