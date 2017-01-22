@@ -9,41 +9,37 @@
 #include "gl/glcanvas.hpp"
 #include "map/map.hpp"
 #include "settings.hpp"
-#include <memory>
 
 /**
  * \brief Represents a page inside our Notebook class.
  *  It contains OpenGL canvas in which we draw the map.
  */
+class MainFrame;
+
 class Workspace: public wxWindow
 {
     public:
-        Workspace(wxWindow *notebook, Settings settings, wxString mapPath);
+        Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath);
         ~Workspace() = default;
 
         DisplaySettings GetDisplaySettings();
         void SetDisplaySetting(int setting, bool display);
 
-        GLCanvas *GetGLCanvas() { return m_glCanvas; }
-        Map &GetMap() const { return *m_map; }
+        GLCanvas& GetGLCanvas() { return *m_glCanvas; }
+        Map &GetMap() { return m_map; }
         wxPoint GetMousePositionOnMap();
 
         void GiveFocusToGLCanvas();
-        void HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                                wxColor selectedColor);
-        void HandleGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor);
-        void HandleGLCanvasRightMouseButtonRelease(int selectedToolId);
 
-        void SaveMapAsPMS(wxString destinationPath);
+        void SaveMapAsPMS(const wxString& destinationPath);
 
         void SelectAll();
-
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
-        void SetPolygonsTexture(wxString textureFilename);
+        void SetPolygonsTexture(const wxString& textureFilename);
 
     private:
-        GLCanvas *m_glCanvas;
-        std::unique_ptr<Map> m_map;
+        GLCanvas* m_glCanvas;
+        Map m_map;
 };
 
 #endif

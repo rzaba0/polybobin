@@ -14,16 +14,6 @@ bool Camera::CanZoomOut()
     return m_zoom > ZOOM_LOWER_BOUND && fabsf(m_zoom - ZOOM_LOWER_BOUND) > EPSILON;
 }
 
-float Camera::GetX()
-{
-    return m_x;
-}
-
-float Camera::GetY()
-{
-    return m_y;
-}
-
 float Camera::GetWidth(wxSize canvasSize)
 {
     float canvasWidth = (float) canvasSize.GetWidth();
@@ -35,11 +25,6 @@ float Camera::GetHeight(wxSize canvasSize)
 {
     float canvasHeight = (float) canvasSize.GetHeight();
     return canvasHeight - canvasHeight * m_zoom / 100.0f;
-}
-
-float Camera::GetZoom()
-{
-    return m_zoom;
 }
 
 void Camera::ScrollX(float delta)

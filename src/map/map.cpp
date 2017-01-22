@@ -71,7 +71,7 @@ void Map::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
     m_sceneryInstances[sceneryIndex] = scenery;
 }
 
-void Map::SaveMapAsPMS(wxString destinationPath)
+void Map::SaveMapAsPMS(const wxString& destinationPath)
 {
     wxFile file;
     if (!file.Open(destinationPath, wxFile::write))

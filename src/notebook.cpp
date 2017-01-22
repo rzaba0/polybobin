@@ -1,7 +1,8 @@
 #include "notebook.hpp"
 
-Notebook::Notebook(wxWindow *parent)
+Notebook::Notebook(wxWindow *parent, MainFrame& mainFrame)
     : wxNotebook(parent, wxID_ANY)
+    , m_mainFrame(mainFrame)
 {
     /**
      * Looks like on Windows instances of wxGLCanvas don't get focus by default,
@@ -13,82 +14,61 @@ Notebook::Notebook(wxWindow *parent)
 
 void Notebook::AddWorkspace(Settings settings, wxString mapPath)
 {
-    Workspace *workspace;
-    workspace = new Workspace(this, settings, mapPath);
-
+    Workspace *workspace = new Workspace(this, m_mainFrame, settings, mapPath);
     wxString title = mapPath.IsEmpty() ? "Untitled" : mapPath.AfterLast('/');
-
     AddPage(workspace, title, true);
-}
-
-DisplaySettings Notebook::GetCurrentDisplaySettings()
-{
-    return GetCurrentWorkspace()->GetDisplaySettings();
 }
 
 void Notebook::SetCurrentDisplaySetting(int setting, bool display)
 {
-    GetCurrentWorkspace()->SetDisplaySetting(setting, display);
+    GetCurrentWorkspace().SetDisplaySetting(setting, display);
 }
 
-GLCanvas *Notebook::GetCurrentGLCanvas()
+GLCanvas &Notebook::GetCurrentGLCanvas()
 {
-    return GetCurrentWorkspace()->GetGLCanvas();
+    return GetCurrentWorkspace().GetGLCanvas();
+}
+
+DisplaySettings& Notebook::GetCurrentDisplaySettings()
+{
+    return GetCurrentWorkspace().GetDisplaySettings();
 }
 
 Map &Notebook::GetCurrentMap()
 {
-    return GetCurrentWorkspace()->GetMap();
+    return GetCurrentWorkspace().GetMap();
 }
 
 wxPoint Notebook::GetCurrentMousePositionOnMap()
 {
-    return GetCurrentWorkspace()->GetMousePositionOnMap();
+    return GetCurrentWorkspace().GetMousePositionOnMap();
 }
-
-void Notebook::HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                                         wxColor selectedColor)
+void Notebook::SaveCurrentMapAsPMS(const wxString& destinationPath)
 {
-    GetCurrentWorkspace()->HandleGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
-                                                              selectedColor);
-}
-
-void Notebook::HandleCurrentGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor)
-{
-    GetCurrentWorkspace()->HandleGLCanvasMouseMotion(event, selectedColor);
-}
-
-void Notebook::HandleCurrentGLCanvasRightMouseButtonRelease(int selectedToolId)
-{
-    GetCurrentWorkspace()->HandleGLCanvasRightMouseButtonRelease(selectedToolId);
-}
-
-void Notebook::SaveCurrentMapAsPMS(wxString destinationPath)
-{
-    GetCurrentWorkspace()->SaveMapAsPMS(destinationPath);
+    GetCurrentWorkspace().SaveMapAsPMS(destinationPath);
 }
 
 void Notebook::SelectAll()
 {
-    GetCurrentWorkspace()->SelectAll();
+    GetCurrentWorkspace().SelectAll();
 }
 
 void Notebook::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
 {
-    GetCurrentWorkspace()->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
+    GetCurrentWorkspace().SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
 }
 
-void Notebook::SetPolygonsTexture(wxString textureFilename)
+void Notebook::SetPolygonsTexture(const wxString& textureFilename)
 {
-    GetCurrentWorkspace()->SetPolygonsTexture(textureFilename);
-}
-
-Workspace *Notebook::GetCurrentWorkspace()
-{
-    return (Workspace*) GetCurrentPage();
+    GetCurrentWorkspace().SetPolygonsTexture(textureFilename);
 }
 
 void Notebook::OnPageChanged(wxBookCtrlEvent &event)
 {
-    GetCurrentWorkspace()->GiveFocusToGLCanvas();
+    GetCurrentWorkspace().GiveFocusToGLCanvas();
+}
+
+Workspace& Notebook::GetCurrentWorkspace()
+{
+    return *static_cast<Workspace*>(GetCurrentPage());
 }

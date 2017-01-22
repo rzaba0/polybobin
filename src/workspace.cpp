@@ -1,9 +1,11 @@
 #include "workspace.hpp"
 #include "gl/glcanvas.hpp"
 #include <wx/glcanvas.h>
+#include "tools/toolset.hpp"
 
-Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
+Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath)
     : wxWindow(notebook, wxID_ANY)
+    , m_map{mapPath}
 {
     wxGLAttributes glCanvasAttributes;
     glCanvasAttributes.PlatformDefaults().Defaults().EndList();
@@ -14,9 +16,7 @@ Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
         throw std::runtime_error("OpenGL display attributes are not supported. The program will quit now.");
     }
 
-    m_map = std::make_unique<Map>(mapPath);
-
-    m_glCanvas = new GLCanvas(this, settings, glCanvasAttributes, *m_map);
+    m_glCanvas = new GLCanvas(this, mainFrame, settings, glCanvasAttributes, m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
@@ -42,25 +42,9 @@ void Workspace::GiveFocusToGLCanvas()
     m_glCanvas->SetFocus();
 }
 
-void Workspace::HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                                   wxColor selectedColor)
+void Workspace::SaveMapAsPMS(const wxString& destinationPath)
 {
-    m_glCanvas->HandleLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId, selectedColor);
-}
-
-void Workspace::HandleGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor)
-{
-    m_glCanvas->HandleMouseMotion(event, selectedColor);
-}
-
-void Workspace::HandleGLCanvasRightMouseButtonRelease(int selectedToolId)
-{
-    m_glCanvas->HandleRightMouseButtonRelease(selectedToolId);
-}
-
-void Workspace::SaveMapAsPMS(wxString destinationPath)
-{
-    m_map->SaveMapAsPMS(destinationPath);
+    m_map.SaveMapAsPMS(destinationPath);
 }
 
 void Workspace::SelectAll()
@@ -73,7 +57,7 @@ void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backg
     m_glCanvas->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
 }
 
-void Workspace::SetPolygonsTexture(wxString textureFilename)
+void Workspace::SetPolygonsTexture(const wxString& textureFilename)
 {
     m_glCanvas->SetPolygonsTexture(textureFilename);
 }

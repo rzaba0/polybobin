@@ -1,6 +1,7 @@
 #include "mainframe.hpp"
 #include "constants.hpp"
 #include "menubar.hpp"
+#include "notebook.hpp"
 #include "preferences/preferencespagepaths.hpp"
 
 MainFrame::MainFrame(Settings *settings)
@@ -33,7 +34,7 @@ MainFrame::MainFrame(Settings *settings)
 
     wxPanel *notebookPanel = new wxPanel(this);
     wxBoxSizer *notebookPanelSizer = new wxBoxSizer(wxVERTICAL);
-    m_notebook = new Notebook(notebookPanel);
+    m_notebook = new Notebook(notebookPanel, *this);
     m_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
@@ -65,13 +66,6 @@ void MainFrame::AddWorkspace(wxString mapPath)
 
         return;
     }
-
-    // We handle click events from main frame, since we can know which tool is currently selected.
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnGLCanvasLeftMouseButtonClicked, this);
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_RIGHT_UP, &MainFrame::OnGLCanvasRightMouseButtonReleased, this);
-
-    // Needed to update cursor coordinates in status bar.
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_MOTION, &MainFrame::OnGLCanvasMouseMotion, this);
 }
 
 void MainFrame::OnBackgroundColorChanged(wxColourPickerEvent &event)
@@ -93,8 +87,8 @@ void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
     wxColor selectedColor = m_paletteFrame->GetColor();
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
     wxPoint mousePositionOnCanvas = event.GetPosition();
-    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
-                                                          selectedColor);
+    //m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
+    //                                                      selectedColor);
 }
 
 void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
@@ -106,13 +100,13 @@ void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
     SetStatusText(statusText);
 
     wxColor selectedColor = m_paletteFrame->GetColor();
-    m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
+    //m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
 }
 
 void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)
 {
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
-    m_notebook->HandleCurrentGLCanvasRightMouseButtonRelease(selectedToolId);
+    //m_notebook->HandleCurrentGLCanvasRightMouseButtonRelease(selectedToolId);
 }
 
 void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)

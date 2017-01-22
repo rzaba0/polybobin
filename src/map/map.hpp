@@ -27,7 +27,7 @@ class Map
 
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
         
-        void SaveMapAsPMS(wxString destinationPath);
+        void SaveMapAsPMS(const wxString& destinationPath);
 
         PMSColor GetBackgroundBottomColor() { return m_backgroundBottomColor; }
         void SetBackgroundBottomColor(PMSColor color) { m_backgroundBottomColor = color; }
