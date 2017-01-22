@@ -8,7 +8,7 @@ using ToolSet = std::vector<std::unique_ptr<Tool>>;
 class EventDispatcher
 {
 public:
-    EventDispatcher(ToolSet tools);
+    EventDispatcher(ToolSet tools, GLCanvas& canvas);
     void Select(int toolId);
     void Unselect();
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event);
@@ -17,6 +17,7 @@ public:
     ~EventDispatcher();
     
 private:
-    ToolSet tools;
-    int selectedToolId;
+    ToolSet m_tools;
+    GLCanvas& m_canvas;
+    int m_selectedToolId;
 };

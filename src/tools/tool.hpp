@@ -18,7 +18,7 @@ public:
     virtual void OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) = 0;
     virtual void OnTimerTick() = 0;
 
-private:
+protected:
     GLCanvas& m_canvas;
 };
 

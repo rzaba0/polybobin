@@ -21,6 +21,7 @@ Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings
     SetSizer(sizer);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
     m_eventDispatcher = MakeEventDispatcher(*m_glCanvas, mainFrame);
+    m_eventDispatcher->Select(1);
 }
 
 DisplaySettings Workspace::GetDisplaySettings()

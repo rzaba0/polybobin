@@ -22,7 +22,7 @@ class Map
          */
         Map(wxString path);
 
-        void AddPolygon(PMSPolygon polygon);
+        int AddPolygon(PMSPolygon polygon);
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
 
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);

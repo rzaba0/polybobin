@@ -40,7 +40,7 @@ PaletteFrame::PaletteFrame(wxWindow *parent)
     SetSizerAndFit(sizer);
 }
 
-wxColor PaletteFrame::GetColor()
+wxColor PaletteFrame::GetColor() const
 {
     wxColor color = m_colorPicker->GetColour();
     int opacity = m_opacitySlider->GetValue();

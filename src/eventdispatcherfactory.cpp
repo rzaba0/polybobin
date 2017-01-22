@@ -12,7 +12,7 @@ std::unique_ptr<EventDispatcher> MakeEventDispatcher(GLCanvas& canvas, MainFrame
     toolSet.emplace_back(std::make_unique<PolygonTool>(canvas, mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(std::make_unique<VertexSelectionTool>(canvas));
     toolSet.emplace_back(std::make_unique<SelectionTool>(canvas));
-    std::unique_ptr<EventDispatcher> dispatcher = std::make_unique<EventDispatcher>(std::move(toolSet));
+    std::unique_ptr<EventDispatcher> dispatcher = std::make_unique<EventDispatcher>(std::move(toolSet), canvas);
 
     canvas.Bind(wxEVT_LEFT_DOWN, &EventDispatcher::OnCanvasLeftMouseButtonClick, dispatcher.get());
     canvas.Bind(wxEVT_RIGHT_UP,  &EventDispatcher::OnCanvasRightMouseButtonRelease, dispatcher.get());

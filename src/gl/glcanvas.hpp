@@ -27,16 +27,20 @@ class GLCanvas: public wxGLCanvas
 
         DisplaySettings GetDisplaySettings() { return m_displaySettings; }
         void SetDisplaySetting(int setting, bool display);
-
         wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
 
-        void HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                        wxColor selectedColor);
-        void HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor);
-        void HandleRightMouseButtonRelease(int selectedToolId);
+        PMSVertex CreateVertex(wxColor color, wxPoint point);
+
+        int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex);
+        void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType,
+            unsigned vertexIndex, PMSVertex vertex);
+        void GLCanvas::PopupMenu(wxMenu* menu);
+
+        void HandleLeftMouseButtonClick(const wxMouseEvent& event);
+        void HandleMouseMotion(const wxMouseEvent &event);
+        void HandleRightMouseButtonRelease(const wxMouseEvent& event);
 
         void SelectAll();
-
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
         void SetPolygonsTexture(wxString textureFilename);
 
@@ -50,14 +54,6 @@ class GLCanvas: public wxGLCanvas
                 m_mousePositionOnMap;
         Selection m_selectedPolygons, m_selectedScenery;
         bool m_movingSelected;
-
-        // Indicates how many vertices have been set while adding a new polygon.
-        unsigned int m_addedPolygonVerticesCount;
-        PMSPolygonType m_newPolygonType;
-        // \brief Is user currently creating a new polygon?
-        bool AddingPolygon() { return m_addedPolygonVerticesCount > 0; }
-        // \brief Returns PMSVertex with coordinates of cursor on map.
-        PMSVertex CreateVertexOnMouse(wxColor color);
 
         void OnMouseWheel(wxMouseEvent &event);
         void OnNewPolygonTypeSelected(wxCommandEvent &event);

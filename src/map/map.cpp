@@ -14,10 +14,9 @@ Map::Map(wxString path)
     }
 }
 
-void Map::AddPolygon(PMSPolygon polygon)
+int Map::AddPolygon(PMSPolygon polygon)
 {
     m_polygons.push_back(polygon);
-    ++m_polygonsCount;
 
     for (unsigned int i = 0; i < 3; ++i)
     {
@@ -40,6 +39,7 @@ void Map::AddPolygon(PMSPolygon polygon)
     }
 
     UpdateBoundaries();
+    return m_polygonsCount++;
 }
 
 void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
