@@ -313,7 +313,7 @@ PMSVertex GLCanvas::CreateVertexOnMouse(wxColor color)
     vertex.y = m_mousePositionOnMap.y;
     vertex.z = 1.0f;
     vertex.rhw = 1.0f;
-    vertex.color = PMSColor(color.Red(), color.Green(), color.Blue(), color.Alpha());
+    vertex.color = color;
     vertex.textureS = (float) m_mousePositionOnMap.x / textureWidth;
     vertex.textureT = (float) m_mousePositionOnMap.y / textureHeight;
 

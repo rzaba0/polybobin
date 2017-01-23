@@ -28,19 +28,40 @@ struct PMSCollider
 
 struct PMSColor
 {
-    unsigned char blue, green, red, alpha;
+    std::uint8_t blue, green, red, alpha;
 
     PMSColor()
+        : red{255}, green{255}, blue{255}, alpha{255}
     {
-        red = 255, green = 255, blue = 255, alpha = 255;
     }
 
-    PMSColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
+    PMSColor(wxColor col)
+        : red{col.Red()}, green{col.Green()}, blue{col.Blue()}, alpha{col.Alpha()}
     {
-        red = r, green = g, blue = b, alpha = a;
+    }
+
+    PMSColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255)
+        : red{r}, green{g}, blue{b}, alpha{a}
+    {
     }
 };
 
+//std::uint8_t red, green, blue, alpha;
+//
+//PMSColor()
+//    : red{ 255 }, green{ 255 }, blue{ 255 }, alpha{ 255 }
+//{
+//}
+//
+//PMSColor(wxColor col)
+//    : red{ col.Red() }, green{ col.Green() }, blue{ col.Blue() }, alpha{ col.Alpha() }
+//{
+//}
+//
+//PMSColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255)
+//    : red{ r }, green{ g }, blue{ b }, alpha{ a }
+//{
+//}
 
 struct PMSVector
 {
