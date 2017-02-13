@@ -1,7 +1,5 @@
-#ifndef SELECTION_HPP
-#define SELECTION_HPP
-
-#include <wx/vector.h>
+#pragma once
+#include <set>
 
 /**
  * \brief Used to keep track of currently selected objects (such as polygons, scenery, ...).
@@ -9,26 +7,23 @@
 class Selection
 {
 public:
-        wxVector<unsigned int> GetSelectedIds()
-        {
-            return m_selectedIds;
-        }
+    Selection() = default;
+    Selection(const Selection&) = default;
+    Selection(Selection&&) = default;
+    Selection(unsigned id);
+    
+    bool contains(unsigned id) const;
 
-        const wxVector<unsigned int> &GetSelectedIds() const
-        {
-            return m_selectedIds;
-        }
+    void select(unsigned id);
+    void selectAll(unsigned elementsCount);
 
-        bool IsSelected(unsigned int id);
+    void unselect(unsigned id);
+    void unselectAll();
 
-        void Select(unsigned int id);
-        void SelectAll(unsigned int elementsCount);
+    bool empty() const;
 
-        void Unselect(unsigned int id);
-        void UnselectAll();
-
-    private:
-        wxVector<unsigned int> m_selectedIds;
+    auto begin() const { return m_selectedIds.begin(); }
+    auto end() const { return m_selectedIds.end(); }
+private:
+    std::set<unsigned> m_selectedIds;
 };
-
-#endif

@@ -15,7 +15,7 @@ void GLOutlineScenery::EditScenery(unsigned int sceneryIndex, PMSScenery scenery
     m_sceneryInstances[sceneryIndex] = scenery;
 }
 
-void GLOutlineScenery::RenderAll(glm::mat4 transform)
+void GLOutlineScenery::RenderAll(const glm::mat4& transform)
 {
     m_shaderProgram.Use();
 
@@ -37,16 +37,15 @@ void GLOutlineScenery::RenderAll(glm::mat4 transform)
     glBindVertexArray(0);
 }
 
-void GLOutlineScenery::RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedSceneryIds)
+void GLOutlineScenery::RenderSelected(const glm::mat4& transform, const Selection& selectedScenery)
 {
     m_shaderProgram.Use();
 
     glBindVertexArray(m_vao);
-    for (unsigned int i = 0; i < selectedSceneryIds.size(); ++i)
+    for (const auto sceneryId : selectedScenery)
     {
         glm::mat4 _transform = transform;
 
-        int sceneryId = selectedSceneryIds[i];
         _transform = glm::translate(_transform, glm::vec3(m_sceneryInstances[sceneryId].x, m_sceneryInstances[sceneryId].y, 0.0f));
         _transform = glm::rotate(_transform, -m_sceneryInstances[sceneryId].rotation, glm::vec3(0.0f, 0.0f, 1.0f));
         _transform = glm::scale(_transform, glm::vec3(m_sceneryInstances[sceneryId].scaleX, m_sceneryInstances[sceneryId].scaleY, 0.0f));

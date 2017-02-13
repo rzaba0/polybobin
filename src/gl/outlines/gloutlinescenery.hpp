@@ -4,6 +4,7 @@
 #include "gloutline.hpp"
 #include "../../map/pmsstructs.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include "../../selection.hpp"
 
 /**
  * \brief Handles the drawing of scenery's outline. Can be used for selection and wireframe.
@@ -20,12 +21,12 @@ class GLOutlineScenery: public GLOutline
         /**
          * \brief Renders outline for all scenery.
          */
-        void RenderAll(glm::mat4 transform);
+        void RenderAll(const glm::mat4& transform);
 
         /**
          * \brief Renders outline for selected scenery.
          */
-        void RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedSceneryIds);
+        void RenderSelected(const glm::mat4& transform, const Selection& selectedSceneryIds);
         void SetupVAO(wxVector<PMSScenery> sceneryInstances);
 
     private:

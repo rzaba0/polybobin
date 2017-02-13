@@ -59,9 +59,9 @@ void PolygonTool::OnCanvasMouseMotion(const wxMouseEvent &event)
         PMSVertex vertex = m_canvas.CreateVertex(m_palette.GetColor(), event.GetPosition());
 
         // Update the positions of the vertices that haven't been set yet.
-        for (unsigned i = m_addedPolygonVerticesCount; i < 3; ++i)
+        //for (unsigned i = m_addedPolygonVerticesCount; i < 3; ++i)
         {
-            m_canvas.EditPolygonVertex(m_polygonId, m_newPolygonType, i, vertex);
+            m_canvas.EditPolygonVertex(m_polygonId, m_newPolygonType, m_addedPolygonVerticesCount, vertex);
         }
         m_canvas.Refresh();
     }

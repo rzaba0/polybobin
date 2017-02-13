@@ -37,16 +37,16 @@ void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygo
     glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, &glVertex[0]);
 }
 
-void GLSelectionPolygons::RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedPolygonsIds)
+void GLSelectionPolygons::RenderSelected(const glm::mat4& transform, const PolygonSelection& selectedPolygons)
 {
     m_shaderProgram.Use();
     glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                        1, GL_FALSE, glm::value_ptr(transform));
     glBindVertexArray(m_vao);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    for (unsigned int i = 0; i < selectedPolygonsIds.size(); ++i)
+    for (const auto& poly : selectedPolygons)
     {
-        glDrawArrays(GL_TRIANGLES, selectedPolygonsIds[i] * 3, 3);
+        glDrawArrays(GL_TRIANGLES, poly.id * 3, 3);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);

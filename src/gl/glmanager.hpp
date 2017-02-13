@@ -19,6 +19,7 @@
 #include "outlines/gloutlinescenery.hpp"
 
 #include "../selection.hpp"
+#include "../polygonselection.hpp"
 #include "glselectionpolygons.hpp"
 
 /**
@@ -41,7 +42,7 @@ class GLManager
         void Init();
         bool IsGLReady();
         void Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,
-                    Selection selectedPolygons, Selection selectedScenery,
+                    const PolygonSelection& selectedPolygons, const Selection& selectedScenery,
                     bool addingPolygon);
 
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);

@@ -51,7 +51,7 @@ void Workspace::SaveMapAsPMS(const wxString& destinationPath)
 
 void Workspace::SelectAll()
 {
-    m_glCanvas->SelectAll();
+
 }
 
 void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)

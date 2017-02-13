@@ -40,7 +40,6 @@ class GLCanvas: public wxGLCanvas
         void HandleMouseMotion(const wxMouseEvent &event);
         void HandleRightMouseButtonRelease(const wxMouseEvent& event);
 
-        void SelectAll();
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
         void SetPolygonsTexture(wxString textureFilename);
 
@@ -52,7 +51,6 @@ class GLCanvas: public wxGLCanvas
         MainFrame& m_mainFrame;
         wxPoint m_mousePositionOnCanvas,
                 m_mousePositionOnMap;
-        Selection m_selectedPolygons, m_selectedScenery;
         bool m_movingSelected;
 
         void OnMouseWheel(wxMouseEvent &event);

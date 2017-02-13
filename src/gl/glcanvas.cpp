@@ -55,73 +55,19 @@ void GLCanvas::HandleMouseMotion(const wxMouseEvent &event)
 
     wxPoint oldMousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
     wxPoint newMousePositionOnMap = GetMousePositionOnMap(newMousePositionOnCanvas);
-
     if (event.MiddleIsDown() && event.Dragging())
     {
-        m_camera.ScrollX((float) (oldMousePositionOnMap.x - newMousePositionOnMap.x));
-        m_camera.ScrollY((float) (oldMousePositionOnMap.y - newMousePositionOnMap.y));
+        m_camera.ScrollX((float)(oldMousePositionOnMap.x - newMousePositionOnMap.x));
+        m_camera.ScrollY((float)(oldMousePositionOnMap.y - newMousePositionOnMap.y));
 
         Refresh();
     }
-
-    if (m_movingSelected)
-    {
-        bool moveSelectedKeyPressed = wxGetKeyState(MOVE_SELECTED_KEY);
-
-        if (!event.LeftIsDown() || !moveSelectedKeyPressed)
-        {
-            m_movingSelected = false;
-        }
-
-        if (event.LeftIsDown() && event.Dragging())
-        {
-            float mouseDiffX = newMousePositionOnMap.x - oldMousePositionOnMap.x;
-            float mouseDiffY = newMousePositionOnMap.y - oldMousePositionOnMap.y;
-            const auto &polygons = m_map.GetPolygons();
-            const auto &sceneries = m_map.GetSceneryInstances();
-            const auto &selectedPolygons = m_selectedPolygons.GetSelectedIds();
-            const auto &selectedSceneries = m_selectedScenery.GetSelectedIds();
-
-            for (size_t i = 0; i < selectedPolygons.size(); ++i)
-            {
-                unsigned int polygonId = selectedPolygons[i];
-                PMSPolygon polygon = polygons.at(polygonId);
-                for (unsigned j = 0; j < 3; ++j)
-                {
-                    PMSVertex vertex = polygon.vertices[j];
-                    vertex.x += mouseDiffX;
-                    vertex.y += mouseDiffY;
-                    m_map.EditPolygonVertex(polygonId, j, vertex);
-                    m_glManager.EditPolygonVertex(polygonId, polygon.polygonType, j, vertex);
-                }
-            }
-
-            for (size_t i = 0; i < selectedSceneries.size(); ++i)
-            {
-                unsigned int sceneryId = selectedSceneries[i];
-                PMSScenery scenery = sceneries.at(sceneryId);
-                scenery.x += mouseDiffX;
-                scenery.y += mouseDiffY;
-                m_map.EditScenery(sceneryId, scenery);
-                m_glManager.EditScenery(sceneryId, scenery);
-            }
-            Refresh();
-        }
-    }
-
     m_mousePositionOnCanvas = newMousePositionOnCanvas;
     m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
 }
 
 void GLCanvas::HandleRightMouseButtonRelease(const wxMouseEvent &event)
 {
-}
-
-void GLCanvas::SelectAll()
-{
-    m_selectedPolygons.SelectAll(m_map.GetPolygons().size());
-    m_selectedScenery.SelectAll(m_map.GetSceneryInstances().size());
-    Refresh();
 }
 
 void GLCanvas::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
@@ -180,8 +126,9 @@ void GLCanvas::OnPaint(wxPaintEvent &event)
     wxGetApp().GetGLContext(this);
 
     m_glManager.Render(m_camera, this->GetSize(), m_displaySettings,
-        m_selectedPolygons, m_selectedScenery, //AddingPolygon());
-        false);
+    {}, {}, //AddingPolygon());
+        //false);
+        true);
     SwapBuffers();
 }
 

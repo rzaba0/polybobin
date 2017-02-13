@@ -1,32 +1,39 @@
 #include "selection.hpp"
 #include <algorithm>
 
-bool Selection::IsSelected(unsigned int id)
+Selection::Selection(unsigned id)
 {
-    return (std::find(m_selectedIds.begin(), m_selectedIds.end(), id) != m_selectedIds.end());
+    m_selectedIds.emplace(id);
 }
 
-void Selection::Select(unsigned int id)
+bool Selection::contains(unsigned id) const
 {
-    m_selectedIds.push_back(id);
+    return m_selectedIds.find(id) != m_selectedIds.end();
 }
 
-void Selection::SelectAll(unsigned int elementsCount)
+void Selection::select(unsigned id)
 {
-    UnselectAll();
-    m_selectedIds.reserve(elementsCount);
-    for (unsigned int i = 0; i < elementsCount; ++i)
-    {
-        m_selectedIds.push_back(i);
-    }
+    m_selectedIds.insert(id);
 }
 
-void Selection::Unselect(unsigned int id)
+void Selection::selectAll(unsigned elementsCount)
 {
-    m_selectedIds.erase(std::remove(m_selectedIds.begin(), m_selectedIds.end(), id), m_selectedIds.end());
+    unselectAll();
+    for (unsigned i(0); i < elementsCount; i++)
+        m_selectedIds.emplace_hint(m_selectedIds.end(), i);
 }
 
-void Selection::UnselectAll()
+void Selection::unselect(unsigned id)
+{
+    m_selectedIds.erase(id);
+}
+
+void Selection::unselectAll()
 {
     m_selectedIds.clear();
+}
+
+bool Selection::empty() const
+{
+    return m_selectedIds.empty();
 }

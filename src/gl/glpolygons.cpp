@@ -14,22 +14,23 @@ void GLPolygons::AddPolygon(PMSVertex firstVertex)
 void GLPolygons::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex,
                                    PMSVertex newVertex)
 {
-    wxVector<GLfloat> glVertex;
-    glVertex.push_back(newVertex.x);
-    glVertex.push_back(newVertex.y);
-    glVertex.push_back(newVertex.z);
-    glVertex.push_back((GLfloat) newVertex.color.red / 255.0f);
-    glVertex.push_back((GLfloat) newVertex.color.green / 255.0f);
-    glVertex.push_back((GLfloat) newVertex.color.blue / 255.0f);
-    glVertex.push_back((GLfloat) newVertex.color.alpha / 255.0f);
-    glVertex.push_back(newVertex.textureS);
-    glVertex.push_back(newVertex.textureT);
+    GLfloat glVertex[] = {
+        newVertex.x,
+        newVertex.y,
+        newVertex.z,
+        newVertex.color.red / 255.0f,
+        newVertex.color.green / 255.0f,
+        newVertex.color.blue / 255.0f,
+        newVertex.color.alpha / 255.0f,
+        newVertex.textureS,
+        newVertex.textureT
+    };
 
-    int offset = polygonIndex * GL_POLYGON_VERTEX_SIZE_BYTES * GL_POLYGON_VERTICES_COUNT +
+    const int offset = polygonIndex * GL_POLYGON_VERTEX_SIZE_BYTES * GL_POLYGON_VERTICES_COUNT +
                  vertexIndex * GL_POLYGON_VERTEX_SIZE_BYTES;
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_POLYGON_VERTEX_SIZE_BYTES, &glVertex[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_POLYGON_VERTEX_SIZE_BYTES, glVertex);
 }
 
 unsigned int GLPolygons::GetTextureWidth()
