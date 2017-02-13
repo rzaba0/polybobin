@@ -9,7 +9,7 @@ Debug/*
 *.filters
 *.opendb
 *.sln
-*.vcxproj
+#*.vcxproj
 .vs/*
 
 # Sublime Text
