@@ -26,7 +26,7 @@ void GLOutlineScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)
     if (vertices.size() > 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, GL_OUTLINE_VERTEX_SIZE_BYTES*m_sceneryVerticesCount, &vertices[0], GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, GL_OUTLINE_VERTEX_SIZE_BYTES * m_sceneryVerticesCount, &vertices[0]);
     }
 }
 
@@ -64,7 +64,7 @@ void GLOutlineScenery::RenderSelected(const glm::mat4& transform, const Selectio
         _transform = glm::translate(_transform, glm::vec3(m_sceneryInstances[sceneryId].x, m_sceneryInstances[sceneryId].y, 0.0f));
         _transform = glm::rotate(_transform, -m_sceneryInstances[sceneryId].rotation, glm::vec3(0.0f, 0.0f, 1.0f));
         _transform = glm::scale(_transform, glm::vec3(m_sceneryInstances[sceneryId].scaleX, m_sceneryInstances[sceneryId].scaleY, 0.0f));
-
+        
         glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                            1, GL_FALSE, glm::value_ptr(_transform));
 
@@ -89,7 +89,7 @@ void GLOutlineScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
         if (vertices.size() > 0)
         {
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferData(GL_ARRAY_BUFFER, GL_OUTLINE_VERTEX_SIZE_BYTES*m_sceneryVerticesCount, &vertices[0], GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, GL_OUTLINE_VERTEX_SIZE_BYTES * MAX_SCENERY_INSTANCES_COUNT, &vertices[0], GL_DYNAMIC_DRAW);
         }
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_OUTLINE_VERTEX_SIZE_BYTES, (GLvoid*)0);
@@ -133,5 +133,13 @@ void GLOutlineScenery::GenerateGLBufferVertices(wxVector<PMSScenery> &sceneryIns
         vertices.push_back(sceneryInstances[i].height);
         vertices.push_back(1.0f);
         SetVertexColor(vertices, sceneryInstances[i].level);
+    }
+
+    for (unsigned int i = 0; i < MAX_SCENERY_INSTANCES_COUNT - sceneryInstances.size(); ++i)
+    {
+        for (unsigned j = 0; j < GL_OUTLINE_VERTEX_SIZE_BYTES; ++j)
+        {
+            vertices.push_back(0.0f);
+        }
     }
 }

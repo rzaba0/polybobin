@@ -24,7 +24,7 @@ void TransformTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 {
 }
 
-void OnCanvasKeyPress(const wxKeyEvent &event)
+void TransformTool::OnCanvasKeyPress(const wxKeyEvent &event)
 {
 }
 

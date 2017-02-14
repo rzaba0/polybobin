@@ -55,6 +55,10 @@ void SpawnPointTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
     m_canvas.PopupMenu(newSpawnPointTypeSelection);
 }
 
+void SpawnPointTool::OnCanvasKeyPress(const wxKeyEvent &event)
+{
+}
+
 void SpawnPointTool::OnTimerTick()
 {
 }

@@ -15,7 +15,7 @@ class GLPolygons: GLObject
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex,
                                PMSVertex newVertex);
 
-        // \brief clear whole buffer and set fill it with polygons
+        // \brief clear whole buffer and fill it with polygons
         void ResetPolygons(wxVector<PMSPolygon> polygons);
 
         unsigned int GetTextureWidth();

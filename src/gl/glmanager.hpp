@@ -65,7 +65,7 @@ class GLManager
         bool m_glReady;
         Map &m_map;
         Settings m_settings;
-
+        
         GLBackground m_glBackground;
         GLPolygons m_glPolygons;
         GLScenery m_glScenery;

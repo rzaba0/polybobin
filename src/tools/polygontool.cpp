@@ -79,7 +79,7 @@ void PolygonTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
     m_canvas.PopupMenu(newPolygonTypeSelection);
 }
 
-void OnCanvasKeyPress(const wxKeyEvent &event)
+void PolygonTool::OnCanvasKeyPress(const wxKeyEvent &event)
 {
 }
 

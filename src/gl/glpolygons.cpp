@@ -43,7 +43,7 @@ void GLPolygons::ResetPolygons(wxVector<PMSPolygon> polygons)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
-            GL_POLYGON_VERTEX_SIZE_BYTES * MAX_POLYGONS_COUNT * GL_POLYGON_VERTICES_COUNT, &vertices[0]);
+            GL_POLYGON_VERTEX_SIZE_BYTES * m_polygonsCount * GL_POLYGON_VERTICES_COUNT, &vertices[0]);
     }
 }
 

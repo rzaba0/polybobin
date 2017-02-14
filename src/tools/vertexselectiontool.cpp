@@ -56,7 +56,7 @@ void VertexSelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &ev
 {
 }
 
-void OnCanvasKeyPress(const wxKeyEvent &event)
+void VertexSelectionTool::OnCanvasKeyPress(const wxKeyEvent &event)
 {
 }
 

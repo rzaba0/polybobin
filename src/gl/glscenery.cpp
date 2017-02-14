@@ -23,12 +23,12 @@ void GLScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)
     if (vertices.size() > 0)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0], GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0]);
     }
     if (indices.size() > 0)
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0], GL_STATIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0]);
     }
 }
 
@@ -120,8 +120,6 @@ void GLScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
 {
     m_sceneryInstances = sceneryInstances;
 
-    int sceneryInstancesCount = sceneryInstances.size();
-
     wxVector<GLfloat> vertices;
     wxVector<GLuint> indices;
 
@@ -136,12 +134,12 @@ void GLScenery::SetupVAO(wxVector<PMSScenery> sceneryInstances)
         if (vertices.size() > 0)
         {
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryInstancesCount * 4 * 8, &vertices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAX_SCENERY_INSTANCES_COUNT * 4 * 8, &vertices[0], GL_STATIC_DRAW);
         }
         if (indices.size() > 0)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * sceneryInstancesCount, &indices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * MAX_SCENERY_INSTANCES_COUNT, &indices[0], GL_STATIC_DRAW);
         }
 
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
@@ -192,6 +190,21 @@ void GLScenery::GenerateGLBufferVertices(wxVector<PMSScenery> &sceneryInstances,
         vertices[i*8*4+30] = 1.0f;
         vertices[i*8*4+31] = 1.0f;
     }
+
+    for (i = 0; i < MAX_SCENERY_INSTANCES_COUNT - sceneryInstancesCount; ++i)
+    {
+        for (j = 0; j < 4; ++j)
+        {
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
+        }
+    }
 }
 
 void GLScenery::GenerateGLBufferIndices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLuint> &indices)
@@ -206,5 +219,15 @@ void GLScenery::GenerateGLBufferIndices(wxVector<PMSScenery> &sceneryInstances, 
         indices.push_back(i*4+1);
         indices.push_back(i*4+3);
         indices.push_back(i*4+2);
+    }
+
+    for (i = sceneryInstancesCount; i < MAX_SCENERY_INSTANCES_COUNT; ++i)
+    {
+        indices.push_back(i * 4 + 0);
+        indices.push_back(i * 4 + 1);
+        indices.push_back(i * 4 + 2);
+        indices.push_back(i * 4 + 1);
+        indices.push_back(i * 4 + 3);
+        indices.push_back(i * 4 + 2);
     }
 }

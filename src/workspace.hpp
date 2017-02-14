@@ -46,6 +46,6 @@ class Workspace: public wxWindow
         DisplaySettings m_displaySettings;
         std::unique_ptr<EventDispatcher> m_eventDispatcher;
         std::unique_ptr<SelectionManager> m_selectionManager;
-}; 
+};
 
 #endif

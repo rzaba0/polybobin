@@ -52,7 +52,7 @@ void GLOutlinePolygons::ResetPolygons(wxVector<PMSPolygon> polygons)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
-            GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT * MAX_POLYGONS_COUNT, &vertices[0]);
+            GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT * m_polygonsCount, &vertices[0]);
     }
 }
 
@@ -93,8 +93,8 @@ void GLOutlinePolygons::RenderSelected(const glm::mat4& transform, const Polygon
 
 void GLOutlinePolygons::SetupVAO(wxVector<PMSPolygon> polygons)
 {
-    m_polygonsCount = polygons.size();
     wxVector<GLfloat> vertices;
+    m_polygonsCount = polygons.size();
     GenerateGLBufferVertices(polygons, vertices);
 
     glGenBuffers(1, &m_vbo);

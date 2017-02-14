@@ -49,7 +49,7 @@ void SelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 {
 }
 
-void OnCanvasKeyPress(const wxKeyEvent &event)
+void SelectionTool::OnCanvasKeyPress(const wxKeyEvent &event)
 {
     if (event.GetUnicodeKey() == REMOVE_SELECTED_KEY)
     {
