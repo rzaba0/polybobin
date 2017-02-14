@@ -16,25 +16,25 @@ void GLSelectionPolygons::AddPolygon(PMSPolygonType polygonType, PMSVertex first
 void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                             unsigned int vertexIndex, PMSVertex newVertex)
 {
-    wxVector<GLfloat> glVertex;
-    glVertex.push_back(newVertex.x);
-    glVertex.push_back(newVertex.y);
-    glVertex.push_back(newVertex.z);
-
     PMSColor color = Utils::GetPolygonColorByType(polygonType);
-    glVertex.push_back((GLfloat)color.red / 255.0f);
-    glVertex.push_back((GLfloat)color.green / 255.0f);
-    glVertex.push_back((GLfloat)color.blue / 255.0f);
-    glVertex.push_back(0.5f);
-    glVertex.push_back(newVertex.x / m_textureWidth);
-    glVertex.push_back(newVertex.y / m_textureHeight);
+    GLfloat glVertex[] = {
+        newVertex.x,
+        newVertex.y,
+        newVertex.z,
+        (GLfloat)color.red / 255.0f,
+        (GLfloat)color.green / 255.0f,
+        (GLfloat)color.blue / 255.0f,
+        0.5f,
+        newVertex.x / m_textureWidth,
+        newVertex.y / m_textureHeight
+    };
 
 
     int offset = polygonIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT +
         vertexIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES;
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, &glVertex[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, glVertex);
 }
 
 void GLSelectionPolygons::RenderSelected(const glm::mat4& transform, const PolygonSelection& selectedPolygons)
