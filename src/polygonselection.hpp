@@ -25,6 +25,8 @@ public:
     void unselect(unsigned polyId, unsigned vertexId);
     void unselectAll();
 
+    void completeSelection();
+
     bool empty() const;
     size_t PolygonSelection::size() const;
 

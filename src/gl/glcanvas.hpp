@@ -1,5 +1,4 @@
-#ifndef GLCANVAS_HPP
-#define GLCANVAS_HPP
+#pragma once
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
@@ -13,45 +12,54 @@
 #include "../map/map.hpp"
 #include "../selection.hpp"
 #include "../settings.hpp"
+#include "../canvas.hpp"
 
 class MainFrame;
 
 /**
  * \brief Custom implementation of OpenGL canvas.
  */
-class GLCanvas: public wxGLCanvas
+class GLCanvas: public wxGLCanvas, public Canvas
 {
     public:
-        GLCanvas(wxWindow *parent, MainFrame& mainFrame, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map);
+        GLCanvas(wxWindow *parent,
+            MainFrame& mainFrame,
+            Settings settings,
+            const DisplaySettings& displaySettings,
+            const wxGLAttributes &glCanvasAttributes,
+            const PolygonSelection& polygonSelection,
+            const Selection& Sceneryelection,
+            Map &map
+        );
         virtual ~GLCanvas() = default;
 
-        DisplaySettings GetDisplaySettings() { return m_displaySettings; }
-        void SetDisplaySetting(int setting, bool display);
         wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
 
         PMSVertex CreateVertex(wxColor color, wxPoint point);
 
-        int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex);
-        void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType,
-            unsigned vertexIndex, PMSVertex vertex);
+        int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
+        void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
+        const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
         void GLCanvas::PopupMenu(wxMenu* menu);
 
-        void HandleLeftMouseButtonClick(const wxMouseEvent& event);
-        void HandleMouseMotion(const wxMouseEvent &event);
-        void HandleRightMouseButtonRelease(const wxMouseEvent& event);
+        void HandleLeftMouseButtonClick(const wxMouseEvent& event) override;
+        void HandleMouseMotion(const wxMouseEvent &event) override;
+        void HandleRightMouseButtonRelease(const wxMouseEvent& event) override;
 
-        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
-        void SetPolygonsTexture(wxString textureFilename);
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) override;
+        void SetPolygonsTexture(wxString textureFilename) override;
 
+        unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
     private:
         Camera m_camera;
-        DisplaySettings m_displaySettings;
         GLManager m_glManager;
         Map &m_map;
         MainFrame& m_mainFrame;
         wxPoint m_mousePositionOnCanvas,
                 m_mousePositionOnMap;
-        bool m_movingSelected;
+        const DisplaySettings& m_displaySettings;
+        const PolygonSelection& m_polygonSelection;
+        const Selection& m_scenerySelection;
 
         void OnMouseWheel(wxMouseEvent &event);
         void OnNewPolygonTypeSelected(wxCommandEvent &event);
@@ -61,5 +69,3 @@ class GLCanvas: public wxGLCanvas
         wxPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas);
         void InitGL();
 };
-
-#endif

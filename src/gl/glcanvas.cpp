@@ -3,15 +3,25 @@
 #include "../constants.hpp"
 #include "../mainframe.hpp"
 
-GLCanvas::GLCanvas(wxWindow *parent, MainFrame& mainFrame, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map)
+GLCanvas::GLCanvas(wxWindow *parent,
+        MainFrame& mainFrame,
+        Settings settings,
+        const DisplaySettings& displaySettings,
+        const wxGLAttributes &glCanvasAttributes,
+        const PolygonSelection& polygonSelection,
+        const Selection& scenerySelection,
+        Map &map
+    )
     : wxGLCanvas(parent, glCanvasAttributes, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW | wxEXPAND)
     , m_map(map)
     , m_glManager(settings, map)
     , m_mainFrame(mainFrame)
+    , m_displaySettings{displaySettings}
+    , m_polygonSelection{polygonSelection}
+    , m_scenerySelection{scenerySelection}
 {
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
-    m_movingSelected = false;
 
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
     Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
@@ -32,15 +42,14 @@ void GLCanvas::EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonTy
     m_glManager.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
 }
 
+const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
+{
+    return m_map.GetPolygons()[polygonIndex];
+}
+
 void GLCanvas::PopupMenu(wxMenu* menu)
 {
     wxWindow::PopupMenu(menu);
-}
-
-void GLCanvas::SetDisplaySetting(int setting, bool display)
-{
-    m_displaySettings.SetDisplaySetting(setting, display);
-    Refresh();
 }
 
 void GLCanvas::HandleLeftMouseButtonClick(const wxMouseEvent &event)
@@ -82,6 +91,8 @@ void GLCanvas::SetPolygonsTexture(wxString textureFilename)
     Refresh();
 }
 
+// TODO: move this functionality to suitable place
+// For now it's kind of bound here by m_glManager
 PMSVertex GLCanvas::CreateVertex(wxColor color, wxPoint canvasPoint)
 {
     auto point = GetMousePositionOnMap(canvasPoint);
@@ -125,10 +136,7 @@ void GLCanvas::OnPaint(wxPaintEvent &event)
 
     wxGetApp().GetGLContext(this);
 
-    m_glManager.Render(m_camera, this->GetSize(), m_displaySettings,
-    {}, {}, //AddingPolygon());
-        //false);
-        true);
+    m_glManager.Render(m_camera, this->GetSize(), m_displaySettings, m_polygonSelection, m_scenerySelection, true);
     SwapBuffers();
 }
 

@@ -29,7 +29,7 @@ GLCanvas &Notebook::GetCurrentGLCanvas()
     return GetCurrentWorkspace().GetGLCanvas();
 }
 
-DisplaySettings& Notebook::GetCurrentDisplaySettings()
+const DisplaySettings& Notebook::GetCurrentDisplaySettings()
 {
     return GetCurrentWorkspace().GetDisplaySettings();
 }

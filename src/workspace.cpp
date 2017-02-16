@@ -1,7 +1,9 @@
 #include "workspace.hpp"
 #include "gl/glcanvas.hpp"
+#include "gl/displaysettings.hpp"
 #include "eventdispatcherfactory.hpp"
 #include <wx/glcanvas.h>
+#include <utility>
 
 Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath)
     : wxWindow(notebook, wxID_ANY)
@@ -15,23 +17,26 @@ Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings
     {
         throw std::runtime_error("OpenGL display attributes are not supported. The program will quit now.");
     }
-
-    m_glCanvas = new GLCanvas(this, mainFrame, settings, glCanvasAttributes, m_map);
+    auto polygonSelection = std::make_unique<PolygonSelection>();
+    auto scenerySelection = std::make_unique<Selection>();
+    m_glCanvas = new GLCanvas(this, mainFrame, settings, m_displaySettings, glCanvasAttributes, *polygonSelection, *scenerySelection, m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
-    sizer->Add(m_glCanvas, 1, wxEXPAND);
     m_eventDispatcher = MakeEventDispatcher(*m_glCanvas, mainFrame);
-    m_eventDispatcher->Select(1);
+    m_eventDispatcher->Select(3);
+    m_selectionManager = std::make_unique<SelectionManager>(*m_glCanvas, m_displaySettings, std::move(polygonSelection), std::move(scenerySelection));
+    sizer->Add(m_glCanvas, 1, wxEXPAND);
 }
 
-DisplaySettings Workspace::GetDisplaySettings()
+const DisplaySettings& Workspace::GetDisplaySettings()
 {
-    return m_glCanvas->GetDisplaySettings();
+    return m_displaySettings;
 }
 
 void Workspace::SetDisplaySetting(int setting, bool display)
 {
-    m_glCanvas->SetDisplaySetting(setting, display);
+    m_displaySettings.SetDisplaySetting(setting, display);
+    m_glCanvas->Refresh();
 }
 
 wxPoint Workspace::GetMousePositionOnMap()

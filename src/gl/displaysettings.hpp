@@ -1,5 +1,4 @@
-#ifndef DISPLAYSETTINGS_HPP
-#define DISPLAYSETTINGS_HPP
+#pragma once
 
 #include "../constants.hpp"
 
@@ -11,10 +10,9 @@
     public:
         DisplaySettings();
         void SetDisplaySetting(int setting, bool display);
-        bool ShouldDisplay(int setting);
-
+        bool ShouldDisplay(int setting) const;
+        bool ShouldDisplayPolygons() const { return ShouldDisplay(DISPLAY_POLYGONS); }
+        bool ShouldDisplayScenery()  const { return ShouldDisplay(DISPLAY_SCENERY); }
     private:
         bool m_settings[DISPLAY_SETTINGS_COUNT];
  };
-
-#endif

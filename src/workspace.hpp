@@ -10,6 +10,8 @@
 #include "map/map.hpp"
 #include "settings.hpp"
 #include "eventdispatcher.hpp"
+#include "selectionmanager.hpp"
+#include <memory>
 
 /**
  * \brief Represents a page inside our Notebook class.
@@ -23,7 +25,7 @@ class Workspace: public wxWindow
         Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath);
         ~Workspace() = default;
 
-        DisplaySettings GetDisplaySettings();
+        const DisplaySettings& GetDisplaySettings();
         void SetDisplaySetting(int setting, bool display);
 
         GLCanvas& GetGLCanvas() { return *m_glCanvas; }
@@ -41,7 +43,9 @@ class Workspace: public wxWindow
     private:
         GLCanvas* m_glCanvas;
         Map m_map;
+        DisplaySettings m_displaySettings;
         std::unique_ptr<EventDispatcher> m_eventDispatcher;
-};
+        std::unique_ptr<SelectionManager> m_selectionManager;
+}; 
 
 #endif

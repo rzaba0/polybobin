@@ -1,6 +1,7 @@
 #include "map.hpp"
 #include "../constants.hpp"
 #include <wx/file.h>
+#include <utility>
 
 Map::Map(wxString path)
 {
@@ -16,7 +17,7 @@ Map::Map(wxString path)
 
 int Map::AddPolygon(PMSPolygon polygon)
 {
-    m_polygons.push_back(polygon);
+    m_polygons.push_back(std::move(polygon));
 
     for (unsigned int i = 0; i < 3; ++i)
     {

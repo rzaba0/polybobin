@@ -87,8 +87,6 @@ void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
     wxColor selectedColor = m_paletteFrame->GetColor();
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
     wxPoint mousePositionOnCanvas = event.GetPosition();
-    //m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
-    //                                                      selectedColor);
 }
 
 void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
@@ -100,13 +98,11 @@ void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
     SetStatusText(statusText);
 
     wxColor selectedColor = m_paletteFrame->GetColor();
-    //m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
 }
 
 void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)
 {
     int selectedToolId = m_toolbarFrame->GetSelectedToolId();
-    //m_notebook->HandleCurrentGLCanvasRightMouseButtonRelease(selectedToolId);
 }
 
 void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)

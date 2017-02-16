@@ -60,6 +60,14 @@ void PolygonSelection::unselectAll()
     m_selected.clear();
 }
 
+void PolygonSelection::completeSelection()
+{
+    for (auto& poly : m_selected)
+    {
+        poly.vertex[0] = poly.vertex[1] = poly.vertex[2] = true;
+    }
+}
+
 bool PolygonSelection::empty() const
 {
     return m_selected.empty();

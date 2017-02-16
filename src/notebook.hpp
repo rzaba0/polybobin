@@ -24,7 +24,7 @@ class Notebook: public wxNotebook
         Notebook(wxWindow *parent, MainFrame& mainFrame);
         void AddWorkspace(Settings settings, wxString mapPath);
        
-        DisplaySettings& GetCurrentDisplaySettings();
+        const DisplaySettings& GetCurrentDisplaySettings();
         GLCanvas& GetCurrentGLCanvas();
         Map& GetCurrentMap();
         wxPoint GetCurrentMousePositionOnMap();
