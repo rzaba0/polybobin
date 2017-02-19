@@ -1,6 +1,6 @@
 #include "eventdispatcher.hpp"
 
-EventDispatcher::EventDispatcher(ToolSet tools, GLCanvas& canvas)
+EventDispatcher::EventDispatcher(ToolSet tools, Canvas& canvas)
     : m_selectedToolId{-1}
     , m_canvas{canvas}
     , m_tools{std::move(tools)}

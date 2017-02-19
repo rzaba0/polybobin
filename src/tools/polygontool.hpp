@@ -1,4 +1,11 @@
 #pragma once
+
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+#include "../gl/glcanvas.hpp"
+
 #include "tool.hpp"
 #include "../miniframes/paletteframe.hpp"
 
@@ -16,6 +23,7 @@ public:
     ~PolygonTool() override = default;
 
 private:
+    GLCanvas& m_canvas;
     const PaletteFrame& m_palette;
     unsigned m_addedPolygonVerticesCount;
     PMSPolygonType m_newPolygonType;

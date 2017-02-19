@@ -1,7 +1,7 @@
 #include "polygontool.hpp"
 
 PolygonTool::PolygonTool(GLCanvas& canvas, const PaletteFrame& palette)
-    : Tool{canvas}
+    : m_canvas{canvas}
     , m_palette{palette}
     , m_addedPolygonVerticesCount{}
     , m_newPolygonType{PMSPolygonType::ptNORMAL}
@@ -21,6 +21,7 @@ void PolygonTool::OnUnselect()
 
 void PolygonTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
 {
+    // TODO: separate this functionality somehow
     PMSVertex vertex = m_canvas.CreateVertex(m_palette.GetColor(), event.GetPosition());
     if (m_addedPolygonVerticesCount == 0)
     {
@@ -59,10 +60,7 @@ void PolygonTool::OnCanvasMouseMotion(const wxMouseEvent &event)
         PMSVertex vertex = m_canvas.CreateVertex(m_palette.GetColor(), event.GetPosition());
 
         // Update the positions of the vertices that haven't been set yet.
-        //for (unsigned i = m_addedPolygonVerticesCount; i < 3; ++i)
-        {
-            m_canvas.EditPolygonVertex(m_polygonId, m_newPolygonType, m_addedPolygonVerticesCount, vertex);
-        }
+        m_canvas.EditPolygonVertex(m_polygonId, m_newPolygonType, m_addedPolygonVerticesCount, vertex);
         m_canvas.Refresh();
     }
 }
