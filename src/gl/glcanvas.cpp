@@ -1,3 +1,5 @@
+#include <cmath>
+#include <string>
 #include "glcanvas.hpp"
 #include "../app.hpp"
 #include "../constants.hpp"
@@ -22,7 +24,6 @@ GLCanvas::GLCanvas(wxWindow *parent,
 {
     wxGLContextAttrs glContextAttributes;
     glContextAttributes.PlatformDefaults().CoreProfile().EndList();
-
     Bind(wxEVT_MOUSEWHEEL, &GLCanvas::OnMouseWheel, this);
     Bind(wxEVT_PAINT, &GLCanvas::OnPaint, this);
     Bind(wxEVT_SIZE, &GLCanvas::OnResize, this);
@@ -54,25 +55,22 @@ void GLCanvas::PopupMenu(wxMenu* menu)
 
 void GLCanvas::HandleLeftMouseButtonClick(const wxMouseEvent &event)
 {
-    m_mousePositionOnCanvas = event.GetPosition();
-    m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+    m_mousePositionOnMap = GetMousePositionOnMap(event.GetPosition());
 }
 
 void GLCanvas::HandleMouseMotion(const wxMouseEvent &event)
 {
-    wxPoint newMousePositionOnCanvas = event.GetPosition();
-
-    wxPoint oldMousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
-    wxPoint newMousePositionOnMap = GetMousePositionOnMap(newMousePositionOnCanvas);
+    wxRealPoint newMousePositionOnMap = GetMousePositionOnMap(event.GetPosition());
     if (event.MiddleIsDown() && event.Dragging())
     {
-        m_camera.ScrollX((float)(oldMousePositionOnMap.x - newMousePositionOnMap.x));
-        m_camera.ScrollY((float)(oldMousePositionOnMap.y - newMousePositionOnMap.y));
-
+        m_camera.ScrollX(m_mousePositionOnMap.x - newMousePositionOnMap.x);
+        m_camera.ScrollY(m_mousePositionOnMap.y - newMousePositionOnMap.y);
         Refresh();
     }
-    m_mousePositionOnCanvas = newMousePositionOnCanvas;
-    m_mousePositionOnMap = GetMousePositionOnMap(m_mousePositionOnCanvas);
+    m_mousePositionOnMap = GetMousePositionOnMap(event.GetPosition());
+    std::string mousePosition = std::to_string(int(round(m_mousePositionOnMap.x)))
+        + " " + std::to_string(int(round(m_mousePositionOnMap.y)));
+    m_mainFrame.SetStatusText(mousePosition);
 }
 
 void GLCanvas::HandleRightMouseButtonRelease(const wxMouseEvent &event)
@@ -88,6 +86,11 @@ void GLCanvas::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgr
 void GLCanvas::SetPolygonsTexture(wxString textureFilename)
 {
     m_glManager.SetPolygonsTexture(textureFilename);
+    Refresh();
+}
+
+void GLCanvas::Draw()
+{
     Refresh();
 }
 
@@ -161,23 +164,17 @@ void GLCanvas::OnResize(wxSizeEvent &event)
 }
 
 
-wxPoint GLCanvas::GetMousePositionOnMap(wxPoint mousePositionOnCanvas)
+wxRealPoint GLCanvas::GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const
 {
-    wxPoint result;
     wxSize canvasSize = GetSize();
 
     /**
      * Proportion from which we take the formula:
      * mousePositionOnCanvas.x : canvasSize.GetWidth() = result.x : m_camera.GetWidth()
      */
-
-    result.x = (int) (m_camera.GetX() +
-                     (float) mousePositionOnCanvas.x * m_camera.GetWidth(canvasSize) / (float) canvasSize.GetWidth());
-
-    result.y = (int) (m_camera.GetY() +
-                     (float) mousePositionOnCanvas.y * m_camera.GetHeight(canvasSize) / (float)canvasSize.GetHeight());
-
-    return result;
+    double x = m_camera.GetX() + double(mousePositionOnCanvas.x) * m_camera.GetWidth(canvasSize) / double(canvasSize.GetWidth());
+    double y = m_camera.GetY() + double(mousePositionOnCanvas.y) * m_camera.GetHeight(canvasSize) / double(canvasSize.GetHeight());
+    return {x, y};
 }
 
 void GLCanvas::InitGL()

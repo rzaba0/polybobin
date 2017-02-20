@@ -33,8 +33,6 @@ class GLCanvas: public wxGLCanvas, public Canvas
         );
         virtual ~GLCanvas() = default;
 
-        wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
-
         PMSVertex CreateVertex(wxColor color, wxPoint point);
 
         int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
@@ -50,13 +48,16 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void SetPolygonsTexture(wxString textureFilename) override;
 
         unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
+
+        void Draw() override;
+
+        wxRealPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const;
     private:
         Camera m_camera;
         GLManager m_glManager;
         Map &m_map;
         MainFrame& m_mainFrame;
-        wxPoint m_mousePositionOnCanvas,
-                m_mousePositionOnMap;
+        wxRealPoint m_mousePositionOnMap;
         const DisplaySettings& m_displaySettings;
         const PolygonSelection& m_polygonSelection;
         const Selection& m_scenerySelection;
@@ -65,7 +66,5 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void OnNewPolygonTypeSelected(wxCommandEvent &event);
         void OnPaint(wxPaintEvent &event);
         void OnResize(wxSizeEvent &event);
-
-        wxPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas);
         void InitGL();
 };

@@ -39,10 +39,6 @@ Map &Notebook::GetCurrentMap()
     return GetCurrentWorkspace().GetMap();
 }
 
-wxPoint Notebook::GetCurrentMousePositionOnMap()
-{
-    return GetCurrentWorkspace().GetMousePositionOnMap();
-}
 void Notebook::SaveCurrentMapAsPMS(const wxString& destinationPath)
 {
     GetCurrentWorkspace().SaveMapAsPMS(destinationPath);

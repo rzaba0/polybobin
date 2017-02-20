@@ -17,5 +17,7 @@ public:
     virtual void HandleMouseMotion(const wxMouseEvent &event) = 0;
     virtual void HandleRightMouseButtonRelease(const wxMouseEvent& event) = 0;
 
+    virtual void Draw() = 0;
+
     virtual ~Canvas() = default;
 };

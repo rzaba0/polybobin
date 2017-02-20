@@ -30,7 +30,6 @@ class Workspace: public wxWindow
 
         GLCanvas& GetGLCanvas() { return *m_glCanvas; }
         Map &GetMap() { return m_map; }
-        wxPoint GetMousePositionOnMap();
 
         void GiveFocusToGLCanvas();
 

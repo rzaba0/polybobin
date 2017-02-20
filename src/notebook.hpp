@@ -27,7 +27,6 @@ class Notebook: public wxNotebook
         const DisplaySettings& GetCurrentDisplaySettings();
         GLCanvas& GetCurrentGLCanvas();
         Map& GetCurrentMap();
-        wxPoint GetCurrentMousePositionOnMap();
 
         void SetCurrentDisplaySetting(int setting, bool display);
         void SaveCurrentMapAsPMS(const wxString& destinationPath);

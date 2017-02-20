@@ -41,9 +41,6 @@ class MainFrame: public wxFrame
 
         void OnBackgroundColorChanged(wxColourPickerEvent &event);
         void OnDisplayFrameCheckBoxClicked(wxCommandEvent &event);
-        void OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event);
-        void OnGLCanvasMouseMotion(wxMouseEvent &event);
-        void OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event);
         void OnMenuBarItemClicked(wxCommandEvent &event);
         void OnNotebookPageChanged(wxBookCtrlEvent &event);
         void OnPolygonsTextureChanged(wxCommandEvent &event);

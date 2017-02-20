@@ -22,9 +22,9 @@ Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings
     m_glCanvas = new GLCanvas(this, mainFrame, settings, m_displaySettings, glCanvasAttributes, *polygonSelection, *scenerySelection, m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
-    m_eventDispatcher = MakeEventDispatcher(*m_glCanvas, mainFrame);
-    m_eventDispatcher->Select(3);
     m_selectionManager = std::make_unique<SelectionManager>(*m_glCanvas, m_displaySettings, std::move(polygonSelection), std::move(scenerySelection));
+    m_eventDispatcher = CreateEventDispatcher(*m_glCanvas, mainFrame, *m_selectionManager);
+    m_eventDispatcher->Select(3);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
 }
 
@@ -37,11 +37,6 @@ void Workspace::SetDisplaySetting(int setting, bool display)
 {
     m_displaySettings.SetDisplaySetting(setting, display);
     m_glCanvas->Refresh();
-}
-
-wxPoint Workspace::GetMousePositionOnMap()
-{
-    return m_glCanvas->GetMousePositionOnMap();
 }
 
 void Workspace::GiveFocusToGLCanvas()

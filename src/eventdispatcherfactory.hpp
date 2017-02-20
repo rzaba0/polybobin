@@ -3,7 +3,8 @@
 #include "gl/glcanvas.hpp"
 #include <wx/glcanvas.h>
 #include "eventdispatcher.hpp"
+#include "selectionmanager.hpp"
 
 class MainFrame;
 
-std::unique_ptr<EventDispatcher> MakeEventDispatcher(GLCanvas& canvas, MainFrame& mainFrame);
+std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFrame& mainFrame, SelectionManager& selectionManager);

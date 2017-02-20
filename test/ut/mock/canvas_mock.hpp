@@ -17,4 +17,5 @@ public:
     MOCK_METHOD1(HandleLeftMouseButtonClick, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleMouseMotion, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleRightMouseButtonRelease, void(const wxMouseEvent&));
+    MOCK_METHOD0(Draw, void(void));
 };
