@@ -36,6 +36,8 @@ class GLManager
 
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
 
+        void ApplyPolygonSelection(const PolygonSelection& selectedPolygons);
+
         unsigned int GetTextureWidth();
         unsigned int GetTextureHeight();
 

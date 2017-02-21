@@ -7,6 +7,7 @@ class Canvas
 public:
     virtual int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) = 0;
     virtual void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) = 0;
+    virtual void UpdatePolygonSelectionForRedraw() = 0;
     virtual const PMSPolygon& GetPolygon(unsigned polygonIndex) const = 0;
     virtual unsigned GetPolygonCount() const = 0;
 

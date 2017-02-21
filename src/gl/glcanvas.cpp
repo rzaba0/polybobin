@@ -94,6 +94,11 @@ void GLCanvas::Draw()
     Refresh();
 }
 
+void GLCanvas::UpdatePolygonSelectionForRedraw()
+{
+    m_glManager.ApplyPolygonSelection(m_polygonSelection);
+}
+
 // TODO: move this functionality to suitable place
 // For now it's kind of bound here by m_glManager
 PMSVertex GLCanvas::CreateVertex(wxColor color, wxPoint canvasPoint)

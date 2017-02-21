@@ -8,6 +8,7 @@ class CanvasMock : public Canvas
 public:
     MOCK_METHOD2(AddPolygon, int(PMSPolygon, PMSVertex));
     MOCK_METHOD4(EditPolygonVertex, void(unsigned, PMSPolygonType, unsigned, PMSVertex));
+    MOCK_METHOD0(UpdatePolygonSelectionForRedraw, void(void));
     MOCK_CONST_METHOD1(GetPolygon, const PMSPolygon&(unsigned));
     MOCK_CONST_METHOD0(GetPolygonCount, unsigned(void));
 

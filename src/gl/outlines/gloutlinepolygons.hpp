@@ -20,7 +20,7 @@ class GLOutlinePolygons: public GLOutline
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex newVertex);
-
+        void ApplySelection(const PolygonSelection& selectedPolygons);
         /**
          * \brief Renders outline for all polygons.
          */
@@ -33,6 +33,7 @@ class GLOutlinePolygons: public GLOutline
         void SetupVAO(wxVector<PMSPolygon> polygons);
 
     private:
+        void ApplyVertexAlpha(unsigned polygonIndex, unsigned vertexIndex, GLfloat alpha);
         GLuint m_vbo;
         unsigned int m_polygonsCount;
 

@@ -25,11 +25,28 @@ void GLOutlinePolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonT
     glVertex.push_back((GLfloat)color.blue / 255.0f);
     glVertex.push_back((GLfloat)color.alpha / 255.0f);
 
-    int offset = polygonIndex * GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT +
+    const int offset = polygonIndex * GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT +
         vertexIndex * GL_OUTLINE_VERTEX_SIZE_BYTES;
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, offset, GL_OUTLINE_VERTEX_SIZE_BYTES, &glVertex[0]);
+}
+
+void GLOutlinePolygons::ApplyVertexAlpha(unsigned polygonIndex, unsigned vertexIndex, GLfloat alpha)
+{
+    constexpr int alphaOffset = 6 * sizeof(GLfloat);
+    const int offset = polygonIndex * GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT +
+        vertexIndex * GL_OUTLINE_VERTEX_SIZE_BYTES + alphaOffset;
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(GLfloat), &alpha);
+}
+
+void GLOutlinePolygons::ApplySelection(const PolygonSelection& selectedPolygons)
+{
+    for (const auto& poly : selectedPolygons)
+        for (unsigned i = 0; i < 3; i++)
+            ApplyVertexAlpha(poly.id, i, poly.vertex[i] ? 1.0f : 0.0f);
 }
 
 void GLOutlinePolygons::RenderAll(const glm::mat4& transform)

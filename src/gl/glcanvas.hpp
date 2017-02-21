@@ -38,6 +38,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
         int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
         void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
         const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
+        void UpdatePolygonSelectionForRedraw() override;
         void GLCanvas::PopupMenu(wxMenu* menu);
 
         void HandleLeftMouseButtonClick(const wxMouseEvent& event) override;

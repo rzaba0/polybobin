@@ -16,6 +16,12 @@ GLManager::GLManager(Settings settings, Map &map) : m_glOutlineScenerySelection(
     m_settings = settings;
 }
 
+void GLManager::ApplyPolygonSelection(const PolygonSelection& selectedPolygons)
+{
+    m_glSelectionPolygons.ApplySelection(selectedPolygons);
+    m_glOutlinePolygons.ApplySelection(selectedPolygons);
+}
+
 void GLManager::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
     m_glBackground.UpdateVBO(m_map.GetBackgroundTopColor(), m_map.GetBackgroundBottomColor(),

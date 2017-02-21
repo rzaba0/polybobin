@@ -13,6 +13,7 @@ void SelectionManager::SelectAll()
 {
     if (m_displaySettings.ShouldDisplayPolygons())
         m_polygonSelection->selectAll(m_canvas.GetPolygonCount());
+    m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
@@ -32,12 +33,14 @@ void SelectionManager::PunctualSelect(wxPoint p, bool append)
             m_polygonSelection->select(i);
         }
     }
+    m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
 void SelectionManager::RectangularSelect(wxPoint a, wxPoint b, bool append)
 {
     if (!append) m_polygonSelection->unselectAll();
+    m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
@@ -61,6 +64,7 @@ void SelectionManager::RectangularUnselect(wxPoint a, wxPoint b)
 void SelectionManager::CompletePolygonSelection()
 {
     m_polygonSelection->completeSelection();
+    m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
