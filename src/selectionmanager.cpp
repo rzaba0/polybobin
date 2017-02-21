@@ -1,5 +1,6 @@
 #include "selectionmanager.hpp"
 #include <utility>
+#include <algorithm>
 
 SelectionManager::SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection)
     : m_canvas{canvas}
@@ -23,41 +24,31 @@ void SelectionManager::UnselectAll()
     m_canvas.Draw();
 }
 
-void SelectionManager::PunctualSelect(wxPoint p, bool append)
+void SelectionManager::PunctualSelect(wxRealPoint p, bool append)
 {
     if (!append) m_polygonSelection->unselectAll();
-    unsigned polyNum = m_canvas.GetPolygonCount();
-    for (unsigned i = 0; i < polyNum; ++i)
-    {
-        if (m_canvas.GetPolygon(i).Contains(p.x, p.y)) {
-            m_polygonSelection->select(i);
-        }
-    }
+    ForEachPolyAtPosition(std::move(p), [&](unsigned polyId) { m_polygonSelection->select(polyId); });
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
-void SelectionManager::RectangularSelect(wxPoint a, wxPoint b, bool append)
+void SelectionManager::RectangularSelect(wxRealPoint a, wxRealPoint b, bool append)
 {
     if (!append) m_polygonSelection->unselectAll();
+    ForEachVerticleInRectangle(a, b, [&](unsigned polyId, unsigned vertexId) { m_polygonSelection->select(polyId, vertexId); });
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
-void SelectionManager::PunctualUnselect(wxPoint p)
+void SelectionManager::PunctualUnselect(wxRealPoint p)
 {
-    unsigned polyNum = m_canvas.GetPolygonCount();
-    for (unsigned i = 0; i < polyNum; ++i)
-    {
-        if (m_canvas.GetPolygon(i).Contains(p.x, p.y)) {
-            m_polygonSelection->unselect(i);
-        }
-    }
+    ForEachPolyAtPosition(std::move(p), [&](unsigned polyId) { m_polygonSelection->unselect(polyId); });
     m_canvas.Draw();
 }
 
-void SelectionManager::RectangularUnselect(wxPoint a, wxPoint b)
+void SelectionManager::RectangularUnselect(wxRealPoint a, wxRealPoint b)
 {
+    ForEachVerticleInRectangle(a, b, [&](unsigned polyId, unsigned vertexId) { m_polygonSelection->unselect(polyId, vertexId); });
     m_canvas.Draw();
 }
 
@@ -85,4 +76,36 @@ void SelectionManager::MoveSelection(float vx, float vy)
         }
     }
     m_canvas.Draw();
+}
+
+void SelectionManager::ForEachPolyAtPosition(wxRealPoint p, std::function<void(unsigned)> operation)
+{
+    unsigned polyNum = m_canvas.GetPolygonCount();
+    for (unsigned i = 0; i < polyNum; i++)
+    {
+        if (m_canvas.GetPolygon(i).Contains(p.x, p.y)) {
+            operation(i);
+        }
+    }
+}
+
+void SelectionManager::ForEachVerticleInRectangle(wxRealPoint a, wxRealPoint b, std::function<void(unsigned, unsigned)> operation)
+{
+    float xMin = std::min(a.x, b.x);
+    float xMax = std::max(a.x, b.x);
+    float yMin = std::min(a.y, b.y);
+    float yMax = std::max(a.y, b.y);
+    unsigned polyNum = m_canvas.GetPolygonCount();
+    for (unsigned i = 0; i < polyNum; i++)
+    {
+        const auto& polygon = m_canvas.GetPolygon(i);
+        for (unsigned j = 0; j < 3; j++)
+        {
+            const auto& vertex = polygon.vertices[i];
+            if (vertex.x >= xMin && vertex.x <= xMax && vertex.y >= yMin && vertex.y <= yMax)
+            {
+                operation(i, j);
+            }
+        }
+    }
 }
