@@ -34,6 +34,7 @@ class Notebook: public wxNotebook
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
         void SetPolygonsTexture(const wxString& textureFilename);
 
+        void OnToolSelected(int toolId);
     private:
         MainFrame& m_mainFrame;
         Workspace& GetCurrentWorkspace();

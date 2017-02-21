@@ -59,6 +59,11 @@ void Notebook::SetPolygonsTexture(const wxString& textureFilename)
     GetCurrentWorkspace().SetPolygonsTexture(textureFilename);
 }
 
+void Notebook::OnToolSelected(int toolId)
+{
+    GetCurrentWorkspace().SelectTool(toolId);
+}
+
 void Notebook::OnPageChanged(wxBookCtrlEvent &event)
 {
     GetCurrentWorkspace().GiveFocusToGLCanvas();

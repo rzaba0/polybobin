@@ -1,8 +1,10 @@
 #include "toolbarframe.hpp"
 #include "../constants.hpp"
+#include <utility>
 
-ToolbarFrame::ToolbarFrame(wxWindow *parent)
+ToolbarFrame::ToolbarFrame(wxWindow *parent, ToolSelectionCallback toolSelecitoncallback)
     : MiniFrame(parent, ID_FRAME_TOOLBAR, "Toolbar", wxDefaultPosition, wxDefaultSize)
+    , m_toolSelectionCallback{std::move(toolSelecitoncallback)}
 {
     wxImage::AddHandler(new wxPNGHandler);
     wxImage toolsImage(PATH_GFX_TOOLS, wxBITMAP_TYPE_PNG);
@@ -36,6 +38,7 @@ void ToolbarFrame::OnButtonToggled(wxCommandEvent &event)
 
     SetToggleButtonValue(m_selectedToolId, false);
     SetToggleButtonValue(toggledButtonId, true);
+    m_toolSelectionCallback(toggledButtonId - ID_TOOL_TRANSFORM);
     m_selectedToolId = toggledButtonId;
 }
 

@@ -24,7 +24,6 @@ Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings
     SetSizer(sizer);
     m_selectionManager = std::make_unique<SelectionManager>(*m_glCanvas, m_displaySettings, std::move(polygonSelection), std::move(scenerySelection));
     m_eventDispatcher = CreateEventDispatcher(*m_glCanvas, mainFrame, *m_selectionManager);
-    m_eventDispatcher->Select(3);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
 }
 
@@ -62,4 +61,9 @@ void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backg
 void Workspace::SetPolygonsTexture(const wxString& textureFilename)
 {
     m_glCanvas->SetPolygonsTexture(textureFilename);
+}
+
+void Workspace::SelectTool(int toolId)
+{
+    m_eventDispatcher->Select(toolId);
 }

@@ -17,6 +17,11 @@ MainFrame::MainFrame(Settings *settings)
     menuBar->Bind(wxEVT_MENU, &MainFrame::OnMenuBarItemClicked, this);
     SetMenuBar(menuBar);
 
+    wxPanel *notebookPanel = new wxPanel(this);
+    wxBoxSizer *notebookPanelSizer = new wxBoxSizer(wxVERTICAL);
+    m_notebook = new Notebook(notebookPanel, *this);
+    m_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
+
     m_displayFrame = new DisplayFrame(this);
     m_displayFrame->Show();
     // When the frame is closed, we want to update menu bar.
@@ -28,17 +33,12 @@ MainFrame::MainFrame(Settings *settings)
     m_paletteFrame->Show();
     m_paletteFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
 
-    m_toolbarFrame = new ToolbarFrame(this);
+    m_toolbarFrame = new ToolbarFrame(this, [&](int toolId) { m_notebook->OnToolSelected(toolId); });
     m_toolbarFrame->Show();
     m_toolbarFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
 
-    wxPanel *notebookPanel = new wxPanel(this);
-    wxBoxSizer *notebookPanelSizer = new wxBoxSizer(wxVERTICAL);
-    m_notebook = new Notebook(notebookPanel, *this);
-    m_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
-
     AddWorkspace(m_settings->GetSoldatPath() + "maps/test.pms");
 }
 

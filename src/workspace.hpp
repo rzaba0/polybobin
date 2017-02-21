@@ -39,6 +39,7 @@ class Workspace: public wxWindow
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
         void SetPolygonsTexture(const wxString& textureFilename);
 
+        void SelectTool(int toolId);
     private:
         GLCanvas* m_glCanvas;
         Map m_map;

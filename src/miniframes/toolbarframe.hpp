@@ -7,6 +7,9 @@
 #endif
 #include <wx/tglbtn.h>
 #include "miniframe.hpp"
+#include <functional>
+
+using ToolSelectionCallback = std::function<void(int)>;
 
 /**
  * \brief Mini frame with tool selection.
@@ -14,7 +17,7 @@
 class ToolbarFrame: public MiniFrame
 {
     public:
-        ToolbarFrame(wxWindow *parent);
+        ToolbarFrame(wxWindow *parent, ToolSelectionCallback toolSeleciton);
         int GetSelectedToolId() { return m_selectedToolId; }
 
     private:
@@ -26,6 +29,7 @@ class ToolbarFrame: public MiniFrame
 
         int m_selectedToolId;
         wxToggleButton *m_toggleButtons[TOOLBAR_TOOLS_COUNT];
+        ToolSelectionCallback m_toolSelectionCallback;
 
         void OnButtonToggled(wxCommandEvent &event);
         void SetToggleButtonValue(int toolId, bool value);
