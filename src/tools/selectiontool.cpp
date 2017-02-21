@@ -14,7 +14,6 @@ void SelectionTool::OnSelect()
 
 void SelectionTool::OnUnselect()
 {
-
 }
 
 void SelectionTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
@@ -28,6 +27,10 @@ void SelectionTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
     else
         m_selectionManager.PunctualSelect(positionOnMap, wxGetKeyState(ADD_SELECTION_KEY));
     m_mousePositionOnMap = m_canvas.GetMousePositionOnMap(event.GetPosition());
+}
+
+void SelectionTool::OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event)
+{
 }
 
 void SelectionTool::OnCanvasMouseMotion(const wxMouseEvent &event)
@@ -44,10 +47,8 @@ void SelectionTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 
 void SelectionTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
 {
-
 }
 
 void SelectionTool::OnTimerTick()
 {
-
 }

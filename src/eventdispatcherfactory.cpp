@@ -25,6 +25,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     std::unique_ptr<EventDispatcher> dispatcher = std::make_unique<EventDispatcher>(std::move(toolSet), canvas);
 
     canvas.Bind(wxEVT_LEFT_DOWN, &EventDispatcher::OnCanvasLeftMouseButtonClick, dispatcher.get());
+    canvas.Bind(wxEVT_LEFT_UP,   &EventDispatcher::OnCanvasLeftMouseButtonRelease, dispatcher.get());
     canvas.Bind(wxEVT_RIGHT_UP,  &EventDispatcher::OnCanvasRightMouseButtonRelease, dispatcher.get());
     canvas.Bind(wxEVT_MOTION,    &EventDispatcher::OnCanvasMouseMotion, dispatcher.get());
 

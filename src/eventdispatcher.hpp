@@ -13,6 +13,7 @@ public:
     void Select(int toolId);
     void Unselect();
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event);
+    void OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event);
     void OnCanvasMouseMotion(const wxMouseEvent &event);
     void OnCanvasRightMouseButtonRelease(const wxMouseEvent &event);
     ~EventDispatcher();

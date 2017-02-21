@@ -33,6 +33,12 @@ void EventDispatcher::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
         m_tools[m_selectedToolId]->OnCanvasLeftMouseButtonClick(event);
 }
 
+void EventDispatcher::OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event)
+{
+    if (m_selectedToolId >= 0)
+        m_tools[m_selectedToolId]->OnCanvasLeftMouseButtonRelease(event);
+}
+
 void EventDispatcher::OnCanvasMouseMotion(const wxMouseEvent &event)
 {
     m_canvas.HandleMouseMotion(event);

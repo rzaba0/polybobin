@@ -11,12 +11,10 @@ PolygonTool::PolygonTool(GLCanvas& canvas, const PaletteFrame& palette)
 
 void PolygonTool::OnSelect()
 {
-
 }
 
 void PolygonTool::OnUnselect()
 {
-
 }
 
 void PolygonTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
@@ -53,6 +51,10 @@ void PolygonTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
     m_canvas.Refresh();
 }
 
+void PolygonTool::OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event)
+{
+}
+
 void PolygonTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 {
     if (m_addedPolygonVerticesCount)
@@ -79,7 +81,6 @@ void PolygonTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 
 void PolygonTool::OnTimerTick()
 {
-
 }
 
 // TODO: allow to select a new type while creating polygon?
