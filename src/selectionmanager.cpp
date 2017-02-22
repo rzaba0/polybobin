@@ -101,7 +101,7 @@ void SelectionManager::ForEachVerticleInRectangle(wxRealPoint a, wxRealPoint b, 
         const auto& polygon = m_canvas.GetPolygon(i);
         for (unsigned j = 0; j < 3; j++)
         {
-            const auto& vertex = polygon.vertices[i];
+            const auto& vertex = polygon.vertices[j];
             if (vertex.x >= xMin && vertex.x <= xMax && vertex.y >= yMin && vertex.y <= yMax)
             {
                 operation(i, j);
