@@ -10,7 +10,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     ToolSet toolSet;
     toolSet.emplace_back(std::make_unique<TransformTool>());
     toolSet.emplace_back(std::make_unique<PolygonTool>(canvas, mainFrame.GetPaletteFrame()));
-    toolSet.emplace_back(std::make_unique<VertexSelectionTool>());
+    toolSet.emplace_back(std::make_unique<VertexSelectionTool>(selectionManager, canvas));
     toolSet.emplace_back(std::make_unique<SelectionTool>(selectionManager, canvas));
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(nullptr);

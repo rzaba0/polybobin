@@ -11,6 +11,7 @@ public:
     MOCK_METHOD0(UpdatePolygonSelectionForRedraw, void(void));
     MOCK_CONST_METHOD1(GetPolygon, const PMSPolygon&(unsigned));
     MOCK_CONST_METHOD0(GetPolygonCount, unsigned(void));
+    MOCK_CONST_METHOD1(GetMousePositionOnMap, wxRealPoint(wxPoint));
 
     MOCK_METHOD2(SetBackgroundColors, void(wxColor, wxColor));
     MOCK_METHOD1(SetPolygonsTexture, void(wxString));

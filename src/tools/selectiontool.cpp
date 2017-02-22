@@ -1,9 +1,9 @@
 #include "selectiontool.hpp"
 #include "../constants.hpp"
 
-SelectionTool::SelectionTool(SelectionManager& selectionManager, GLCanvas& glCanvas)
+SelectionTool::SelectionTool(SelectionManager& selectionManager, Canvas& canvas)
     : m_selectionManager{selectionManager}
-    , m_canvas{glCanvas}
+    , m_canvas{canvas}
 {
 }
 

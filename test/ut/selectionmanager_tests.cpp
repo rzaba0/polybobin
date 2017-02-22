@@ -136,6 +136,7 @@ TEST_F(SelectionManagerTest, rectangularSelectUnselectTwoPolygons)
     // unselecting the thrid vertex of the second polygon with "remove"
     EXPECT_CALL(canvas, GetPolygonCount());
     EXPECT_CALL(canvas, GetPolygon(_)).Times(2);
+    EXPECT_CALL(canvas, UpdatePolygonSelectionForRedraw());
     EXPECT_CALL(canvas, Draw());
     sut.RectangularUnselect(clickPoint1, releasePoint1);
     EXPECT_FALSE(polygonSelection->contains(1, 0));

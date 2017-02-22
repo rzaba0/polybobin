@@ -49,6 +49,7 @@ void SelectionManager::PunctualUnselect(wxRealPoint p)
 void SelectionManager::RectangularUnselect(wxRealPoint a, wxRealPoint b)
 {
     ForEachVerticleInRectangle(a, b, [&](unsigned polyId, unsigned vertexId) { m_polygonSelection->unselect(polyId, vertexId); });
+    m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 

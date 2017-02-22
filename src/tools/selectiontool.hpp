@@ -1,12 +1,12 @@
 #pragma once
 #include "tool.hpp"
-#include "../gl/glcanvas.hpp"
+#include "../canvas.hpp"
 #include "../selectionmanager.hpp"
 
 class SelectionTool : public Tool
 {
 public:
-    SelectionTool(SelectionManager& selectionManager, GLCanvas& glCanvas);
+    SelectionTool(SelectionManager& selectionManager, Canvas& glCanvas);
     void OnSelect() override;
     void OnUnselect() override;
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event) override;
@@ -18,6 +18,6 @@ public:
 
 private:
     SelectionManager& m_selectionManager;
-    GLCanvas& m_canvas;
+    Canvas& m_canvas;
     wxRealPoint m_mousePositionOnMap;
 };

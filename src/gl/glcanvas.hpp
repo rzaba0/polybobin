@@ -52,7 +52,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
 
         void Draw() override;
 
-        wxRealPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const;
+        wxRealPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const override;
     private:
         Camera m_camera;
         GLManager m_glManager;

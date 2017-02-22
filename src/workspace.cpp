@@ -50,7 +50,7 @@ void Workspace::SaveMapAsPMS(const wxString& destinationPath)
 
 void Workspace::SelectAll()
 {
-
+    m_selectionManager->SelectAll();
 }
 
 void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
