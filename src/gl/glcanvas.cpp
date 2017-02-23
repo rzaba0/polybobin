@@ -15,8 +15,8 @@ GLCanvas::GLCanvas(wxWindow *parent,
         Map &map
     )
     : wxGLCanvas(parent, glCanvasAttributes, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW | wxEXPAND)
-    , m_map(map)
     , m_glManager(settings, map)
+    , m_map(map)
     , m_mainFrame(mainFrame)
     , m_displaySettings{displaySettings}
     , m_polygonSelection{polygonSelection}

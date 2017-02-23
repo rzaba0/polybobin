@@ -73,7 +73,7 @@ bool PolygonSelection::empty() const
     return m_selected.empty();
 }
 
-size_t PolygonSelection::size() const
+std::size_t PolygonSelection::size() const
 {
     return m_selected.size();
 }

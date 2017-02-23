@@ -28,7 +28,7 @@ public:
     void completeSelection();
 
     bool empty() const;
-    size_t PolygonSelection::size() const;
+    std::size_t size() const;
 
     auto begin() const { return m_selected.begin(); }
     auto end() const { return m_selected.end(); }

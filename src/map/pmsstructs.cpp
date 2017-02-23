@@ -1,17 +1,17 @@
 #include "pmsstructs.hpp"
 
 PMSColor::PMSColor()
-    : red{ 255 }, green{ 255 }, blue{ 255 }, alpha{ 255 }
+    : blue{255}, green{255}, red{255}, alpha{255}
 {
 }
 
 PMSColor::PMSColor(wxColor col)
-    : red{ col.Red() }, green{ col.Green() }, blue{ col.Blue() }, alpha{ col.Alpha() }
+    :  blue{col.Blue()}, green{col.Green()}, red{col.Red()}, alpha{col.Alpha()}
 {
 }
 
 PMSColor::PMSColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
-    : red{ r }, green{ g }, blue{ b }, alpha{ a }
+    :  blue{b}, green{g}, red{r}, alpha{a}
 {
 }
 
