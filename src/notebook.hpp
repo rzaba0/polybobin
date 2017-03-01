@@ -12,6 +12,8 @@
 #include "settings.hpp"
 #include "workspace.hpp"
 
+class MainFrame;
+
 /**
  * \brief Represents a notebook with multiple pages/tabs. In our notebook, pages
  *  are instances of Workspace class.
@@ -19,30 +21,23 @@
 class Notebook: public wxNotebook
 {
     public:
-        Notebook(wxWindow *parent);
+        Notebook(wxWindow *parent, MainFrame& mainFrame);
         void AddWorkspace(Settings settings, wxString mapPath);
+       
+        const DisplaySettings& GetCurrentDisplaySettings();
+        GLCanvas& GetCurrentGLCanvas();
+        Map& GetCurrentMap();
 
-        DisplaySettings GetCurrentDisplaySettings();
         void SetCurrentDisplaySetting(int setting, bool display);
-
-        GLCanvas *GetCurrentGLCanvas();
-        Map &GetCurrentMap();
-        wxPoint GetCurrentMousePositionOnMap();
-
-        void HandleCurrentGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                                       wxColor selectedColor);
-        void HandleCurrentGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor);
-        void HandleCurrentGLCanvasRightMouseButtonRelease(int selectedToolId);
-
-        void SaveCurrentMapAsPMS(wxString destinationPath);
-
+        void SaveCurrentMapAsPMS(const wxString& destinationPath);
         void SelectAll();
-
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
-        void SetPolygonsTexture(wxString textureFilename);
+        void SetPolygonsTexture(const wxString& textureFilename);
 
+        void OnToolSelected(int toolId);
     private:
-        Workspace *GetCurrentWorkspace();
+        MainFrame& m_mainFrame;
+        Workspace& GetCurrentWorkspace();
         void OnPageChanged(wxBookCtrlEvent &event);
 };
 

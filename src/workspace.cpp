@@ -1,9 +1,13 @@
 #include "workspace.hpp"
 #include "gl/glcanvas.hpp"
+#include "gl/displaysettings.hpp"
+#include "eventdispatcherfactory.hpp"
 #include <wx/glcanvas.h>
+#include <utility>
 
-Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
+Workspace::Workspace(wxWindow *notebook, MainFrame& mainFrame, Settings settings, wxString mapPath)
     : wxWindow(notebook, wxID_ANY)
+    , m_map{mapPath}
 {
     wxGLAttributes glCanvasAttributes;
     glCanvasAttributes.PlatformDefaults().Defaults().EndList();
@@ -13,28 +17,25 @@ Workspace::Workspace(wxWindow *notebook, Settings settings, wxString mapPath)
     {
         throw std::runtime_error("OpenGL display attributes are not supported. The program will quit now.");
     }
-
-    m_map = std::make_unique<Map>(mapPath);
-
-    m_glCanvas = new GLCanvas(this, settings, glCanvasAttributes, *m_map);
+    auto polygonSelection = std::make_unique<PolygonSelection>();
+    auto scenerySelection = std::make_unique<Selection>();
+    m_glCanvas = new GLCanvas(this, mainFrame, settings, m_displaySettings, glCanvasAttributes, *polygonSelection, *scenerySelection, m_map);
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
+    m_selectionManager = std::make_unique<SelectionManager>(*m_glCanvas, m_displaySettings, std::move(polygonSelection), std::move(scenerySelection));
+    m_eventDispatcher = CreateEventDispatcher(*m_glCanvas, mainFrame, *m_selectionManager);
     sizer->Add(m_glCanvas, 1, wxEXPAND);
 }
 
-DisplaySettings Workspace::GetDisplaySettings()
+const DisplaySettings& Workspace::GetDisplaySettings()
 {
-    return m_glCanvas->GetDisplaySettings();
+    return m_displaySettings;
 }
 
 void Workspace::SetDisplaySetting(int setting, bool display)
 {
-    m_glCanvas->SetDisplaySetting(setting, display);
-}
-
-wxPoint Workspace::GetMousePositionOnMap()
-{
-    return m_glCanvas->GetMousePositionOnMap();
+    m_displaySettings.SetDisplaySetting(setting, display);
+    m_glCanvas->Refresh();
 }
 
 void Workspace::GiveFocusToGLCanvas()
@@ -42,30 +43,14 @@ void Workspace::GiveFocusToGLCanvas()
     m_glCanvas->SetFocus();
 }
 
-void Workspace::HandleGLCanvasLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                                   wxColor selectedColor)
+void Workspace::SaveMapAsPMS(const wxString& destinationPath)
 {
-    m_glCanvas->HandleLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId, selectedColor);
-}
-
-void Workspace::HandleGLCanvasMouseMotion(wxMouseEvent &event, wxColor selectedColor)
-{
-    m_glCanvas->HandleMouseMotion(event, selectedColor);
-}
-
-void Workspace::HandleGLCanvasRightMouseButtonRelease(int selectedToolId)
-{
-    m_glCanvas->HandleRightMouseButtonRelease(selectedToolId);
-}
-
-void Workspace::SaveMapAsPMS(wxString destinationPath)
-{
-    m_map->SaveMapAsPMS(destinationPath);
+    m_map.SaveMapAsPMS(destinationPath);
 }
 
 void Workspace::SelectAll()
 {
-    m_glCanvas->SelectAll();
+    m_selectionManager->SelectAll();
 }
 
 void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
@@ -73,7 +58,12 @@ void Workspace::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backg
     m_glCanvas->SetBackgroundColors(backgroundBottomColor, backgroundTopColor);
 }
 
-void Workspace::SetPolygonsTexture(wxString textureFilename)
+void Workspace::SetPolygonsTexture(const wxString& textureFilename)
 {
     m_glCanvas->SetPolygonsTexture(textureFilename);
+}
+
+void Workspace::SelectTool(int toolId)
+{
+    m_eventDispatcher->Select(toolId);
 }

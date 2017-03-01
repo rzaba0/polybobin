@@ -1,6 +1,7 @@
 #include "map.hpp"
 #include "../constants.hpp"
 #include <wx/file.h>
+#include <utility>
 
 Map::Map(wxString path)
 {
@@ -14,10 +15,9 @@ Map::Map(wxString path)
     }
 }
 
-void Map::AddPolygon(PMSPolygon polygon)
+int Map::AddPolygon(PMSPolygon polygon)
 {
-    m_polygons.push_back(polygon);
-    ++m_polygonsCount;
+    m_polygons.push_back(std::move(polygon));
 
     for (unsigned int i = 0; i < 3; ++i)
     {
@@ -40,6 +40,7 @@ void Map::AddPolygon(PMSPolygon polygon)
     }
 
     UpdateBoundaries();
+    return m_polygonsCount++;
 }
 
 void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
@@ -71,7 +72,7 @@ void Map::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
     m_sceneryInstances[sceneryIndex] = scenery;
 }
 
-void Map::SaveMapAsPMS(wxString destinationPath)
+void Map::SaveMapAsPMS(const wxString& destinationPath)
 {
     wxFile file;
     if (!file.Open(destinationPath, wxFile::write))

@@ -16,6 +16,12 @@ GLManager::GLManager(Settings settings, Map &map) : m_glOutlineScenerySelection(
     m_settings = settings;
 }
 
+void GLManager::ApplyPolygonSelection(const PolygonSelection& selectedPolygons)
+{
+    m_glSelectionPolygons.ApplySelection(selectedPolygons);
+    m_glOutlinePolygons.ApplySelection(selectedPolygons);
+}
+
 void GLManager::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
     m_glBackground.UpdateVBO(m_map.GetBackgroundTopColor(), m_map.GetBackgroundBottomColor(),
@@ -68,7 +74,7 @@ bool GLManager::IsGLReady()
 }
 
 void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings displaySettings,
-                       Selection selectedPolygons, Selection selectedScenery,
+                       const PolygonSelection& selectedPolygons, const Selection& selectedScenery,
                        bool addingPolygon)
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -114,25 +120,23 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
         m_glOutlineSceneryWireframe.RenderAll(transform);
     }
 
-    const auto &selectedPolygonsIds = selectedPolygons.GetSelectedIds();
-    if (selectedPolygonsIds.size() > 0)
+    if (!selectedPolygons.empty())
     {
-        m_glOutlinePolygons.RenderSelected(transform, selectedPolygonsIds);
-        m_glSelectionPolygons.RenderSelected(transform, selectedPolygonsIds);
+        m_glOutlinePolygons.RenderSelected(transform, selectedPolygons);
+        m_glSelectionPolygons.RenderSelected(transform, selectedPolygons);
     }
 
-    const auto &selectedSceneryIds = selectedScenery.GetSelectedIds();
-    if (selectedSceneryIds.size() > 0)
+    if (!selectedScenery.empty())
     {
-        m_glOutlineScenerySelection.RenderSelected(transform, selectedSceneryIds);
+       m_glOutlineScenerySelection.RenderSelected(transform, selectedScenery);
     }
 
     // We draw outline around the polygon that is currently being added.
+
     if (addingPolygon)
     {
-        wxVector<unsigned int> newPolygonId;
-        newPolygonId.push_back(m_map.GetPolygonsCount() - 1);
-        m_glOutlinePolygons.RenderSelected(transform, newPolygonId);
+        // TODO:
+        //m_glOutlinePolygons.RenderSelected(transform, m_map.GetPolygonsCount() - 1);
     }
 }
 

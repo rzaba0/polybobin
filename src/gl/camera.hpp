@@ -14,10 +14,13 @@ class Camera
     public:
         Camera();
 
-        bool CanZoomIn(), CanZoomOut();
-        float GetX(), GetY();
-        float GetWidth(wxSize canvasSize), GetHeight(wxSize canvasSize);
-        float GetZoom();
+        bool CanZoomIn() const;
+        bool CanZoomOut() const;
+        float GetX() const { return m_x; }
+        float GetY() const { return m_y; }
+        float GetZoom() const { return m_zoom; };
+        float GetWidth(wxSize canvasSize) const;
+        float GetHeight(wxSize canvasSize) const;
         void ScrollX(float delta), ScrollY(float delta);
         void ZoomIn(), ZoomOut();
 

@@ -4,42 +4,27 @@ Camera::Camera(): m_x(), m_y(), m_zoom()
 {
 }
 
-bool Camera::CanZoomIn()
+bool Camera::CanZoomIn() const
 {
     return m_zoom < ZOOM_UPPER_BOUND && fabsf(m_zoom - ZOOM_UPPER_BOUND) > EPSILON;
 }
 
-bool Camera::CanZoomOut()
+bool Camera::CanZoomOut() const
 {
     return m_zoom > ZOOM_LOWER_BOUND && fabsf(m_zoom - ZOOM_LOWER_BOUND) > EPSILON;
 }
 
-float Camera::GetX()
-{
-    return m_x;
-}
-
-float Camera::GetY()
-{
-    return m_y;
-}
-
-float Camera::GetWidth(wxSize canvasSize)
+float Camera::GetWidth(wxSize canvasSize) const
 {
     float canvasWidth = (float) canvasSize.GetWidth();
     // TODO: fix magic number.
     return canvasWidth - canvasWidth * m_zoom / 100.0f;
 }
 
-float Camera::GetHeight(wxSize canvasSize)
+float Camera::GetHeight(wxSize canvasSize) const
 {
     float canvasHeight = (float) canvasSize.GetHeight();
     return canvasHeight - canvasHeight * m_zoom / 100.0f;
-}
-
-float Camera::GetZoom()
-{
-    return m_zoom;
 }
 
 void Camera::ScrollX(float delta)

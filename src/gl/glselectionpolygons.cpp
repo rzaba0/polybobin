@@ -16,37 +16,53 @@ void GLSelectionPolygons::AddPolygon(PMSPolygonType polygonType, PMSVertex first
 void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                             unsigned int vertexIndex, PMSVertex newVertex)
 {
-    wxVector<GLfloat> glVertex;
-    glVertex.push_back(newVertex.x);
-    glVertex.push_back(newVertex.y);
-    glVertex.push_back(newVertex.z);
-
     PMSColor color = Utils::GetPolygonColorByType(polygonType);
-    glVertex.push_back((GLfloat)color.red / 255.0f);
-    glVertex.push_back((GLfloat)color.green / 255.0f);
-    glVertex.push_back((GLfloat)color.blue / 255.0f);
-    glVertex.push_back(0.5f);
-    glVertex.push_back(newVertex.x / m_textureWidth);
-    glVertex.push_back(newVertex.y / m_textureHeight);
+    GLfloat glVertex[] = {
+        newVertex.x,
+        newVertex.y,
+        newVertex.z,
+        (GLfloat)color.red / 255.0f,
+        (GLfloat)color.green / 255.0f,
+        (GLfloat)color.blue / 255.0f,
+        GL_SELECTION_ALPHA,
+        newVertex.x / m_textureWidth,
+        newVertex.y / m_textureHeight
+    };
 
-
-    int offset = polygonIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT +
+    const int offset = polygonIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT +
         vertexIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES;
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, &glVertex[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, glVertex);
 }
 
-void GLSelectionPolygons::RenderSelected(glm::mat4 transform, wxVector<unsigned int> selectedPolygonsIds)
+void GLSelectionPolygons::ApplyVertexAlpha(unsigned polygonIndex, unsigned vertexIndex, GLfloat alpha)
+{
+    constexpr int alphaOffset = 6 * sizeof(GLfloat);
+    const int offset = polygonIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT +
+        vertexIndex * GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES + alphaOffset;
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(GLfloat), &alpha);
+}
+
+void GLSelectionPolygons::ApplySelection(const PolygonSelection& selectedPolygons)
+{
+    for (const auto& poly : selectedPolygons)
+        for (unsigned i = 0; i < 3; i++)
+            ApplyVertexAlpha(poly.id, i, poly.vertex[i] ? GL_SELECTION_ALPHA : 0.0f);
+}
+
+void GLSelectionPolygons::RenderSelected(const glm::mat4& transform, const PolygonSelection& selectedPolygons)
 {
     m_shaderProgram.Use();
     glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                        1, GL_FALSE, glm::value_ptr(transform));
     glBindVertexArray(m_vao);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    for (unsigned int i = 0; i < selectedPolygonsIds.size(); ++i)
+    for (const auto& poly : selectedPolygons)
     {
-        glDrawArrays(GL_TRIANGLES, selectedPolygonsIds[i] * 3, 3);
+        glDrawArrays(GL_TRIANGLES, poly.id * 3, 3);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);

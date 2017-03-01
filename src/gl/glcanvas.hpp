@@ -1,5 +1,4 @@
-#ifndef GLCANVAS_HPP
-#define GLCANVAS_HPP
+#pragma once
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
@@ -13,56 +12,60 @@
 #include "../map/map.hpp"
 #include "../selection.hpp"
 #include "../settings.hpp"
+#include "../canvas.hpp"
+
+class MainFrame;
 
 /**
  * \brief Custom implementation of OpenGL canvas.
  */
-class GLCanvas: public wxGLCanvas
+class GLCanvas: public wxGLCanvas, public Canvas
 {
     public:
-        GLCanvas(wxWindow *parent, Settings settings, const wxGLAttributes &glCanvasAttributes, Map &map);
+        GLCanvas(wxWindow *parent,
+            MainFrame& mainFrame,
+            Settings settings,
+            const DisplaySettings& displaySettings,
+            const wxGLAttributes &glCanvasAttributes,
+            const PolygonSelection& polygonSelection,
+            const Selection& Sceneryelection,
+            Map &map
+        );
         virtual ~GLCanvas() = default;
 
-        DisplaySettings GetDisplaySettings() { return m_displaySettings; }
-        void SetDisplaySetting(int setting, bool display);
+        PMSVertex CreateVertex(wxColor color, wxPoint point);
 
-        wxPoint GetMousePositionOnMap() { return m_mousePositionOnMap; }
+        int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
+        void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
+        const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
+        void UpdatePolygonSelectionForRedraw() override;
+        void PopupMenu(wxMenu* menu);
 
-        void HandleLeftMouseButtonClick(wxPoint mousePositionOnCanvas, int selectedToolId,
-                                        wxColor selectedColor);
-        void HandleMouseMotion(wxMouseEvent &event, wxColor selectedColor);
-        void HandleRightMouseButtonRelease(int selectedToolId);
+        void HandleLeftMouseButtonClick(const wxMouseEvent& event) override;
+        void HandleMouseMotion(const wxMouseEvent &event) override;
+        void HandleRightMouseButtonRelease(const wxMouseEvent& event) override;
 
-        void SelectAll();
+        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) override;
+        void SetPolygonsTexture(wxString textureFilename) override;
 
-        void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
-        void SetPolygonsTexture(wxString textureFilename);
+        unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
 
+        void Draw() override;
+
+        wxRealPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const override;
     private:
         Camera m_camera;
-        DisplaySettings m_displaySettings;
         GLManager m_glManager;
         Map &m_map;
-        wxPoint m_mousePositionOnCanvas,
-                m_mousePositionOnMap;
-        Selection m_selectedPolygons, m_selectedScenery;
-        bool m_movingSelected;
-
-        // Indicates how many vertices have been set while adding a new polygon.
-        unsigned int m_addedPolygonVerticesCount;
-        PMSPolygonType m_newPolygonType;
-        // \brief Is user currently creating a new polygon?
-        bool AddingPolygon() { return m_addedPolygonVerticesCount > 0; }
-        // \brief Returns PMSVertex with coordinates of cursor on map.
-        PMSVertex CreateVertexOnMouse(wxColor color);
+        MainFrame& m_mainFrame;
+        wxRealPoint m_mousePositionOnMap;
+        const DisplaySettings& m_displaySettings;
+        const PolygonSelection& m_polygonSelection;
+        const Selection& m_scenerySelection;
 
         void OnMouseWheel(wxMouseEvent &event);
         void OnNewPolygonTypeSelected(wxCommandEvent &event);
         void OnPaint(wxPaintEvent &event);
         void OnResize(wxSizeEvent &event);
-
-        wxPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas);
         void InitGL();
 };
-
-#endif

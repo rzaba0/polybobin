@@ -22,6 +22,9 @@ class MainFrame: public wxFrame
     public:
         MainFrame(Settings *settings);
         ~MainFrame();
+        const DisplayFrame& GetDisplayFrame() const { return *m_displayFrame; }
+        const PaletteFrame& GetPaletteFrame() const { return *m_paletteFrame; }
+        const ToolbarFrame& GetToolbarFrame() const { return *m_toolbarFrame; }
 
     private:
         MapSettingsDialog *m_mapSettingsDialog;
@@ -38,9 +41,6 @@ class MainFrame: public wxFrame
 
         void OnBackgroundColorChanged(wxColourPickerEvent &event);
         void OnDisplayFrameCheckBoxClicked(wxCommandEvent &event);
-        void OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event);
-        void OnGLCanvasMouseMotion(wxMouseEvent &event);
-        void OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event);
         void OnMenuBarItemClicked(wxCommandEvent &event);
         void OnNotebookPageChanged(wxBookCtrlEvent &event);
         void OnPolygonsTextureChanged(wxCommandEvent &event);

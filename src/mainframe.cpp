@@ -1,6 +1,7 @@
 #include "mainframe.hpp"
 #include "constants.hpp"
 #include "menubar.hpp"
+#include "notebook.hpp"
 #include "preferences/preferencespagepaths.hpp"
 
 MainFrame::MainFrame(Settings *settings)
@@ -16,6 +17,11 @@ MainFrame::MainFrame(Settings *settings)
     menuBar->Bind(wxEVT_MENU, &MainFrame::OnMenuBarItemClicked, this);
     SetMenuBar(menuBar);
 
+    wxPanel *notebookPanel = new wxPanel(this);
+    wxBoxSizer *notebookPanelSizer = new wxBoxSizer(wxVERTICAL);
+    m_notebook = new Notebook(notebookPanel, *this);
+    m_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
+
     m_displayFrame = new DisplayFrame(this);
     m_displayFrame->Show();
     // When the frame is closed, we want to update menu bar.
@@ -27,17 +33,12 @@ MainFrame::MainFrame(Settings *settings)
     m_paletteFrame->Show();
     m_paletteFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
 
-    m_toolbarFrame = new ToolbarFrame(this);
+    m_toolbarFrame = new ToolbarFrame(this, [&](int toolId) { m_notebook->OnToolSelected(toolId); });
     m_toolbarFrame->Show();
     m_toolbarFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
 
-    wxPanel *notebookPanel = new wxPanel(this);
-    wxBoxSizer *notebookPanelSizer = new wxBoxSizer(wxVERTICAL);
-    m_notebook = new Notebook(notebookPanel);
-    m_notebook->Bind(wxEVT_NOTEBOOK_PAGE_CHANGED, &MainFrame::OnNotebookPageChanged, this);
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
-
     AddWorkspace(m_settings->GetSoldatPath() + "maps/test.pms");
 }
 
@@ -65,13 +66,6 @@ void MainFrame::AddWorkspace(wxString mapPath)
 
         return;
     }
-
-    // We handle click events from main frame, since we can know which tool is currently selected.
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnGLCanvasLeftMouseButtonClicked, this);
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_RIGHT_UP, &MainFrame::OnGLCanvasRightMouseButtonReleased, this);
-
-    // Needed to update cursor coordinates in status bar.
-    m_notebook->GetCurrentGLCanvas()->Bind(wxEVT_MOTION, &MainFrame::OnGLCanvasMouseMotion, this);
 }
 
 void MainFrame::OnBackgroundColorChanged(wxColourPickerEvent &event)
@@ -86,33 +80,6 @@ void MainFrame::OnDisplayFrameCheckBoxClicked(wxCommandEvent &event)
     bool isChecked = event.IsChecked();
 
     m_notebook->SetCurrentDisplaySetting(displaySetting, isChecked);
-}
-
-void MainFrame::OnGLCanvasLeftMouseButtonClicked(wxMouseEvent &event)
-{
-    wxColor selectedColor = m_paletteFrame->GetColor();
-    int selectedToolId = m_toolbarFrame->GetSelectedToolId();
-    wxPoint mousePositionOnCanvas = event.GetPosition();
-    m_notebook->HandleCurrentGLCanvasLeftMouseButtonClick(mousePositionOnCanvas, selectedToolId,
-                                                          selectedColor);
-}
-
-void MainFrame::OnGLCanvasMouseMotion(wxMouseEvent &event)
-{
-    char statusText[255];
-    wxPoint mousePositionOnMap = m_notebook->GetCurrentMousePositionOnMap();
-
-    sprintf(statusText, "%d %d", mousePositionOnMap.x, mousePositionOnMap.y);
-    SetStatusText(statusText);
-
-    wxColor selectedColor = m_paletteFrame->GetColor();
-    m_notebook->HandleCurrentGLCanvasMouseMotion(event, selectedColor);
-}
-
-void MainFrame::OnGLCanvasRightMouseButtonReleased(wxMouseEvent &event)
-{
-    int selectedToolId = m_toolbarFrame->GetSelectedToolId();
-    m_notebook->HandleCurrentGLCanvasRightMouseButtonRelease(selectedToolId);
 }
 
 void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)

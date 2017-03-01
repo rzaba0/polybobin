@@ -16,7 +16,7 @@ class DisplayFrame: public MiniFrame
 {
     public:
         DisplayFrame(wxWindow *parent);
-        void UpdateCheckBoxes(DisplaySettings displaySettings);
+        void UpdateCheckBoxes(const DisplaySettings& displaySettings);
 
     private:
         wxCheckBox *m_checkBoxes[DISPLAY_SETTINGS_COUNT];

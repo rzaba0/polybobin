@@ -11,7 +11,7 @@ void DisplaySettings::SetDisplaySetting(int setting, bool display)
     m_settings[setting] = display;
 }
 
-bool DisplaySettings::ShouldDisplay(int setting)
+bool DisplaySettings::ShouldDisplay(int setting) const
 {
     return m_settings[setting];
 }

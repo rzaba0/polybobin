@@ -21,7 +21,7 @@ DisplayFrame::DisplayFrame(wxWindow *parent)
     Fit();
 }
 
-void DisplayFrame::UpdateCheckBoxes(DisplaySettings displaySettings)
+void DisplayFrame::UpdateCheckBoxes(const DisplaySettings& displaySettings)
 {
     m_checkBoxes[DISPLAY_BACKGROUND]->SetValue(displaySettings.ShouldDisplay(DISPLAY_BACKGROUND));
     m_checkBoxes[DISPLAY_POLYGONS]->SetValue(displaySettings.ShouldDisplay(DISPLAY_POLYGONS));

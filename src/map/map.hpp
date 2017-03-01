@@ -22,12 +22,12 @@ class Map
          */
         Map(wxString path);
 
-        void AddPolygon(PMSPolygon polygon);
+        int AddPolygon(PMSPolygon polygon);
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
 
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
         
-        void SaveMapAsPMS(wxString destinationPath);
+        void SaveMapAsPMS(const wxString& destinationPath);
 
         PMSColor GetBackgroundBottomColor() { return m_backgroundBottomColor; }
         void SetBackgroundBottomColor(PMSColor color) { m_backgroundBottomColor = color; }
