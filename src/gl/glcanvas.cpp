@@ -63,8 +63,7 @@ void GLCanvas::HandleMouseMotion(const wxMouseEvent &event)
     wxRealPoint newMousePositionOnMap = GetMousePositionOnMap(event.GetPosition());
     if (event.MiddleIsDown() && event.Dragging())
     {
-        m_camera.ScrollX(m_mousePositionOnMap.x - newMousePositionOnMap.x);
-        m_camera.ScrollY(m_mousePositionOnMap.y - newMousePositionOnMap.y);
+        m_camera.Scroll(m_mousePositionOnMap - newMousePositionOnMap);
         Refresh();
     }
     m_mousePositionOnMap = GetMousePositionOnMap(event.GetPosition());
@@ -121,16 +120,18 @@ void GLCanvas::OnMouseWheel(wxMouseEvent &event)
 {
     int wheelRotation = event.GetWheelRotation();
 
+    auto p0 = GetMousePositionOnMap(event.GetPosition());
     if (wheelRotation > 0 && m_camera.CanZoomIn())
     {
         m_camera.ZoomIn();
-        Refresh();
     }
     else if (wheelRotation < 0 && m_camera.CanZoomOut())
     {
         m_camera.ZoomOut();
-        Refresh();
     }
+    auto p1 = GetMousePositionOnMap(event.GetPosition());
+    m_camera.Scroll(p0 - p1);
+    Refresh();
 }
 
 void GLCanvas::OnPaint(wxPaintEvent &event)

@@ -27,14 +27,10 @@ float Camera::GetHeight(wxSize canvasSize) const
     return canvasHeight - canvasHeight * m_zoom / 100.0f;
 }
 
-void Camera::ScrollX(float delta)
+void Camera::Scroll(const wxRealPoint& delta)
 {
-    m_x += delta;
-}
-
-void Camera::ScrollY(float delta)
-{
-    m_y += delta;
+    m_x += delta.x;
+    m_y += delta.y;
 }
 
 void Camera::ZoomIn()
