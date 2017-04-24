@@ -3,6 +3,8 @@
 #include "image.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+#define BUFFER_OFFSET(i) (static_cast<char*>(0) + (i))
+
 void GLSpawnPoints::Render(glm::mat4 transform)
 {
     m_shaderProgram.Use();
@@ -13,7 +15,8 @@ void GLSpawnPoints::Render(glm::mat4 transform)
         glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                            1, GL_FALSE, glm::value_ptr(transform));
         glBindTexture(GL_TEXTURE_2D, m_texture);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(i * 6 * sizeof(GLuint)));
+        glDrawElements(GL_TRIANGLES, GL_SPAWNPOINT_INDICES_SIZE, GL_UNSIGNED_INT,
+            BUFFER_OFFSET(i * GL_SPAWNPOINT_INDICES_SIZE_BYTES));
     }
     glBindVertexArray(0);
 }
@@ -77,13 +80,18 @@ void GLSpawnPoints::SetupVAO(wxVector<PMSSpawnPoint> spawnPoints)
     wxVector<GLfloat> vertices;
     wxVector<GLuint> indices;
 
+    if (m_spawnPointsCount > MAX_SPAWNPOINTS_COUNT)
+    {
+        m_spawnPointsCount = MAX_SPAWNPOINTS_COUNT;
+    }
+
+    // Each spawn point image is 32x32 pixels.
+    const int SPAWNPOINT_TEXTURE_SIZE = 32;
+    // Indicates how many 32x32 images can fit in 1024x32 image.
+    const int MAX_SPAWNPOINT_TYPES_COUNT = 1024 / 32;
+
     for (int i = 0; i < m_spawnPointsCount; ++i)
     {
-        // Each spawn point image is 32x32 pixels.
-        const int SPAWNPOINT_TEXTURE_SIZE = 32;
-        // Indicates how many 32x32 images can fit in 1024x32 image.
-        const int MAX_SPAWNPOINT_TYPES_COUNT = 1024 / 32;
-
         // We want the image to be centered at spawn point's coordinates.
         spawnPoints[i].x -= SPAWNPOINT_TEXTURE_SIZE / 2;
         spawnPoints[i].y -= SPAWNPOINT_TEXTURE_SIZE / 2;
@@ -116,6 +124,10 @@ void GLSpawnPoints::SetupVAO(wxVector<PMSSpawnPoint> spawnPoints)
         indices.push_back(i*4+2);
     }
 
+    // Initialization of unused spawnpoints.
+    vertices.resize(MAX_SPAWNPOINTS_COUNT * GL_SPAWNPOINT_VERTICES_COUNT * GL_SPAWNPOINT_VERTEX_SIZE, 0.0f);
+    indices.resize(MAX_SPAWNPOINTS_COUNT * GL_SPAWNPOINT_INDICES_SIZE, 0);
+
     GLuint vbo, ebo;
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
@@ -125,18 +137,20 @@ void GLSpawnPoints::SetupVAO(wxVector<PMSSpawnPoint> spawnPoints)
         if (vertices.size() > 0)
         {
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_spawnPointsCount * 4 * 4, &vertices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, GL_SPAWNPOINT_VERTEX_SIZE_BYTES * MAX_SPAWNPOINTS_COUNT * GL_SPAWNPOINT_VERTICES_COUNT,
+                &vertices[0], GL_DYNAMIC_DRAW);
         }
         if (indices.size() > 0)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_spawnPointsCount * 6, &indices[0], GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, GL_SPAWNPOINT_INDICES_SIZE_BYTES * MAX_SPAWNPOINTS_COUNT,
+                &indices[0], GL_DYNAMIC_DRAW);
         }
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)(2 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 }

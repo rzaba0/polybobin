@@ -12,7 +12,7 @@
 /**
  * \brief Handles the drawing of spawn points.
  */
-class GLSpawnPoints : GLObject
+class GLSpawnPoints: GLObject
 {
     public:
         void Render(glm::mat4 transform);
@@ -24,6 +24,12 @@ class GLSpawnPoints : GLObject
     private:
         GLuint m_texture;
         int m_spawnPointsCount;
+
+        static const int GL_SPAWNPOINT_INDICES_SIZE = 6;
+        static const int GL_SPAWNPOINT_INDICES_SIZE_BYTES = GL_SPAWNPOINT_INDICES_SIZE * sizeof(GLuint);
+        static const int GL_SPAWNPOINT_VERTEX_SIZE = 4;
+        static const int GL_SPAWNPOINT_VERTEX_SIZE_BYTES = GL_SPAWNPOINT_VERTEX_SIZE * sizeof(GLfloat);
+        static const int GL_SPAWNPOINT_VERTICES_COUNT = 4;
 };
 
 #endif
