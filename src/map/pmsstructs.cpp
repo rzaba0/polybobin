@@ -88,8 +88,9 @@ PMSSpawnPoint::PMSSpawnPoint()
 {
 }
 
-PMSSpawnPoint::PMSSpawnPoint(int x, int y, PMSSpawnPointType type)
-    : x{x}
+PMSSpawnPoint::PMSSpawnPoint(bool active, int x, int y, PMSSpawnPointType type)
+    : active{active}
+    , x{x}
     , y{y}
     , type{type}
 {

@@ -32,7 +32,7 @@ class GLSpawnPoints: GLObject
 
         static const int GL_SPAWNPOINT_INDICES_SIZE = 6;
         static const int GL_SPAWNPOINT_INDICES_SIZE_BYTES = GL_SPAWNPOINT_INDICES_SIZE * sizeof(GLuint);
-        static const int GL_SPAWNPOINT_VERTEX_SIZE = 4;
+        static const int GL_SPAWNPOINT_VERTEX_SIZE = 5;
         static const int GL_SPAWNPOINT_VERTEX_SIZE_BYTES = GL_SPAWNPOINT_VERTEX_SIZE * sizeof(GLfloat);
         static const int GL_SPAWNPOINT_VERTICES_COUNT = 4;
         static const int GL_SPAWNPOINT_EBO_SIZE = GL_SPAWNPOINT_INDICES_SIZE_BYTES;

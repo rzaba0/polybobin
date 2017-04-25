@@ -77,12 +77,15 @@ void GLSpawnPoints::SetupShaderProgram()
     {
         "#version 330 core\n"
         "layout (location = 0) in vec2 position;\n"
-        "layout (location = 1) in vec2 texture;\n"
+        "layout (location = 1) in float opacity;\n"
+        "layout (location = 2) in vec2 texture;\n"
         "uniform mat4 transform;\n"
+        "out vec4 vertexColor;\n"
         "out vec2 vertexTexture;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = transform*(vec4(position, 1.0f, 1.0f));\n"
+        "   vertexColor = vec4(1.0f, 1.0f, 1.0f, opacity);\n"
         "   vertexTexture = texture;\n"
         "}\n"
     };
@@ -90,12 +93,13 @@ void GLSpawnPoints::SetupShaderProgram()
     const GLchar *fragmentShaderSource =
     {
         "#version 330 core\n"
+        "in vec4 vertexColor;\n"
         "in vec2 vertexTexture;\n"
         "out vec4 color;\n"
         "uniform sampler2D ourTexture;\n"
         "void main()\n"
         "{\n"
-        "   color = texture(ourTexture, vertexTexture);\n"
+        "   color = texture(ourTexture, vertexTexture) * vertexColor;\n"
         "}\n"
     };
 
@@ -165,8 +169,11 @@ void GLSpawnPoints::SetupVAO(wxVector<PMSSpawnPoint> spawnPoints)
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)(2 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)(2 * sizeof(GLfloat)));
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, GL_SPAWNPOINT_VERTEX_SIZE_BYTES, (GLvoid*)(3 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 }
 
@@ -175,24 +182,29 @@ void GLSpawnPoints::AddGLSpawnPoint(wxVector<GLfloat> &vertices, wxVector<GLuint
     // We want the image to be centered at spawn point's coordinates.
     spawnPoint.x -= SPAWNPOINT_TEXTURE_SIZE / 2;
     spawnPoint.y -= SPAWNPOINT_TEXTURE_SIZE / 2;
+    GLfloat spawnPointOpacity = spawnPoint.active ? 1.0f : 0.5f;
 
     vertices.push_back((GLfloat)spawnPoint.x);
     vertices.push_back((GLfloat)spawnPoint.y);
+    vertices.push_back(spawnPointOpacity);
     vertices.push_back(0.0f);
     vertices.push_back((GLfloat)spawnPoint.type / (GLfloat)MAX_SPAWNPOINT_TYPES_COUNT);
 
     vertices.push_back((GLfloat)spawnPoint.x + (GLfloat)SPAWNPOINT_TEXTURE_SIZE);
     vertices.push_back((GLfloat)spawnPoint.y);
+    vertices.push_back(spawnPointOpacity);
     vertices.push_back(1.0f);
     vertices.push_back((GLfloat)spawnPoint.type / (GLfloat)MAX_SPAWNPOINT_TYPES_COUNT);
 
     vertices.push_back((GLfloat)spawnPoint.x);
     vertices.push_back((GLfloat)spawnPoint.y + (GLfloat)SPAWNPOINT_TEXTURE_SIZE);
+    vertices.push_back(spawnPointOpacity);
     vertices.push_back(0.0f);
     vertices.push_back((GLfloat)(spawnPoint.type+1) / (GLfloat)MAX_SPAWNPOINT_TYPES_COUNT);
 
     vertices.push_back((GLfloat)spawnPoint.x + (GLfloat)SPAWNPOINT_TEXTURE_SIZE);
     vertices.push_back((GLfloat)spawnPoint.y + (GLfloat)SPAWNPOINT_TEXTURE_SIZE);
+    vertices.push_back(spawnPointOpacity);
     vertices.push_back(1.0f);
     vertices.push_back((GLfloat)(spawnPoint.type+1) / (GLfloat)MAX_SPAWNPOINT_TYPES_COUNT);
 

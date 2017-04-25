@@ -2,6 +2,7 @@
 
 SpawnPointTool::SpawnPointTool(GLCanvas &canvas)
     : m_canvas{canvas}
+    , m_mousePositionOnMap{}
     , m_spawnPointIdx{}
     , m_spawnPointType{PMSSpawnPointType::sptALPHA}
 {
@@ -9,7 +10,7 @@ SpawnPointTool::SpawnPointTool(GLCanvas &canvas)
 
 void SpawnPointTool::OnSelect()
 {
-    PMSSpawnPoint spawnPoint(0, 0, m_spawnPointType);
+    PMSSpawnPoint spawnPoint(false, m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
     m_spawnPointIdx = m_canvas.AddSpawnPoint(spawnPoint);
 }
 
@@ -23,6 +24,10 @@ void SpawnPointTool::OnUnselect()
 
 void SpawnPointTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)
 {
+    PMSSpawnPoint spawnPoint(true, m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
+    m_canvas.EditSpawnPoint(m_spawnPointIdx, spawnPoint);
+    m_canvas.Refresh();
+
     OnSelect();
 }
 
@@ -33,7 +38,7 @@ void SpawnPointTool::OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event)
 void SpawnPointTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 {
     m_mousePositionOnMap = m_canvas.GetMousePositionOnMap(event.GetPosition());
-    PMSSpawnPoint spawnPoint(m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
+    PMSSpawnPoint spawnPoint(false, m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
     m_canvas.EditSpawnPoint(m_spawnPointIdx, spawnPoint);
     m_canvas.Refresh();
 }
@@ -59,7 +64,7 @@ void SpawnPointTool::OnNewSpawnPointTypeSelected(wxCommandEvent &event)
     int selectedSpawnPointType = event.GetId() - ID_SPAWNPOINT_TYPE_GENERAL;
     m_spawnPointType = (PMSSpawnPointType)selectedSpawnPointType;
     
-    PMSSpawnPoint spawnPoint(m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
+    PMSSpawnPoint spawnPoint(false, m_mousePositionOnMap.x, m_mousePositionOnMap.y, m_spawnPointType);
     m_canvas.EditSpawnPoint(m_spawnPointIdx, spawnPoint);
     m_canvas.Refresh();
 }
