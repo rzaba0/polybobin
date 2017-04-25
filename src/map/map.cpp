@@ -43,6 +43,12 @@ int Map::AddPolygon(PMSPolygon polygon)
     return m_polygonsCount++;
 }
 
+int Map::AddSpawnPoint(PMSSpawnPoint spawnPoint)
+{
+    m_spawnPoints.push_back(std::move(spawnPoint));
+    return m_spawnPointsCount++;
+}
+
 void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
 {
     m_polygons[polygonIndex].vertices[vertexIndex] = vertex;
@@ -70,6 +76,21 @@ void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex,
 void Map::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
 {
     m_sceneryInstances[sceneryIndex] = scenery;
+}
+
+void Map::EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint)
+{
+    m_spawnPoints[spawnPointIdx] = spawnPoint;
+}
+
+void Map::RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes)
+{
+    wxVectorSort(spawnPointIndexes);
+    for (int i = spawnPointIndexes.size() - 1; i >= 0; --i)
+    {
+        m_spawnPoints.erase(m_spawnPoints.begin() + spawnPointIndexes[i]);
+    }
+    m_spawnPointsCount = m_spawnPoints.size();
 }
 
 void Map::SaveMapAsPMS(const wxString& destinationPath)

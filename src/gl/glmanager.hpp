@@ -31,10 +31,14 @@ class GLManager
         GLManager(Settings settings, Map &map);
 
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
+        void AddSpawnPoint(PMSSpawnPoint spawnPoint);
+
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex vertex);
-
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
+        void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint);
+
+        void ResetSpawnPoints(wxVector<PMSSpawnPoint> spawnPoints);
 
         void ApplyPolygonSelection(const PolygonSelection& selectedPolygons);
 

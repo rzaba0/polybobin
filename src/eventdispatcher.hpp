@@ -11,7 +11,7 @@ class EventDispatcher
 public:
     EventDispatcher(ToolSet tools, Canvas& canvas);
     void Select(int toolId);
-    void Unselect();
+    int Unselect();
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event);
     void OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event);
     void OnCanvasMouseMotion(const wxMouseEvent &event);

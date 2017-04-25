@@ -31,6 +31,11 @@ void GLManager::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
     m_glSelectionPolygons.AddPolygon(polygonType, firstVertex);
 }
 
+void GLManager::AddSpawnPoint(PMSSpawnPoint spawnPoint)
+{
+    m_glSpawnPoints.AddSpawnPoint(spawnPoint);
+}
+
 void GLManager::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                   unsigned int vertexIndex, PMSVertex vertex)
 {
@@ -46,6 +51,16 @@ void GLManager::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
     m_glScenery.EditScenery(sceneryIndex, scenery);
     m_glOutlineScenerySelection.EditScenery(sceneryIndex, scenery);
     m_glOutlineSceneryWireframe.EditScenery(sceneryIndex, scenery);
+}
+
+void GLManager::EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint)
+{
+    m_glSpawnPoints.EditSpawnPoint(spawnPointIdx, spawnPoint);
+}
+
+void GLManager::ResetSpawnPoints(wxVector<PMSSpawnPoint> spawnPoints)
+{
+    m_glSpawnPoints.ResetSpawnPoints(spawnPoints);
 }
 
 unsigned int GLManager::GetTextureWidth()

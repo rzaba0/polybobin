@@ -45,7 +45,10 @@ void Workspace::GiveFocusToGLCanvas()
 
 void Workspace::SaveMapAsPMS(const wxString& destinationPath)
 {
+    // We unselect current tool so that temporary map objects don't get saved to output file.
+    int selectedToolId = m_eventDispatcher->Unselect();
     m_map.SaveMapAsPMS(destinationPath);
+    m_eventDispatcher->Select(selectedToolId);
 }
 
 void Workspace::SelectAll()

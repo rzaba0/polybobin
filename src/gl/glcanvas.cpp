@@ -36,11 +36,30 @@ int GLCanvas::AddPolygon(PMSPolygon polygon, PMSVertex firstVertex)
     return id;
 }
 
+int GLCanvas::AddSpawnPoint(PMSSpawnPoint spawnPoint)
+{
+    auto id = m_map.AddSpawnPoint(spawnPoint);
+    m_glManager.AddSpawnPoint(spawnPoint);
+    return id;
+}
+
 void GLCanvas::EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType,
     unsigned vertexIndex, PMSVertex vertex)
 {
     m_map.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
     m_glManager.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
+}
+
+void GLCanvas::EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint)
+{
+    m_map.EditSpawnPoint(spawnPointIdx, spawnPoint);
+    m_glManager.EditSpawnPoint(spawnPointIdx, spawnPoint);
+}
+
+void GLCanvas::RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes)
+{
+    m_map.RemoveSpawnPoints(spawnPointIndexes);
+    m_glManager.ResetSpawnPoints(m_map.GetSpawnPoints());
 }
 
 const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
