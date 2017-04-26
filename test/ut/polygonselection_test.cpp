@@ -54,3 +54,9 @@ TEST_F(polygonSelectionTest, unselectSingleVertex)
     sut.unselect(0, 2);
     EXPECT_TRUE(sut.empty());
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

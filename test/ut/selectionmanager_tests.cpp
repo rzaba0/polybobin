@@ -1,8 +1,8 @@
 #include <gmock/gmock.h>
 #include <memory>
 #include <vector>
-#include <PolygonSelection.hpp>
-#include <Selection.hpp>
+#include <polygonselection.hpp>
+#include <selection.hpp>
 #include <selectionmanager.hpp>
 #include "mock/canvas_mock.hpp"
 
@@ -189,3 +189,9 @@ TEST_F(SelectionManagerTest, moveSelectedVerticles)
     EXPECT_CALL(canvas, EditPolygonVertex(1, _, 2, _));
     sut.MoveSelection(vx, vy);
 };
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
