@@ -79,3 +79,19 @@ bool PMSPolygon::Contains(float x, float y) const
 
     return (b1 == b2 && b2 == b3);
 }
+
+// TODO: consider setting active variable too.
+PMSSpawnPoint::PMSSpawnPoint()
+    : x{0}
+    , y{0}
+    , type{PMSSpawnPointType::sptALPHA}
+{
+}
+
+PMSSpawnPoint::PMSSpawnPoint(bool active, int x, int y, PMSSpawnPointType type)
+    : active{active}
+    , x{x}
+    , y{y}
+    , type{type}
+{
+}

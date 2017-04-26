@@ -84,6 +84,24 @@ enum WxWidgetsId
     ID_POLYGON_TYPE_NONFLAGGERCOLLIDES,
     ID_POLYGON_TYPE_FLAGCOLLIDES,
 
+    ID_SPAWNPOINT_TYPE_GENERAL,
+    ID_SPAWNPOINT_TYPE_ALPHA,
+    ID_SPAWNPOINT_TYPE_BRAVO,
+    ID_SPAWNPOINT_TYPE_CHARLIE,
+    ID_SPAWNPOINT_TYPE_DELTA,
+    ID_SPAWNPOINT_TYPE_ALPHA_FLAG,
+    ID_SPAWNPOINT_TYPE_BRAVO_FLAG,
+    ID_SPAWNPOINT_TYPE_GRENADES,
+    ID_SPAWNPOINT_TYPE_MEDIKITS,
+    ID_SPAWNPOINT_TYPE_CLUSTERS,
+    ID_SPAWNPOINT_TYPE_VEST,
+    ID_SPAWNPOINT_TYPE_FLAMER,
+    ID_SPAWNPOINT_TYPE_BERSERKER,
+    ID_SPAWNPOINT_TYPE_PREDATOR,
+    ID_SPAWNPOINT_TYPE_YELLOW_FLAG,
+    ID_SPAWNPOINT_TYPE_RAMBO_BOW,
+    ID_SPAWNPOINT_TYPE_STAT_GUN,
+
     ID_COLOR_PICKER
 };
 
@@ -128,6 +146,27 @@ const wxString POLYGON_TYPES_NAMES[] =
     "Flaggers collide",
     "Non-flaggers collide",
     "Flag collides"
+};
+
+const wxString SPAWNPOINT_TYPES_NAMES[] =
+{
+    "Player spawn",
+    "Alpha",
+    "Bravo",
+    "Charlie",
+    "Delta",
+    "Alpha flag",
+    "Bravo flag",
+    "Grenades",
+    "Medikits",
+    "Clusters",
+    "Vest",
+    "Flamer",
+    "Berserker",
+    "Predator",
+    "Yellow flag",
+    "Rambo bow",
+    "Stationary gun"
 };
 
 #endif

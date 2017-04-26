@@ -19,11 +19,14 @@ void EventDispatcher::Select(int toolId)
     m_tools[m_selectedToolId]->OnSelect();
 }
 
-void EventDispatcher::Unselect()
+int EventDispatcher::Unselect()
 {
+    int lastSelectedToolId = m_selectedToolId;
     if (m_selectedToolId >= 0)
         m_tools[m_selectedToolId]->OnUnselect();
     m_selectedToolId = -1;
+
+    return lastSelectedToolId;
 }
 
 void EventDispatcher::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)

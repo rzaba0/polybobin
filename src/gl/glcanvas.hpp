@@ -36,7 +36,13 @@ class GLCanvas: public wxGLCanvas, public Canvas
         PMSVertex CreateVertex(wxColor color, wxPoint point);
 
         int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
+        int AddSpawnPoint(PMSSpawnPoint spawnPoint) override;
+
         void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
+        void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint) override;
+
+        void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes) override;
+
         const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
         void UpdatePolygonSelectionForRedraw() override;
         void PopupMenu(wxMenu* menu);

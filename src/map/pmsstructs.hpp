@@ -104,6 +104,8 @@ struct PMSSpawnPoint
 {
     int active, x, y;
     PMSSpawnPointType type;
+    PMSSpawnPoint();
+    PMSSpawnPoint(bool active, int x, int y, PMSSpawnPointType type);
 };
 
 struct PMSWayPoint

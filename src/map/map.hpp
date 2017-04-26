@@ -23,10 +23,14 @@ class Map
         Map(wxString path);
 
         int AddPolygon(PMSPolygon polygon);
-        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
+        int AddSpawnPoint(PMSSpawnPoint spawnPoint);
 
+        void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
-        
+        void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint);
+
+        void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes);
+
         void SaveMapAsPMS(const wxString& destinationPath);
 
         PMSColor GetBackgroundBottomColor() { return m_backgroundBottomColor; }

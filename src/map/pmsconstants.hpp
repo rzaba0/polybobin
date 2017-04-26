@@ -11,6 +11,9 @@ const int MAP_VERSION = 11;
 const unsigned int MAX_POLYGONS_COUNT = 5000;
 const unsigned int POLYGON_TYPES_COUNT = 24;
 
+const unsigned int MAX_SPAWNPOINTS_COUNT = 255;
+const unsigned int SPAWNPOINT_TYPES_COUNT = 17;
+
 const int SECTORS_COUNT = 51; // Each map is a 51x51 grid of sectors.
 
 #endif
