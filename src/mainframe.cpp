@@ -106,7 +106,7 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
         case ID_MENU_FILE_SAVE_AS_PMS:
             {
                 wxString path = wxFileSelector(wxT("Save as PMS"), m_settings->GetSoldatPath() + "maps/",
-                    wxEmptyString, wxT(".pms"), wxT(".pms"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+                    wxEmptyString, wxT(".pms"), wxT("*.pms"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
                 if (!path.IsEmpty())
                 {
                     m_notebook->SaveCurrentMapAsPMS(path);
