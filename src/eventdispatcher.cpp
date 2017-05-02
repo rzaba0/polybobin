@@ -56,9 +56,10 @@ void EventDispatcher::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
         m_tools[m_selectedToolId]->OnCanvasRightMouseButtonRelease(event);
 }
 
-void EventDispatcher::OnCanvasKeyPress(const wxKeyEvent &event)
+void EventDispatcher::OnCanvasKeyPress(wxKeyEvent &event)
 {
     m_canvas.HandleKeyPress(event);
     if (m_selectedToolId >= 0)
         m_tools[m_selectedToolId]->OnCanvasKeyPress(event);
+    event.Skip();
 }

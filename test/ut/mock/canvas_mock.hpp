@@ -12,7 +12,9 @@ public:
     MOCK_METHOD4(EditPolygonVertex, void(unsigned, PMSPolygonType, unsigned, PMSVertex));
     MOCK_METHOD2(EditSpawnPoint, void(unsigned int, PMSSpawnPoint));
 
+    MOCK_METHOD1(RemovePolygons, void(const wxVector<unsigned int>&));
     MOCK_METHOD1(RemoveSpawnPoints, void(wxVector<unsigned int>));
+    MOCK_METHOD1(RemoveSceneries, void(const wxVector<unsigned int>&));
 
     MOCK_METHOD0(UpdatePolygonSelectionForRedraw, void(void));
     MOCK_CONST_METHOD1(GetPolygon, const PMSPolygon&(unsigned));
@@ -25,5 +27,6 @@ public:
     MOCK_METHOD1(HandleLeftMouseButtonClick, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleMouseMotion, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleRightMouseButtonRelease, void(const wxMouseEvent&));
+    MOCK_METHOD1(HandleKeyPress, void(const wxKeyEvent&));
     MOCK_METHOD0(Draw, void(void));
 };

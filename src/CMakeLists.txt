@@ -4,10 +4,11 @@ include_directories(${GLM_INCLUDE_DIRS})
 find_package(OpenGL REQUIRED)
 
 file(GLOB_RECURSE LIB_SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE HEADER_SOURCES ${CMAKE_SOURCE_DIR}/src/*.hpp)
 list(REMOVE_ITEM LIB_SOURCES ${CMAKE_SOURCE_DIR}/src/app.cpp)
 
 # Build all sources except src/app.cpp as a library.
-add_library(${polybobin_lib} ${LIB_SOURCES})
+add_library(${polybobin_lib} ${LIB_SOURCES} ${HEADER_SOURCES})
 target_link_libraries(
     ${polybobin_lib}
     ${wxWidgets_LIBRARIES}

@@ -16,7 +16,7 @@ public:
     void OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event);
     void OnCanvasMouseMotion(const wxMouseEvent &event);
     void OnCanvasRightMouseButtonRelease(const wxMouseEvent &event);
-    void OnCanvasKeyPress(const wxKeyEvent &event);
+    void OnCanvasKeyPress(wxKeyEvent &event);
     ~EventDispatcher();
 
 private:

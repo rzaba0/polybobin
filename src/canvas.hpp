@@ -6,18 +6,18 @@ class Canvas
 {
 public:
     virtual int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) = 0;
-    virtual void RemovePolygons(const wxVector<unsigned int> &polygons) = 0;
     virtual int AddSpawnPoint(PMSSpawnPoint spawnPoint) = 0;
+
     virtual void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) = 0;
     virtual void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint) = 0;
 
+    virtual void RemovePolygons(const wxVector<unsigned int> &polygons) = 0;
     virtual void RemoveSpawnPoints(wxVector<unsigned int> spawnPoints) = 0;
+    virtual void RemoveSceneries(const wxVector<unsigned int> &sceneries) = 0;
 
     virtual void UpdatePolygonSelectionForRedraw() = 0;
     virtual const PMSPolygon& GetPolygon(unsigned polygonIndex) const = 0;
     virtual unsigned GetPolygonCount() const = 0;
-
-    virtual void RemoveSceneries(const wxVector<unsigned int> &sceneries) = 0;
 
     virtual wxRealPoint GetMousePositionOnMap(wxPoint positionOnCanvas) const = 0;
 

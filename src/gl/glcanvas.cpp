@@ -76,8 +76,11 @@ const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
 
 void GLCanvas::RemoveSceneries(const wxVector<unsigned int> &sceneries)
 {
+    // TODO: uncomment when scenery selection is implemented
+    /*
     m_map.RemoveSceneries(sceneries);
     m_glManager.ResetSceneries(m_map.GetSceneryInstances());
+    */
 }
 
 void GLCanvas::PopupMenu(wxMenu* menu)
