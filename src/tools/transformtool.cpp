@@ -20,7 +20,11 @@ void TransformTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 {
 }
 
-void TransformTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) 
+void TransformTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
+{
+}
+
+void TransformTool::OnCanvasKeyPress(const wxKeyEvent &event)
 {
 }
 

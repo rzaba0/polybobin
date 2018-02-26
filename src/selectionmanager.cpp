@@ -79,6 +79,27 @@ void SelectionManager::MoveSelection(float vx, float vy)
     m_canvas.Draw();
 }
 
+void SelectionManager::RemoveSelection()
+{
+    wxVector<unsigned int> selectedPolygons;
+    wxVector<unsigned int> selectedSceneries;
+    for (const auto &selectedPolygon : *m_polygonSelection)
+    {
+        selectedPolygons.push_back(selectedPolygon.id);
+    }
+
+    for (const auto &selectedScenery : *m_scenerySelection)
+    {
+        selectedSceneries.push_back(selectedScenery);
+    }
+
+    m_canvas.RemovePolygons(selectedPolygons);
+    m_canvas.RemoveSceneries(selectedSceneries);
+
+    UnselectAll();
+    m_canvas.Draw();
+}
+
 void SelectionManager::ForEachPolyAtPosition(wxRealPoint p, std::function<void(unsigned)> operation)
 {
     unsigned polyNum = m_canvas.GetPolygonCount();

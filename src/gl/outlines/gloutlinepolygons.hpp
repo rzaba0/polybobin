@@ -20,7 +20,9 @@ class GLOutlinePolygons: public GLOutline
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex newVertex);
+        void ResetPolygons(wxVector<PMSPolygon> polygons);
         void ApplySelection(const PolygonSelection& selectedPolygons);
+
         /**
          * \brief Renders outline for all polygons.
          */
@@ -38,6 +40,8 @@ class GLOutlinePolygons: public GLOutline
         unsigned int m_polygonsCount;
 
         static const int GL_OUTLINE_POLYGON_VERTICES_COUNT = 3;
+
+        void GenerateGLBufferVertices(wxVector<PMSPolygon> &polygons, wxVector<GLfloat> &vertices);
 };
 
 #endif

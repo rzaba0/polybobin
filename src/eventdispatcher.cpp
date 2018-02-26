@@ -1,4 +1,5 @@
 #include "eventdispatcher.hpp"
+#include "constants.hpp"
 
 EventDispatcher::EventDispatcher(ToolSet tools, Canvas& canvas)
     : m_tools{std::move(tools)}
@@ -54,4 +55,14 @@ void EventDispatcher::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
     m_canvas.HandleRightMouseButtonRelease(event);
     if (m_selectedToolId >= 0)
         m_tools[m_selectedToolId]->OnCanvasRightMouseButtonRelease(event);
+}
+
+void EventDispatcher::OnCanvasKeyPress(wxKeyEvent &event)
+{
+    m_canvas.HandleKeyPress(event);
+	if (event.GetKeyCode() == REMOVE_SELECTED_KEY && m_selectedToolId != ID_TOOL_SELECTION - ID_TOOL_TRANSFORM)
+		m_tools[ID_TOOL_SELECTION - ID_TOOL_TRANSFORM]->OnCanvasKeyPress(event);
+    if (m_selectedToolId >= 0)
+        m_tools[m_selectedToolId]->OnCanvasKeyPress(event);
+    event.Skip();
 }

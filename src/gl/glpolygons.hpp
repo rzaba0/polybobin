@@ -15,6 +15,9 @@ class GLPolygons: GLObject
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex,
                                PMSVertex newVertex);
 
+        // \brief clear whole buffer and fill it with polygons
+        void ResetPolygons(wxVector<PMSPolygon> polygons);
+
         unsigned int GetTextureWidth();
         unsigned int GetTextureHeight();
 
@@ -33,6 +36,8 @@ class GLPolygons: GLObject
         static const int GL_POLYGON_VERTEX_SIZE = 9;
         static const int GL_POLYGON_VERTEX_SIZE_BYTES = GL_POLYGON_VERTEX_SIZE * sizeof(GLfloat);
         static const int GL_POLYGON_VERTICES_COUNT = 3;
+
+        void GenerateGLBufferVertices(wxVector<PMSPolygon> &polygons, wxVector<GLfloat> &vertices);
 };
 
 #endif

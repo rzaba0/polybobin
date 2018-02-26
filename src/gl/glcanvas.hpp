@@ -36,8 +36,8 @@ class GLCanvas: public wxGLCanvas, public Canvas
         PMSVertex CreateVertex(wxColor color, wxPoint point);
 
         int AddPolygon(PMSPolygon polygon, PMSVertex firstVertex) override;
+        void RemovePolygons(const wxVector<unsigned int> &polygons) override;
         int AddSpawnPoint(PMSSpawnPoint spawnPoint) override;
-
         void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
         void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint) override;
 
@@ -45,11 +45,15 @@ class GLCanvas: public wxGLCanvas, public Canvas
 
         const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
         void UpdatePolygonSelectionForRedraw() override;
+
+        void RemoveSceneries(const wxVector<unsigned int> &sceneries) override;
+
         void PopupMenu(wxMenu* menu);
 
         void HandleLeftMouseButtonClick(const wxMouseEvent& event) override;
         void HandleMouseMotion(const wxMouseEvent &event) override;
         void HandleRightMouseButtonRelease(const wxMouseEvent& event) override;
+        void HandleKeyPress(const wxKeyEvent &event) override;
 
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) override;
         void SetPolygonsTexture(wxString textureFilename) override;

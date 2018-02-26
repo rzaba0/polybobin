@@ -36,6 +36,20 @@ void GLSelectionPolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygo
     glBufferSubData(GL_ARRAY_BUFFER, offset, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, glVertex);
 }
 
+void GLSelectionPolygons::ResetPolygons(wxVector<PMSPolygon> polygons)
+{
+    wxVector<GLfloat> vertices;
+    GenerateGLBufferVertices(polygons, vertices);
+    m_polygonsCount = polygons.size();
+
+    if (vertices.size() > 0)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+            GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES * GL_SELECTION_POLYGON_VERTICES_COUNT * m_polygonsCount, &vertices[0]);
+    }
+}
+
 void GLSelectionPolygons::ApplyVertexAlpha(unsigned polygonIndex, unsigned vertexIndex, GLfloat alpha)
 {
     constexpr int alphaOffset = 6 * sizeof(GLfloat);
@@ -130,44 +144,9 @@ void GLSelectionPolygons::SetupTexture()
 void GLSelectionPolygons::SetupVAO(wxVector<PMSPolygon> polygons)
 {
     wxVector<GLfloat> vertices;
+    GenerateGLBufferVertices(polygons, vertices);
     m_polygonsCount = polygons.size();
-    unsigned int i, j;
 
-    if (m_polygonsCount > MAX_POLYGONS_COUNT)
-    {
-        m_polygonsCount = MAX_POLYGONS_COUNT;
-    }
-
-    for (i = 0; i < m_polygonsCount; ++i)
-    {
-        PMSColor color = Utils::GetPolygonColorByType(polygons[i].polygonType);
-
-        for (j = 0; j < 3; ++j)
-        {
-            vertices.push_back(polygons[i].vertices[j].x);
-            vertices.push_back(polygons[i].vertices[j].y);
-            vertices.push_back(polygons[i].vertices[j].z);
-            vertices.push_back((GLfloat) color.red / 255.0f);
-            vertices.push_back((GLfloat) color.green / 255.0f);
-            vertices.push_back((GLfloat) color.blue / 255.0f);
-            vertices.push_back(0.5f);
-            vertices.push_back(polygons[i].vertices[j].x / m_textureWidth);
-            vertices.push_back(polygons[i].vertices[j].y / m_textureHeight);
-        }
-    }
-
-    // Initialization of unused polygons.
-    for (i = 0; i < MAX_POLYGONS_COUNT - m_polygonsCount; ++i)
-    {
-        for (j = 0; j < 3; ++j)
-        {
-            for (unsigned int k = 0; k < GL_SELECTION_POLYGON_VERTEX_SIZE; ++k)
-            {
-                vertices.push_back(0.0f);
-            }
-        }
-    }
-    
     glGenBuffers(1, &m_vbo);
 
     glGenVertexArrays(1, &m_vao);
@@ -188,4 +167,45 @@ void GLSelectionPolygons::SetupVAO(wxVector<PMSPolygon> polygons)
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, GL_SELECTION_POLYGON_VERTEX_SIZE_BYTES, (GLvoid*)(7 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
     glBindVertexArray(0);
+}
+
+void GLSelectionPolygons::GenerateGLBufferVertices(wxVector<PMSPolygon> &polygons, wxVector<GLfloat> &vertices)
+{
+    unsigned int polygonsCount = polygons.size();
+    unsigned int i, j;
+
+    if (polygonsCount > MAX_POLYGONS_COUNT)
+    {
+        polygonsCount = MAX_POLYGONS_COUNT;
+    }
+
+    for (i = 0; i < polygonsCount; ++i)
+    {
+        PMSColor color = Utils::GetPolygonColorByType(polygons[i].polygonType);
+
+        for (j = 0; j < 3; ++j)
+        {
+            vertices.push_back(polygons[i].vertices[j].x);
+            vertices.push_back(polygons[i].vertices[j].y);
+            vertices.push_back(polygons[i].vertices[j].z);
+            vertices.push_back((GLfloat) color.red / 255.0f);
+            vertices.push_back((GLfloat) color.green / 255.0f);
+            vertices.push_back((GLfloat) color.blue / 255.0f);
+            vertices.push_back(0.5f);
+            vertices.push_back(polygons[i].vertices[j].x / m_textureWidth);
+            vertices.push_back(polygons[i].vertices[j].y / m_textureHeight);
+        }
+    }
+
+    // Initialization of unused polygons.
+    for (i = 0; i < MAX_POLYGONS_COUNT - polygonsCount; ++i)
+    {
+        for (j = 0; j < 3; ++j)
+        {
+            for (unsigned int k = 0; k < GL_SELECTION_POLYGON_VERTEX_SIZE; ++k)
+            {
+                vertices.push_back(0.0f);
+            }
+        }
+    }
 }

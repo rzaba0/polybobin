@@ -17,7 +17,8 @@ class GLOutlineScenery: public GLOutline
                          PMSColor behindNoneColor);
 
         void EditScenery(unsigned int sceneryIndex, PMSScenery scenery);
-        
+        void ResetSceneries(wxVector<PMSScenery> sceneryInstances);
+
         /**
          * \brief Renders outline for all scenery.
          */
@@ -38,6 +39,7 @@ class GLOutlineScenery: public GLOutline
         static const int RECTANGLE_VERTICES_COUNT = 4;
 
         void SetVertexColor(wxVector<GLfloat> &vertices, int sceneryLevel);
+        void GenerateGLBufferVertices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLfloat> &vertices);
 };
 
 #endif

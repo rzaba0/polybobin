@@ -18,7 +18,8 @@ const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
 
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
                 REMOVE_SELECTION_KEY = WXK_CONTROL,
-                MOVE_SELECTED_KEY = WXK_SPACE;
+                MOVE_SELECTED_KEY = WXK_SPACE,
+                REMOVE_SELECTED_KEY = WXK_DELETE;
 
 const float EPSILON = 0.00001f;
 

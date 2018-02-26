@@ -49,6 +49,28 @@ int Map::AddSpawnPoint(PMSSpawnPoint spawnPoint)
     return m_spawnPointsCount++;
 }
 
+void Map::RemovePolygons(wxVector<unsigned int> polygonIndexes)
+{
+    wxVectorSort(polygonIndexes);
+    unsigned int swapsCount = 0;
+    for (unsigned int i = 0; i < m_polygons.size(); ++i)
+    {
+        if(swapsCount + 1 <= polygonIndexes.size() && i == polygonIndexes.at(swapsCount))
+        {
+            ++swapsCount;
+        }
+        else
+        {
+            wxSwap(m_polygons[i], m_polygons[i - swapsCount]);
+        }
+    }
+    while (swapsCount--)
+    {
+        m_polygons.pop_back();
+    }
+    m_polygonsCount = m_polygons.size();
+}
+
 void Map::EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex)
 {
     m_polygons[polygonIndex].vertices[vertexIndex] = vertex;
@@ -91,6 +113,28 @@ void Map::RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes)
         m_spawnPoints.erase(m_spawnPoints.begin() + spawnPointIndexes[i]);
     }
     m_spawnPointsCount = m_spawnPoints.size();
+}
+
+void Map::RemoveSceneries(wxVector<unsigned int> sceneryIndexes)
+{
+    wxVectorSort(sceneryIndexes);
+    unsigned int swapsCount = 0;
+    for (unsigned int i = 0; i < m_sceneryInstances.size(); ++i)
+    {
+        if(swapsCount + 1 <= sceneryIndexes.size() && i == sceneryIndexes.at(swapsCount))
+        {
+            ++swapsCount;
+        }
+        else
+        {
+            wxSwap(m_sceneryInstances[i], m_sceneryInstances[i - swapsCount]);
+        }
+    }
+    while (swapsCount--)
+    {
+        m_sceneryInstances.pop_back();
+    }
+    m_sceneryInstancesCount = m_sceneryInstances.size();
 }
 
 void Map::SaveMapAsPMS(const wxString& destinationPath)
@@ -451,7 +495,7 @@ void Map::LoadMap(wxString mapPath)
     memset(m_description, 0, sizeof(m_description));
     file.Read(static_cast<void*>(m_description), sizeof(char) * m_descriptionLength);
     file.Read(static_cast<void*>(filler), sizeof(char) * (DESCRIPTION_MAX_LENGTH - m_descriptionLength));
-    
+
     file.Read(static_cast<void*>(&m_textureNameLength), sizeof(unsigned char));
     memset(m_textureName, 0, sizeof(m_textureName));
     file.Read(static_cast<void*>(m_textureName), sizeof(char) * m_textureNameLength);
@@ -575,7 +619,7 @@ void Map::LoadMap(wxString mapPath)
     }
 
     UpdateBoundaries();
-    
+
     file.Close();
 }
 

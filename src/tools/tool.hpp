@@ -14,6 +14,7 @@ public:
     virtual void OnCanvasLeftMouseButtonRelease(const wxMouseEvent &event) = 0;
     virtual void OnCanvasMouseMotion(const wxMouseEvent &event) = 0;
     virtual void OnCanvasRightMouseButtonRelease(const wxMouseEvent &event) = 0;
+    virtual void OnCanvasKeyPress(const wxKeyEvent &event) = 0;
     virtual void OnTimerTick() = 0;
     virtual ~Tool() = default;
 };

@@ -12,5 +12,6 @@ public:
     MOCK_METHOD1(OnCanvasLeftMouseButtonRelease, void(const wxMouseEvent&));
     MOCK_METHOD1(OnCanvasMouseMotion, void(const wxMouseEvent&));
     MOCK_METHOD1(OnCanvasRightMouseButtonRelease, void(const wxMouseEvent&));
+    MOCK_METHOD1(OnCanvasKeyPress, void(const wxKeyEvent&));
     MOCK_METHOD0(OnTimerTick, void());
 };

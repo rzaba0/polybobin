@@ -29,6 +29,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     canvas.Bind(wxEVT_LEFT_UP,   &EventDispatcher::OnCanvasLeftMouseButtonRelease, dispatcher.get());
     canvas.Bind(wxEVT_RIGHT_UP,  &EventDispatcher::OnCanvasRightMouseButtonRelease, dispatcher.get());
     canvas.Bind(wxEVT_MOTION,    &EventDispatcher::OnCanvasMouseMotion, dispatcher.get());
+    canvas.Bind(wxEVT_CHAR_HOOK, &EventDispatcher::OnCanvasKeyPress, dispatcher.get());
 
     return dispatcher;
 }

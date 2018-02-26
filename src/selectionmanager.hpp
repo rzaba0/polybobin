@@ -13,16 +13,18 @@ class SelectionManager
 public:
     void SelectAll();
     void UnselectAll();
-   
+
     void PunctualSelect(wxRealPoint p, bool append = false);
     void RectangularSelect(wxRealPoint a, wxRealPoint b, bool append = false);
-    
+
     void PunctualUnselect(wxRealPoint p);
     void RectangularUnselect(wxRealPoint a, wxRealPoint b);
-    
+
     void CompletePolygonSelection();
 
     void MoveSelection(float vx, float vy);
+
+    void RemoveSelection();
 
     SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection);
 
