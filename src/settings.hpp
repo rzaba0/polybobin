@@ -12,7 +12,7 @@
 class Settings
 {
     public:
-        wxString GetSoldatPath()
+        wxString GetSoldatPath() const
         {
             return m_soldatPath;
         }

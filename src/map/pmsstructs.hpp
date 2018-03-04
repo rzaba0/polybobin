@@ -30,6 +30,9 @@ struct PMSColor
     PMSColor();
     PMSColor(wxColor col);
     PMSColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255);
+
+    bool operator==(const PMSColor& otherColor);
+    bool operator!=(const PMSColor& otherColor);
 };
 
 struct PMSVector

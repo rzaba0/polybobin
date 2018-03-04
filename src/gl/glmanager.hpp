@@ -61,6 +61,8 @@ class GLManager
         void SetupTextures();
         void SetupVertices();
 
+        void AddSceneryTexture(wxString sceneryName);
+
     private:
         bool m_glReady;
         Map &m_map;

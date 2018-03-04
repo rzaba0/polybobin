@@ -26,6 +26,7 @@ class GLScenery: GLObject
 
         using GLObject::SetupShaderProgram;
         void SetupShaderProgram();
+        void AddTexture(wxString sceneryPath);
         void SetupTextures(wxString sceneryDirectoryPath, wxVector<PMSSceneryType> sceneryTypes);
         void SetupVAO(wxVector<PMSScenery> sceneryInstances);
 
@@ -37,6 +38,7 @@ class GLScenery: GLObject
 
         void GenerateGLBufferVertices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLfloat> &vertices);
         void GenerateGLBufferIndices(wxVector<PMSScenery> &sceneryInstances, wxVector<GLuint> &indices);
+        void RemoveUnusedSceneryTypes();
 };
 
 #endif

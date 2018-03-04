@@ -7,14 +7,18 @@ class CanvasMock : public Canvas
 {
 public:
     MOCK_METHOD2(AddPolygon, int(PMSPolygon, PMSVertex));
+    MOCK_METHOD1(AddScenery, int(PMSScenery));
+    MOCK_METHOD1(AddSceneryType, int(wxString));
     MOCK_METHOD1(AddSpawnPoint, int(PMSSpawnPoint));
 
     MOCK_METHOD4(EditPolygonVertex, void(unsigned, PMSPolygonType, unsigned, PMSVertex));
+    MOCK_METHOD2(EditScenery, void(unsigned, PMSScenery));
     MOCK_METHOD2(EditSpawnPoint, void(unsigned int, PMSSpawnPoint));
 
     MOCK_METHOD1(RemovePolygons, void(const wxVector<unsigned int>&));
     MOCK_METHOD1(RemoveSpawnPoints, void(wxVector<unsigned int>));
     MOCK_METHOD1(RemoveSceneries, void(const wxVector<unsigned int>&));
+    MOCK_METHOD1(RemoveScenery, void(unsigned int));
 
     MOCK_METHOD0(UpdatePolygonSelectionForRedraw, void(void));
     MOCK_CONST_METHOD1(GetPolygon, const PMSPolygon&(unsigned));

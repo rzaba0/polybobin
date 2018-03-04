@@ -3,6 +3,7 @@
 #include "tools/polygontool.hpp"
 #include "tools/vertexselectiontool.hpp"
 #include "tools/selectiontool.hpp"
+#include "tools/scenerytool.hpp"
 #include "tools/spawnpointtool.hpp"
 #include "mainframe.hpp"
 
@@ -16,7 +17,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(nullptr);
-    toolSet.emplace_back(nullptr);
+    toolSet.emplace_back(std::make_unique<SceneryTool>(canvas, mainFrame.GetSettings(), mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(std::make_unique<SpawnPointTool>(canvas));
     toolSet.emplace_back(nullptr);

@@ -39,6 +39,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void RemovePolygons(const wxVector<unsigned int> &polygons) override;
         int AddSpawnPoint(PMSSpawnPoint spawnPoint) override;
         void EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonType, unsigned vertexIndex, PMSVertex vertex) override;
+        void EditScenery(unsigned sceneryIndex, PMSScenery scenery) override;
         void EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint) override;
 
         void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes) override;
@@ -47,6 +48,9 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void UpdatePolygonSelectionForRedraw() override;
 
         void RemoveSceneries(const wxVector<unsigned int> &sceneries) override;
+        void RemoveScenery(unsigned int sceneryId) override;
+        int AddScenery(PMSScenery newScenery) override;
+        int AddSceneryType(wxString sceneryName) override;
 
         void PopupMenu(wxMenu* menu);
 

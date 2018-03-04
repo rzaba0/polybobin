@@ -43,6 +43,50 @@ int Map::AddPolygon(PMSPolygon polygon)
     return m_polygonsCount++;
 }
 
+int Map::AddScenery(PMSScenery scenery)
+{
+    m_sceneryInstances.push_back(std::move(scenery));
+    return m_sceneryInstancesCount++;
+}
+
+int Map::AddSceneryType(wxString sceneryName)
+{
+    bool found = false;
+    int index = 0;
+    for (int i = 0; i < m_sceneryTypes.size(); i++)
+    {
+        if (wxString(m_sceneryTypes[i].name) == sceneryName)
+        {
+            index = i + 1;
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        PMSSceneryType type;
+        memset(type.name, 0, 50);
+        for (int i = 0; i < sceneryName.size(); i++)
+        {
+            type.name[i] = sceneryName[i];
+        }
+        type.nameLength = sceneryName.length();
+        // Legacy things - not used anymore
+        //type.timestamp.date.day = 1;
+        //type.timestamp.date.month = 1;
+        //type.timestamp.date.year = 2018;
+        //type.timestamp.time.hour = 1;
+        //type.timestamp.time.second = 0;
+        //type.timestamp.time.minute = 0;
+
+        m_sceneryTypes.push_back(std::move(type));
+        m_sceneryTypesCount++;
+        index = m_sceneryTypesCount;
+    }
+
+    return index;
+}
+
 int Map::AddSpawnPoint(PMSSpawnPoint spawnPoint)
 {
     m_spawnPoints.push_back(std::move(spawnPoint));
@@ -135,6 +179,49 @@ void Map::RemoveSceneries(wxVector<unsigned int> sceneryIndexes)
         m_sceneryInstances.pop_back();
     }
     m_sceneryInstancesCount = m_sceneryInstances.size();
+}
+
+void Map::RemoveUnusedSceneryTypes()
+{
+    wxVector<int> useCount(m_sceneryTypes.size(), 0);
+    wxVector<unsigned int> newIndexes(m_sceneryTypes.size(), 0);
+    for (const auto& scenery : m_sceneryInstances)
+    {
+        useCount[scenery.style - 1]++;
+    }
+
+    int removeCount = 0;
+    for (int i = 0; i < m_sceneryTypes.size(); i++)
+    {
+        if (useCount[i] == 0)
+        {
+            removeCount++;
+        }
+    }
+
+    unsigned int swapsCount = 0;
+    for (unsigned int i = 0; i < m_sceneryTypes.size(); ++i)
+    {
+        if (swapsCount + 1 <= removeCount && useCount[i] == 0)
+        {
+            ++swapsCount;
+        }
+        else
+        {
+            wxSwap(m_sceneryTypes[i], m_sceneryTypes[i - swapsCount]);
+            newIndexes[i] = i - swapsCount;
+        }
+    }
+    while (swapsCount--)
+    {
+        m_sceneryTypes.pop_back();
+    }
+    m_sceneryTypesCount = m_sceneryTypes.size();
+
+    for (auto& scenery : m_sceneryInstances)
+    {
+        scenery.style = newIndexes[scenery.style - 1] + 1;
+    }
 }
 
 void Map::SaveMapAsPMS(const wxString& destinationPath)
@@ -453,6 +540,7 @@ void Map::LoadDefaultMap()
 
     m_polygonsCount = 0;
     m_sceneryInstances = {};
+    m_sceneryInstancesCount = 0;
     m_sceneryTypesCount = 0;
     m_collidersCount = 0;
     m_spawnPointsCount = 0;

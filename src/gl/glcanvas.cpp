@@ -57,6 +57,12 @@ void GLCanvas::EditPolygonVertex(unsigned polygonIndex, PMSPolygonType polygonTy
     m_glManager.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
 }
 
+void GLCanvas::EditScenery(unsigned sceneryIndex, PMSScenery scenery)
+{
+    m_map.EditScenery(sceneryIndex, scenery);
+    m_glManager.EditScenery(sceneryIndex, scenery);
+}
+
 void GLCanvas::EditSpawnPoint(unsigned int spawnPointIdx, PMSSpawnPoint spawnPoint)
 {
     m_map.EditSpawnPoint(spawnPointIdx, spawnPoint);
@@ -76,11 +82,39 @@ const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
 
 void GLCanvas::RemoveSceneries(const wxVector<unsigned int> &sceneries)
 {
-    // TODO: uncomment when scenery selection is implemented
-    /*
     m_map.RemoveSceneries(sceneries);
     m_glManager.ResetSceneries(m_map.GetSceneryInstances());
-    */
+    m_map.RemoveUnusedSceneryTypes();
+}
+
+void GLCanvas::RemoveScenery(unsigned int sceneryId)
+{
+    wxVector<unsigned int> sceneries;
+    sceneries.push_back(sceneryId);
+    RemoveSceneries(sceneries);
+}
+
+int GLCanvas::AddScenery(PMSScenery newScenery)
+{
+    int newSceneryId = m_map.AddScenery(newScenery);
+    m_glManager.ResetSceneries(m_map.GetSceneryInstances());
+    m_map.RemoveUnusedSceneryTypes();
+
+    return newSceneryId;
+}
+
+int GLCanvas::AddSceneryType(wxString sceneryName)
+{
+    int sceneryTypesNum = m_map.GetSceneryTypes().size();
+
+    int newSceneryTypeId = m_map.AddSceneryType(sceneryName);
+
+    if (sceneryTypesNum != m_map.GetSceneryTypes().size()) // New SceneryType
+    {
+        m_glManager.AddSceneryTexture(sceneryName);
+    }
+
+    return newSceneryTypeId;
 }
 
 void GLCanvas::PopupMenu(wxMenu* menu)

@@ -23,6 +23,8 @@ class Map
         Map(wxString path);
 
         int AddPolygon(PMSPolygon polygon);
+        int AddScenery(PMSScenery scenery);
+        int AddSceneryType(wxString sceneryName);
         int AddSpawnPoint(PMSSpawnPoint spawnPoint);
 
         void EditPolygonVertex(unsigned int polygonIndex, unsigned int vertexIndex, PMSVertex vertex);
@@ -32,6 +34,7 @@ class Map
         void RemovePolygons(wxVector<unsigned int> polygonIndexes);
         void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes);
         void RemoveSceneries(wxVector<unsigned int> sceneryIndexes);
+        void RemoveUnusedSceneryTypes();
 
         void SaveMapAsPMS(const wxString& destinationPath);
 

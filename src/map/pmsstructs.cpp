@@ -15,6 +15,19 @@ PMSColor::PMSColor(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t 
 {
 }
 
+bool PMSColor::operator==(const PMSColor& otherColor)
+{
+    return (alpha == otherColor.alpha
+        && red == otherColor.red
+        && green == otherColor.green
+        && blue == otherColor.blue);
+}
+
+bool PMSColor::operator!=(const PMSColor& otherColor)
+{
+    return !(*this == otherColor);
+}
+
 bool PMSScenery::Contains(float x, float y) const
 {
     float rectX[4], rectY[4];

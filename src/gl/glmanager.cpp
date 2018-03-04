@@ -219,3 +219,8 @@ void GLManager::SetupVertices()
 
     m_glSelectionPolygons.SetupVAO(m_map.GetPolygons());
 }
+
+void GLManager::AddSceneryTexture(wxString sceneryName)
+{
+    m_glScenery.AddTexture(m_settings.GetSoldatPath() + "scenery-gfx/" + sceneryName);
+}

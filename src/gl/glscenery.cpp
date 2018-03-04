@@ -3,14 +3,59 @@
 #include "../constants.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+// TODO: Add changing vbo and ebo to change color width and height
 void GLScenery::EditScenery(unsigned int sceneryIndex, PMSScenery newScenery)
 {
+    if (m_sceneryInstances[sceneryIndex].color != newScenery.color
+        || m_sceneryInstances[sceneryIndex].alpha != newScenery.alpha
+        || m_sceneryInstances[sceneryIndex].width != newScenery.width
+        || m_sceneryInstances[sceneryIndex].height != newScenery.height)
+    {
+        wxVector<GLfloat> vertices;
+
+        for (int j = 0; j < 4; ++j)
+        {
+            vertices.push_back(0.0f); // These values will be set manually later.
+            vertices.push_back(0.0f);
+            vertices.push_back((GLfloat)newScenery.color.red / 255.0f);
+            vertices.push_back((GLfloat)newScenery.color.green / 255.0f);
+            vertices.push_back((GLfloat)newScenery.color.blue / 255.0f);
+            vertices.push_back((GLfloat)newScenery.alpha / 255.0f);
+            vertices.push_back(0.0f); // These values will be set manually later.
+            vertices.push_back(0.0f);
+        }
+        vertices[0] = 0.0f;
+        vertices[1] = 0.0f;
+        vertices[6] = 0.0f;
+        vertices[7] = 0.0f;
+
+        vertices[8] = newScenery.width;
+        vertices[9] = 0.0f;
+        vertices[14] = 1.0f;
+        vertices[15] = 0.0f;
+
+        vertices[16] = 0.0f;
+        vertices[17] = newScenery.height;
+        vertices[22] = 0.0f;
+        vertices[23] = 1.0f;
+
+        vertices[24] = newScenery.width;
+        vertices[25] = newScenery.height;
+        vertices[30] = 1.0f;
+        vertices[31] = 1.0f;
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sceneryIndex * 4 * 8, sizeof(GLfloat) * 4 * 8, &vertices[0]);
+
+    }
     m_sceneryInstances[sceneryIndex] = newScenery;
 }
 
+// TODO: Add removing unused types
 void GLScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)
 {
     m_sceneryInstances = sceneryInstances;
+    RemoveUnusedSceneryTypes();
 
     int sceneryInstancesCount = sceneryInstances.size();
 
@@ -49,6 +94,7 @@ void GLScenery::Render(glm::mat4 transform, PMSSceneryLevel targetLevel)
 
             glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                                1, GL_FALSE, glm::value_ptr(_transform));
+            //wxMessageBox((wxString("style: ") << m_sceneryInstances[i].style - 1) + (wxString(" textures: ") << m_sceneryTextures.size()));
             glBindTexture(GL_TEXTURE_2D, m_sceneryTextures[m_sceneryInstances[i].style - 1]);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(i * 6 * sizeof(GLuint)));
         }
@@ -91,28 +137,33 @@ void GLScenery::SetupShaderProgram()
     SetupShaderProgram(vertexShaderSource, fragmentShaderSource);
 }
 
+void GLScenery::AddTexture(wxString sceneryPath)
+{
+    Image tmpImage;
+    tmpImage.OpenAndResize(sceneryPath);
+
+    m_sceneryTextures.push_back(0);
+    glGenTextures(1, &m_sceneryTextures.back());
+    glBindTexture(GL_TEXTURE_2D, m_sceneryTextures.back());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLint format = tmpImage.HasAlpha() ? GL_RGBA : GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, format,
+        tmpImage.GetWidth(), tmpImage.GetHeight(),
+        0, format, GL_UNSIGNED_BYTE, tmpImage.GetData());
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void GLScenery::SetupTextures(wxString sceneryDirectoryPath, wxVector<PMSSceneryType> sceneryTypes)
 {
     for (unsigned int i = 0; i < sceneryTypes.size(); ++i)
     {
-        Image tmpImage;
-        tmpImage.OpenAndResize(sceneryDirectoryPath + sceneryTypes[i].name);
-
-        m_sceneryTextures.push_back(0);
-        glGenTextures(1, &m_sceneryTextures[i]);
-        glBindTexture(GL_TEXTURE_2D, m_sceneryTextures[i]);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        GLint format = tmpImage.HasAlpha() ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format,
-                     tmpImage.GetWidth(), tmpImage.GetHeight(),
-                     0, format, GL_UNSIGNED_BYTE, tmpImage.GetData());
-        glBindTexture(GL_TEXTURE_2D, 0);
+        AddTexture(sceneryDirectoryPath + sceneryTypes[i].name);
     }
 }
 
@@ -229,5 +280,48 @@ void GLScenery::GenerateGLBufferIndices(wxVector<PMSScenery> &sceneryInstances, 
         indices.push_back(i * 4 + 1);
         indices.push_back(i * 4 + 3);
         indices.push_back(i * 4 + 2);
+    }
+}
+
+void GLScenery::RemoveUnusedSceneryTypes()
+{
+    wxVector<int> useCount(m_sceneryTextures.size(), 0);
+    wxVector<unsigned int> newIndexes(m_sceneryTextures.size(), 0);
+    for (const auto& scenery : m_sceneryInstances)
+    {
+        useCount[scenery.style - 1]++;
+    }
+
+    int removeCount = 0;
+    for (int i = 0; i < m_sceneryTextures.size(); i++)
+    {
+        if (useCount[i] == 0)
+        {
+            removeCount++;
+        }
+    }
+
+    unsigned int swapsCount = 0;
+    for (unsigned int i = 0; i < m_sceneryTextures.size(); ++i)
+    {
+        if (swapsCount + 1 <= removeCount && useCount[i] == 0)
+        {
+            ++swapsCount;
+        }
+        else
+        {
+            wxSwap(m_sceneryTextures[i], m_sceneryTextures[i - swapsCount]);
+            newIndexes[i] = i - swapsCount;
+        }
+    }
+    while (swapsCount--)
+    {
+        glDeleteTextures(1, &m_sceneryTextures.back());
+        m_sceneryTextures.pop_back();
+    }
+
+    for (auto& scenery : m_sceneryInstances)
+    {
+        scenery.style = newIndexes[scenery.style - 1] + 1;
     }
 }

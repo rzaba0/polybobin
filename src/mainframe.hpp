@@ -25,6 +25,7 @@ class MainFrame: public wxFrame
         const DisplayFrame& GetDisplayFrame() const { return *m_displayFrame; }
         const PaletteFrame& GetPaletteFrame() const { return *m_paletteFrame; }
         const ToolbarFrame& GetToolbarFrame() const { return *m_toolbarFrame; }
+        const Settings& GetSettings() const { return *m_settings; }
 
     private:
         MapSettingsDialog *m_mapSettingsDialog;
