@@ -2,6 +2,8 @@
 #include "map/pmsstructs.hpp"
 #include "utils.hpp"
 
+#include <cmath>
+
 namespace Utils
 {
     PMSColor GetPolygonColorByType(PMSPolygonType polygonType)

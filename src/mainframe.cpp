@@ -37,6 +37,10 @@ MainFrame::MainFrame(Settings *settings)
     m_toolbarFrame->Show();
     m_toolbarFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
 
+    m_sceneryFrame = new SceneryFrame(this);
+    m_sceneryFrame->Show();
+    m_sceneryFrame->Bind(wxEVT_CLOSE_WINDOW, &MenuBar::OnFrameClosed, menuBar);
+
     notebookPanelSizer->Add(m_notebook, 1, wxEXPAND);
     notebookPanel->SetSizer(notebookPanelSizer);
 
@@ -158,6 +162,10 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
         case ID_MENU_WINDOWS_TOOLBAR:
             m_toolbarFrame->ToggleVisibility();
             break;
+
+        case ID_MENU_WINDOWS_SCENERY:
+            m_sceneryFrame->ToggleVisibility();
+            break;
     }
 
     // Pass the event to following event handler.
@@ -181,4 +189,5 @@ void MainFrame::ShowAllMiniFrames(bool show)
     m_displayFrame->Show(show);
     m_paletteFrame->Show(show);
     m_toolbarFrame->Show(show);
+    m_sceneryFrame->Show(show);
 }

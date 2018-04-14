@@ -10,6 +10,7 @@
 #include "miniframes/displayframe.hpp"
 #include "miniframes/paletteframe.hpp"
 #include "miniframes/toolbarframe.hpp"
+#include "miniframes/sceneryframe.hpp"
 #include "notebook.hpp"
 #include "settings.hpp"
 
@@ -25,6 +26,7 @@ class MainFrame: public wxFrame
         const DisplayFrame& GetDisplayFrame() const { return *m_displayFrame; }
         const PaletteFrame& GetPaletteFrame() const { return *m_paletteFrame; }
         const ToolbarFrame& GetToolbarFrame() const { return *m_toolbarFrame; }
+        SceneryFrame& GetSceneryFrame() const { return *m_sceneryFrame; }
         const Settings& GetSettings() const { return *m_settings; }
 
     private:
@@ -33,6 +35,7 @@ class MainFrame: public wxFrame
         DisplayFrame *m_displayFrame;
         PaletteFrame *m_paletteFrame;
         ToolbarFrame *m_toolbarFrame;
+        SceneryFrame *m_sceneryFrame;
 
         Notebook *m_notebook;
         wxPreferencesEditor *m_preferencesEditor;

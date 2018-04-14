@@ -26,6 +26,8 @@ MenuBar::MenuBar()
     m_menuItemWindowsPalette->Check(true);
     m_menuItemWindowsToolbar = menuWindows->AppendCheckItem(ID_MENU_WINDOWS_TOOLBAR, "Toolbar", "Show/hide toolbar");
     m_menuItemWindowsToolbar->Check(true);
+    m_menuItemWindowsScenery = menuWindows->AppendCheckItem(ID_MENU_WINDOWS_SCENERY, "Scenery", "Show/hide scenery properties");
+    m_menuItemWindowsScenery->Check(true);
 
     Append(menuFile, "File");
     Append(menuEdit, "Edit");
@@ -53,6 +55,10 @@ void MenuBar::OnFrameClosed(wxCloseEvent &event)
         case ID_FRAME_TOOLBAR:
             m_menuItemWindowsToolbar->Check(false);
             break;
+
+        case ID_FRAME_SCENERY:
+            m_menuItemWindowsScenery->Check(false);
+            break;
     }
 
     // We pass the event to following event handlers.
@@ -64,6 +70,7 @@ void MenuBar::CheckAllMenuItems(bool check)
     m_menuItemWindowsDisplay->Check(check);
     m_menuItemWindowsPalette->Check(check);
     m_menuItemWindowsToolbar->Check(check);
+    m_menuItemWindowsScenery->Check(check);
 }
 
 void MenuBar::OnHideAllWindows(wxCommandEvent &event)

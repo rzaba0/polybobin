@@ -4,6 +4,7 @@
 #include "gl/displaysettings.hpp"
 #include "selection.hpp"
 #include "polygonselection.hpp"
+#include "miniframes\sceneryframe.hpp"
 #include <vector>
 #include <functional>
 #include <memory>
@@ -26,7 +27,11 @@ public:
 
     void RemoveSelection();
 
-    SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection);
+    SelectionManager(Canvas& canvas,
+                    const DisplaySettings& displaySettings,
+                    SceneryFrame& sceneryFrame,
+                    std::unique_ptr<PolygonSelection> polygonSelection,
+                    std::unique_ptr<Selection> scenerySelection);
 
 private:
     void ForEachPolyAtPosition(wxRealPoint position, std::function<void(unsigned)> operation);
@@ -34,6 +39,7 @@ private:
 
     Canvas& m_canvas;
     const DisplaySettings& m_displaySettings;
+    SceneryFrame& m_sceneryFrame;
     std::unique_ptr<PolygonSelection> m_polygonSelection;
     std::unique_ptr<Selection> m_scenerySelection;
 };

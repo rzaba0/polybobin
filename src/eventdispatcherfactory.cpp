@@ -17,7 +17,8 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(nullptr);
-    toolSet.emplace_back(std::make_unique<SceneryTool>(canvas, mainFrame.GetSettings(), mainFrame.GetPaletteFrame()));
+    toolSet.emplace_back(std::make_unique<SceneryTool>(canvas, mainFrame.GetSettings(),
+            mainFrame.GetSceneryFrame(), mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(nullptr);
     toolSet.emplace_back(std::make_unique<SpawnPointTool>(canvas));
     toolSet.emplace_back(nullptr);

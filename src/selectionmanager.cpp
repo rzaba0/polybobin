@@ -2,9 +2,10 @@
 #include <utility>
 #include <algorithm>
 
-SelectionManager::SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection)
+SelectionManager::SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, SceneryFrame& sceneryFrame, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection)
     : m_canvas{canvas}
     , m_displaySettings{displaySettings}
+    , m_sceneryFrame{sceneryFrame}
     , m_polygonSelection{std::move(polygonSelection)}
     , m_scenerySelection{std::move(scenerySelection)}
 {
@@ -91,6 +92,7 @@ void SelectionManager::RemoveSelection()
     for (const auto &selectedScenery : *m_scenerySelection)
     {
         selectedSceneries.push_back(selectedScenery);
+        m_sceneryFrame.RemoveScenery(selectedScenery);
     }
 
     m_canvas.RemovePolygons(selectedPolygons);

@@ -3,7 +3,6 @@
 #include "../constants.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-// TODO: Add changing vbo and ebo to change color width and height
 void GLScenery::EditScenery(unsigned int sceneryIndex, PMSScenery newScenery)
 {
     if (m_sceneryInstances[sceneryIndex].color != newScenery.color
@@ -51,7 +50,6 @@ void GLScenery::EditScenery(unsigned int sceneryIndex, PMSScenery newScenery)
     m_sceneryInstances[sceneryIndex] = newScenery;
 }
 
-// TODO: Add removing unused types
 void GLScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)
 {
     m_sceneryInstances = sceneryInstances;
@@ -94,7 +92,6 @@ void GLScenery::Render(glm::mat4 transform, PMSSceneryLevel targetLevel)
 
             glUniformMatrix4fv(m_shaderProgram.GetUniformLocation("transform"),
                                1, GL_FALSE, glm::value_ptr(_transform));
-            //wxMessageBox((wxString("style: ") << m_sceneryInstances[i].style - 1) + (wxString(" textures: ") << m_sceneryTextures.size()));
             glBindTexture(GL_TEXTURE_2D, m_sceneryTextures[m_sceneryInstances[i].style - 1]);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(i * 6 * sizeof(GLuint)));
         }

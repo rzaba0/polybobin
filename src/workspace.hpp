@@ -11,6 +11,7 @@
 #include "settings.hpp"
 #include "eventdispatcher.hpp"
 #include "selectionmanager.hpp"
+#include "miniframes\sceneryframe.hpp"
 #include <memory>
 
 /**
@@ -44,6 +45,7 @@ class Workspace: public wxWindow
         GLCanvas* m_glCanvas;
         Map m_map;
         DisplaySettings m_displaySettings;
+        SceneryFrame& m_sceneryFrame;
         std::unique_ptr<EventDispatcher> m_eventDispatcher;
         std::unique_ptr<SelectionManager> m_selectionManager;
 };

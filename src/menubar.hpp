@@ -24,7 +24,8 @@ class MenuBar: public wxMenuBar
     private:
         wxMenuItem *m_menuItemWindowsDisplay,
                    *m_menuItemWindowsPalette,
-                   *m_menuItemWindowsToolbar;
+                   *m_menuItemWindowsToolbar,
+                   *m_menuItemWindowsScenery;
 
         void CheckAllMenuItems(bool check);
         void OnHideAllWindows(wxCommandEvent &event);
