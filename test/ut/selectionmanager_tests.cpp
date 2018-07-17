@@ -29,14 +29,16 @@ struct SelectionManagerTest : public testing::Test
     }};
     CanvasMock canvas;
     DisplaySettings dummyDisplaySettings;
+    SceneryFrame dummySceneryFrame;
     PolygonSelection* polygonSelection;
     Selection* scenerySelection;
     SelectionManager sut;
 
     SelectionManagerTest()
-        : polygonSelection{new PolygonSelection}
+        : dummySceneryFrame{nullptr}
+        , polygonSelection{new PolygonSelection}
         , scenerySelection{new Selection}
-        , sut{canvas, dummyDisplaySettings, std::unique_ptr<PolygonSelection>(polygonSelection), std::unique_ptr<Selection>(scenerySelection)}
+        , sut{canvas, dummyDisplaySettings, dummySceneryFrame, std::unique_ptr<PolygonSelection>(polygonSelection), std::unique_ptr<Selection>(scenerySelection)}
     {
         // Inject our "map" into Canvas' GetPolygon, GetPolygonCount methods.
         ON_CALL(canvas, GetPolygonCount()).WillByDefault(ReturnFuncResult([&](){ return mapSim.GetPolygonCount(); }));
