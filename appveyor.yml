@@ -1,0 +1,42 @@
+image: Visual Studio 2017
+clone_folder: c:\polybobin
+platform: x64
+configuration: Release
+
+environment:
+  WXWIN: c:\wxWidgets-3.1.1\
+  GLM_ROOT_DIR: c:\glm\glm
+
+before_build:
+  - ps: appveyor DownloadFile "https://cmake.org/files/v3.12/cmake-3.12.0-rc3-win64-x64.zip" -FileName cmake.zip
+  - ps: 7z x cmake.zip -oC:\cmake
+  - ps: move C:\cmake\cmake-* C:\cmake\cmake
+  - ps: Invoke-WebRequest 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1/wxWidgets-3.1.1-headers.7z' -OutFile 'headers.7z'
+  - ps: Invoke-WebRequest 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1/wxMSW-3.1.1_vc141_Dev.7z' -OutFile 'dev.7z'
+  - ps: Invoke-WebRequest 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1/wxMSW-3.1.1_vc141_ReleaseDLL.7z' -OutFile 'dll.7z'
+  - ps: Invoke-WebRequest 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1/wxMSW-3.1.1_vc141_ReleasePDB.7z' -OutFile 'pdb.7z'
+  - ps: 7z x headers.7z -oc:\wxWidgets-3.1.1 -aoa
+  - ps: 7z x dev.7z -oc:\wxWidgets-3.1.1 -aoa
+  - ps: 7z x dll.7z -oc:\wxWidgets-3.1.1 -aoa
+  - ps: 7z x pdb.7z -oc:\wxWidgets-3.1.1 -aoa
+  - ps: Invoke-WebRequest 'https://github.com/g-truc/glm/releases/download/0.9.9.0/glm-0.9.9.0.7z' -OutFile 'glm.7z'
+  - ps: 7z x glm.7z -oc:\glm -aoa
+
+build_script:
+  - ps: C:\cmake\cmake\bin\cmake.exe . -DBUILD_TESTS=OFF -Wno-dev
+  - ps: cmake --build . --config Release --target INSTALL
+
+after_build:
+  - ps: mkdir build
+  - ps: cp -r bin build
+  - ps: cp -r gfx build
+  - ps: cp -r palettes build
+  - ps: cp C:\wxWidgets-3.1.1\lib\vc141_dll\wxmsw311u_core_vc141.dll c:\polybobin\build\bin\
+  - ps: cp C:\wxWidgets-3.1.1\lib\vc141_dll\wxbase311u_vc141.dll c:\polybobin\build\bin\
+  - ps: cp C:\wxWidgets-3.1.1\lib\vc141_dll\wxmsw311u_gl_vc141.dll c:\polybobin\build\bin\
+  - ps: echo "SoldatPath=C:/Soldat/" | Out-File -encoding ASCII c:\polybobin\build\bin\settings.ini
+
+artifacts:
+  - path: build
+    name: polybobin
+    type: zip

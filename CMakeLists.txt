@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
+cmake_policy(SET CMP0043 OLD)
 project(polybobin)
+
+option(BUILD_TESTS "Build tests" ON)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -20,5 +23,7 @@ endif()
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(test)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
