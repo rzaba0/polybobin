@@ -1,5 +1,12 @@
 # polybobin
+[![discord](https://img.shields.io/discord/234733999879094272.svg)](https://discord.gg/soldat)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/soldat/polybobin?branch=master&svg=true)](https://ci.appveyor.com/project/soldat/polybobin)
+
 Map maker for Soldat.
+
+![screenshot](https://www.dropbox.com/s/9gh1znsmgvynxa0/poly.png?raw=1)
+
+### Binary builds: [Download for Windows](https://ci.appveyor.com/api/projects/soldat/polybobin/artifacts/polybobin.zip)
 
 The project is written in C++ and depends on:<br />
 - [wxWidgets 3.1.0](https://github.com/wxWidgets/wxWidgets)<br />
