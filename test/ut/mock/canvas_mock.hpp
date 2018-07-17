@@ -27,6 +27,7 @@ public:
 
     MOCK_METHOD2(SetBackgroundColors, void(wxColor, wxColor));
     MOCK_METHOD1(SetPolygonsTexture, void(wxString));
+    MOCK_METHOD1(SetTextureTransformationMode, void(bool));
 
     MOCK_METHOD1(HandleLeftMouseButtonClick, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleMouseMotion, void(const wxMouseEvent&));

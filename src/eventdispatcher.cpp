@@ -10,7 +10,6 @@ EventDispatcher::EventDispatcher(ToolSet tools, Canvas& canvas)
 
 EventDispatcher::~EventDispatcher()
 {
-    Unselect();
 }
 
 void EventDispatcher::Select(int toolId)

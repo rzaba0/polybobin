@@ -20,6 +20,9 @@ class GLOutlinePolygons: public GLOutline
         void AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex);
         void EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType polygonType,
                                unsigned int vertexIndex, PMSVertex newVertex);
+        void SetVertexColor(unsigned int polygonIndex, unsigned int vertexIndex, PMSColor color);
+        void RestoreVertexColor(unsigned int polygonIndex, unsigned int vertexIndex, PMSPolygonType polygonType);
+
         void ResetPolygons(wxVector<PMSPolygon> polygons);
         void ApplySelection(const PolygonSelection& selectedPolygons);
 

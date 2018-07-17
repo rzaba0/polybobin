@@ -27,6 +27,7 @@ public:
 
     virtual void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) = 0;
     virtual void SetPolygonsTexture(wxString textureFilename) = 0;
+    virtual void SetTextureTransformationMode(bool mode = true) = 0;
 
     virtual void HandleLeftMouseButtonClick(const wxMouseEvent& event) = 0;
     virtual void HandleMouseMotion(const wxMouseEvent &event) = 0;

@@ -32,6 +32,28 @@ void GLOutlinePolygons::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonT
     glBufferSubData(GL_ARRAY_BUFFER, offset, GL_OUTLINE_VERTEX_SIZE_BYTES, &glVertex[0]);
 }
 
+void GLOutlinePolygons::SetVertexColor(unsigned int polygonIndex, unsigned int vertexIndex, PMSColor color)
+{
+    wxVector<GLfloat> glVertex;
+    glVertex.push_back((GLfloat)color.red / 255.0f);
+    glVertex.push_back((GLfloat)color.green / 255.0f);
+    glVertex.push_back((GLfloat)color.blue / 255.0f);
+    glVertex.push_back((GLfloat)color.alpha / 255.0f);
+
+    const int offset = polygonIndex * GL_OUTLINE_VERTEX_SIZE_BYTES * GL_OUTLINE_POLYGON_VERTICES_COUNT +
+        vertexIndex * GL_OUTLINE_VERTEX_SIZE_BYTES + 4 * 3;
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, 4 * 4, &glVertex[0]);
+}
+
+void GLOutlinePolygons::RestoreVertexColor(unsigned int polygonIndex, unsigned int vertexIndex, PMSPolygonType polygonType)
+{
+    PMSColor color = Utils::GetPolygonColorByType(polygonType);
+
+    SetVertexColor(polygonIndex, vertexIndex, color);
+}
+
 void GLOutlinePolygons::ApplyVertexAlpha(unsigned polygonIndex, unsigned vertexIndex, GLfloat alpha)
 {
     constexpr int alphaOffset = 6 * sizeof(GLfloat);

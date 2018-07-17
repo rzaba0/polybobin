@@ -4,7 +4,7 @@
 #include "gl/displaysettings.hpp"
 #include "selection.hpp"
 #include "polygonselection.hpp"
-#include "miniframes\sceneryframe.hpp"
+#include "miniframes/sceneryframe.hpp"
 #include <vector>
 #include <functional>
 #include <memory>
@@ -24,6 +24,7 @@ public:
     void CompletePolygonSelection();
 
     void MoveSelection(float vx, float vy);
+    void MoveSelectedTextures(float vx, float vy);
 
     void RemoveSelection();
 

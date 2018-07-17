@@ -63,6 +63,8 @@ class GLManager
 
         void AddSceneryTexture(wxString sceneryName);
 
+        void SetTextureTransformationMode(const PolygonSelection& selectedPolygons, bool mode = true);
+
     private:
         bool m_glReady;
         Map &m_map;
@@ -78,6 +80,8 @@ class GLManager
         GLOutlineScenery m_glOutlineSceneryWireframe;
 
         GLSelectionPolygons m_glSelectionPolygons;
+
+        bool m_textureTransformationMode;
 };
 
 #endif

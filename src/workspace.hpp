@@ -11,7 +11,7 @@
 #include "settings.hpp"
 #include "eventdispatcher.hpp"
 #include "selectionmanager.hpp"
-#include "miniframes\sceneryframe.hpp"
+#include "miniframes/sceneryframe.hpp"
 #include <memory>
 
 /**

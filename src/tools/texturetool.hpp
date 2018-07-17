@@ -1,10 +1,12 @@
 #pragma once
 #include "tool.hpp"
+#include "../canvas.hpp"
+#include "../selectionmanager.hpp"
 
 class TextureTool : public Tool
 {
 public:
-    TextureTool();
+    TextureTool(SelectionManager& selectionManager, Canvas& glCanvas);
     void OnSelect() override;
     void OnUnselect() override;
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event) override;
@@ -16,4 +18,7 @@ public:
     ~TextureTool() override = default;
 
 private:
+    SelectionManager& m_selectionManager;
+    Canvas& m_canvas;
+    wxRealPoint m_mousePositionOnMap;
 };

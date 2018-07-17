@@ -4,13 +4,15 @@
 
 #include "../constants.hpp"
 
-GLManager::GLManager(Settings settings, Map &map) : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
-                                                                                PMSColor(176, 31, 31, 255),
-                                                                                PMSColor(255, 44, 44, 255)),
-                                                    m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
-                                                                                PMSColor(168, 168, 168, 255),
-                                                                                PMSColor(210, 210, 210, 255)),
-                                                    m_map(map)
+GLManager::GLManager(Settings settings, Map &map)
+    : m_glOutlineScenerySelection(PMSColor(129, 23, 23, 255),
+        PMSColor(176, 31, 31, 255),
+        PMSColor(255, 44, 44, 255))
+    , m_glOutlineSceneryWireframe(PMSColor(129, 129, 129, 255),
+        PMSColor(168, 168, 168, 255),
+        PMSColor(210, 210, 210, 255))
+    , m_map(map)
+    , m_textureTransformationMode(false)
 {
     m_glReady = false;
     m_settings = settings;
@@ -42,7 +44,8 @@ void GLManager::EditPolygonVertex(unsigned int polygonIndex, PMSPolygonType poly
     m_glBackground.UpdateVBO(m_map.GetBackgroundTopColor(), m_map.GetBackgroundBottomColor(),
                              m_map.GetBoundaries());
     m_glPolygons.EditPolygonVertex(polygonIndex, vertexIndex, vertex);
-    m_glOutlinePolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
+    if (!m_textureTransformationMode)
+        m_glOutlinePolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
     m_glSelectionPolygons.EditPolygonVertex(polygonIndex, polygonType, vertexIndex, vertex);
 }
 
@@ -152,7 +155,9 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
     if (!selectedPolygons.empty())
     {
         m_glOutlinePolygons.RenderSelected(transform, selectedPolygons);
-        m_glSelectionPolygons.RenderSelected(transform, selectedPolygons);
+
+        if (!m_textureTransformationMode)
+            m_glSelectionPolygons.RenderSelected(transform, selectedPolygons);
     }
 
     if (!selectedScenery.empty())
@@ -223,4 +228,32 @@ void GLManager::SetupVertices()
 void GLManager::AddSceneryTexture(wxString sceneryName)
 {
     m_glScenery.AddTexture(m_settings.GetSoldatPath() + "scenery-gfx/" + sceneryName);
+}
+
+void GLManager::SetTextureTransformationMode(const PolygonSelection& selectedPolygons, bool mode)
+{
+    auto polygons = m_map.GetPolygons();
+
+    if (m_textureTransformationMode != mode)
+    {
+        for (const auto& poly : selectedPolygons)
+        {
+            for (unsigned i = 0; i < 3; i++)
+            {
+                if (mode)
+                {
+                    PMSColor color(255, 0, 0);
+
+                    if (poly.vertex[i])
+                        m_glOutlinePolygons.SetVertexColor(poly.id, i, color);
+                }
+                else
+                {
+                    m_glOutlinePolygons.RestoreVertexColor(poly.id, i, polygons[poly.id].polygonType); // TODO
+                }
+            }
+        }
+        
+        m_textureTransformationMode = mode;
+    }
 }

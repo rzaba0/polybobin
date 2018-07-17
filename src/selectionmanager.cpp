@@ -80,6 +80,25 @@ void SelectionManager::MoveSelection(float vx, float vy)
     m_canvas.Draw();
 }
 
+void SelectionManager::MoveSelectedTextures(float vx, float vy)
+{
+    for (const auto& selectedPolygon : *m_polygonSelection)
+    {
+        const auto& polygon = m_canvas.GetPolygon(selectedPolygon.id);
+        for (unsigned i = 0; i < 3; i++)
+        {
+            if (selectedPolygon.vertex[i])
+            {
+                auto vertex = polygon.vertices[i];
+                vertex.textureS += vx;
+                vertex.textureT += vy;
+                m_canvas.EditPolygonVertex(selectedPolygon.id, polygon.polygonType, i, std::move(vertex));
+            }
+        }
+    }
+    m_canvas.Draw();
+}
+
 void SelectionManager::RemoveSelection()
 {
     wxVector<unsigned int> selectedPolygons;
