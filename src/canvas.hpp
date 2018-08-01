@@ -22,6 +22,8 @@ public:
     virtual void UpdatePolygonSelectionForRedraw() = 0;
     virtual const PMSPolygon& GetPolygon(unsigned polygonIndex) const = 0;
     virtual unsigned GetPolygonCount() const = 0;
+    virtual const PMSScenery& GetScenery(unsigned sceneryIndex) const = 0;
+    virtual unsigned GetSceneryCount() const = 0;
 
     virtual wxRealPoint GetMousePositionOnMap(wxPoint positionOnCanvas) const = 0;
 

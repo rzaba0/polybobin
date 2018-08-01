@@ -80,6 +80,11 @@ const PMSPolygon& GLCanvas::GetPolygon(unsigned polygonIndex) const
     return m_map.GetPolygons()[polygonIndex];
 }
 
+const PMSScenery& GLCanvas::GetScenery(unsigned sceneryIndex) const
+{
+    return m_map.GetSceneryInstances()[sceneryIndex];
+}
+
 void GLCanvas::RemoveSceneries(const wxVector<unsigned int> &sceneries)
 {
     m_map.RemoveSceneries(sceneries);

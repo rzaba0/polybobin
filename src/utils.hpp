@@ -15,6 +15,10 @@ namespace Utils
     bool SegmentsIntersect(float aX, float aY, float bX, float bY,
                            float cX, float cY, float dX, float dY);
 
+    // https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
+    bool RectanglesIntersect(float aX, float aY, float bX, float bY,
+                             float cX, float cY, float dX, float dY);
+
     // http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     float Sign(float aX, float aY, float bX, float bY, float cX, float cY);
 }

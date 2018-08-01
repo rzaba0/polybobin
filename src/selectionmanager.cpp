@@ -2,6 +2,8 @@
 #include <utility>
 #include <algorithm>
 
+#include "utils.hpp"
+
 SelectionManager::SelectionManager(Canvas& canvas, const DisplaySettings& displaySettings, SceneryFrame& sceneryFrame, std::unique_ptr<PolygonSelection> polygonSelection, std::unique_ptr<Selection> scenerySelection)
     : m_canvas{canvas}
     , m_displaySettings{displaySettings}
@@ -15,6 +17,8 @@ void SelectionManager::SelectAll()
 {
     if (m_displaySettings.ShouldDisplayPolygons())
         m_polygonSelection->selectAll(m_canvas.GetPolygonCount());
+    if (m_displaySettings.ShouldDisplayScenery())
+        m_scenerySelection->selectAll(m_canvas.GetSceneryCount());
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
@@ -22,13 +26,18 @@ void SelectionManager::SelectAll()
 void SelectionManager::UnselectAll()
 {
     m_polygonSelection->unselectAll();
+    m_scenerySelection->unselectAll();
     m_canvas.Draw();
 }
 
 void SelectionManager::PunctualSelect(wxRealPoint p, bool append)
 {
     if (!append) m_polygonSelection->unselectAll();
-    ForEachPolyAtPosition(std::move(p), [&](unsigned polyId) { m_polygonSelection->select(polyId); });
+    if (!append) m_scenerySelection->unselectAll();
+
+    ForEachPolyAtPosition(p, [&](unsigned polyId) { m_polygonSelection->select(polyId); });
+    ForEachSceneryAtPosition(p, [&](unsigned sceneryId) { m_scenerySelection->select(sceneryId); });
+
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
@@ -36,20 +45,27 @@ void SelectionManager::PunctualSelect(wxRealPoint p, bool append)
 void SelectionManager::RectangularSelect(wxRealPoint a, wxRealPoint b, bool append)
 {
     if (!append) m_polygonSelection->unselectAll();
+    if (!append) m_scenerySelection->unselectAll();
+
     ForEachVerticleInRectangle(a, b, [&](unsigned polyId, unsigned vertexId) { m_polygonSelection->select(polyId, vertexId); });
+    ForEachSceneryInRectangle(a, b, [&](unsigned sceneryId) { m_scenerySelection->select(sceneryId); });
+
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
 
 void SelectionManager::PunctualUnselect(wxRealPoint p)
 {
-    ForEachPolyAtPosition(std::move(p), [&](unsigned polyId) { m_polygonSelection->unselect(polyId); });
+    ForEachPolyAtPosition(p, [&](unsigned polyId) { m_polygonSelection->unselect(polyId); });
+    ForEachSceneryAtPosition(p, [&](unsigned sceneryId) { m_scenerySelection->unselect(sceneryId); });
     m_canvas.Draw();
 }
 
 void SelectionManager::RectangularUnselect(wxRealPoint a, wxRealPoint b)
 {
     ForEachVerticleInRectangle(a, b, [&](unsigned polyId, unsigned vertexId) { m_polygonSelection->unselect(polyId, vertexId); });
+    ForEachSceneryInRectangle(a, b, [&](unsigned sceneryId) { m_scenerySelection->unselect(sceneryId); });
+
     m_canvas.UpdatePolygonSelectionForRedraw();
     m_canvas.Draw();
 }
@@ -76,6 +92,15 @@ void SelectionManager::MoveSelection(float vx, float vy)
                 m_canvas.EditPolygonVertex(selectedPolygon.id, polygon.polygonType, i, std::move(vertex));
             }
         }
+    }
+
+    for (const auto& selectedSceneryId : *m_scenerySelection)
+    {
+        const auto& scenery = m_canvas.GetScenery(selectedSceneryId);
+        PMSScenery newScenery = scenery;
+        newScenery.x += vx;
+        newScenery.y += vy;
+        m_canvas.EditScenery(selectedSceneryId, newScenery);
     }
     m_canvas.Draw();
 }
@@ -149,6 +174,31 @@ void SelectionManager::ForEachVerticleInRectangle(wxRealPoint a, wxRealPoint b, 
             {
                 operation(i, j);
             }
+        }
+    }
+}
+
+void SelectionManager::ForEachSceneryAtPosition(wxRealPoint position, std::function<void(unsigned)> operation)
+{
+    unsigned sceneryNum = m_canvas.GetSceneryCount();
+    for (unsigned i = 0; i < sceneryNum; i++)
+    {
+        if (m_canvas.GetScenery(i).Contains(position.x, position.y)) {
+            operation(i);
+        }
+    }
+}
+
+void SelectionManager::ForEachSceneryInRectangle(wxRealPoint a, wxRealPoint b, std::function<void(unsigned)> operation)
+{
+    unsigned sceneryNum = m_canvas.GetSceneryCount();
+    for (unsigned i = 0; i < sceneryNum; i++)
+    {
+        const auto& scenery = m_canvas.GetScenery(i);
+        if (Utils::RectanglesIntersect(a.x, a.y, b.x, b.y, scenery.x, scenery.y,
+            scenery.x + scenery.width, scenery.y + scenery.height))
+        {
+            operation(i);
         }
     }
 }

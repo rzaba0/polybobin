@@ -45,6 +45,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void RemoveSpawnPoints(wxVector<unsigned int> spawnPointIndexes) override;
 
         const PMSPolygon& GetPolygon(unsigned polygonIndex) const override;
+        const PMSScenery& GetScenery(unsigned sceneryIndex) const override;
         void UpdatePolygonSelectionForRedraw() override;
 
         void RemoveSceneries(const wxVector<unsigned int> &sceneries) override;
@@ -64,6 +65,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void SetTextureTransformationMode(bool mode = true) override;
 
         unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
+        unsigned GetSceneryCount() const override { return m_map.GetSceneriesCount(); }
 
         void Draw() override;
 

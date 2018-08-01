@@ -69,6 +69,7 @@ class Map
 
         const wxVector<PMSScenery> &GetSceneryInstances() const { return m_sceneryInstances; }
         const wxVector<PMSSceneryType> &GetSceneryTypes() const { return m_sceneryTypes; }
+        unsigned int GetSceneriesCount() { return m_sceneryInstances.size(); }
 
         const wxVector <PMSSpawnPoint> GetSpawnPoints() const  { return m_spawnPoints; }
 

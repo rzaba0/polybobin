@@ -4,6 +4,8 @@
 
 #include <cmath>
 
+using namespace std;
+
 namespace Utils
 {
     PMSColor GetPolygonColorByType(PMSPolygonType polygonType)
@@ -68,6 +70,23 @@ namespace Utils
             (-segmentCDCenterX * segmentABCenterY + segmentABCenterX * segmentCDCenterY);
 
         return s >= 0 && s <= 1 && t >= 0 && t <= 1;
+    }
+
+    bool RectanglesIntersect(float aX, float aY, float bX, float bY,
+                             float cX, float cY, float dX, float dY)
+    {
+        float leftAB = min(aX, bX);
+        float rightAB = max(aX, bX);
+        float bottomAB = min(aY, bY);
+        float topAB = max(aY, bY);
+
+        float leftCD = min(cX, dX);
+        float rightCD = max(cX, dX);
+        float bottomCD = min(cY, dY);
+        float topCD = max(cY, dY);
+
+        return (leftAB < rightCD && rightAB > leftCD &&
+                topAB > bottomCD && bottomAB < topCD);
     }
 
     float Sign(float aX, float aY, float bX, float bY, float cX, float cY)

@@ -37,6 +37,8 @@ public:
 private:
     void ForEachPolyAtPosition(wxRealPoint position, std::function<void(unsigned)> operation);
     void ForEachVerticleInRectangle(wxRealPoint a, wxRealPoint b, std::function<void(unsigned, unsigned)> operation);
+    void ForEachSceneryAtPosition(wxRealPoint position, std::function<void(unsigned)> operation);
+    void ForEachSceneryInRectangle(wxRealPoint a, wxRealPoint b, std::function<void(unsigned)> operation);
 
     Canvas& m_canvas;
     const DisplaySettings& m_displaySettings;
