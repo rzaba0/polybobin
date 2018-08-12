@@ -146,6 +146,11 @@ void SelectionManager::RemoveSelection()
     m_canvas.Draw();
 }
 
+bool SelectionManager::Empty() const
+{
+    return (m_polygonSelection->empty() && m_scenerySelection->empty());
+}
+
 void SelectionManager::ForEachPolyAtPosition(wxRealPoint p, std::function<void(unsigned)> operation)
 {
     unsigned polyNum = m_canvas.GetPolygonCount();

@@ -230,7 +230,7 @@ void GLManager::AddSceneryTexture(wxString sceneryName)
     m_glScenery.AddTexture(m_settings.GetSoldatPath() + "scenery-gfx/" + sceneryName);
 }
 
-void GLManager::SetTextureTransformationMode(const PolygonSelection& selectedPolygons, bool mode)
+void GLManager::SetFillPolygonSelection(const PolygonSelection& selectedPolygons, bool mode)
 {
     auto polygons = m_map.GetPolygons();
 

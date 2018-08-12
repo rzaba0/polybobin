@@ -23,7 +23,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
     toolSet.emplace_back(std::make_unique<VertexSelectionTool>(selectionManager, canvas));
     toolSet.emplace_back(std::make_unique<SelectionTool>(selectionManager, canvas));
     toolSet.emplace_back(std::make_unique<VertexColorTool>());
-    toolSet.emplace_back(std::make_unique<ColorTool>());
+    toolSet.emplace_back(std::make_unique<ColorTool>(canvas, selectionManager, mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(std::make_unique<TextureTool>(selectionManager, canvas));
     toolSet.emplace_back(std::make_unique<SceneryTool>(canvas, mainFrame.GetSettings(),
             mainFrame.GetSceneryFrame(), mainFrame.GetPaletteFrame()));

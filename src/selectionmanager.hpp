@@ -34,6 +34,11 @@ public:
                     std::unique_ptr<PolygonSelection> polygonSelection,
                     std::unique_ptr<Selection> scenerySelection);
 
+    const PolygonSelection* GetPolygonSelection() const { return m_polygonSelection.get(); }
+    const Selection* GetScenerySelection() const { return m_scenerySelection.get(); }
+
+    bool Empty() const;
+
 private:
     void ForEachPolyAtPosition(wxRealPoint position, std::function<void(unsigned)> operation);
     void ForEachVerticleInRectangle(wxRealPoint a, wxRealPoint b, std::function<void(unsigned, unsigned)> operation);

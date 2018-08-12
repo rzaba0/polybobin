@@ -8,12 +8,12 @@ TextureTool::TextureTool(SelectionManager& selectionManager, Canvas& glCanvas)
 
 void TextureTool::OnSelect()
 {
-    m_canvas.SetTextureTransformationMode(true);
+    m_canvas.SetFillPolygonSelection(true);
 }
 
 void TextureTool::OnUnselect()
 {
-    m_canvas.SetTextureTransformationMode(false);
+    m_canvas.SetFillPolygonSelection(false);
 }
 
 void TextureTool::OnCanvasLeftMouseButtonClick(const wxMouseEvent &event)

@@ -1,10 +1,17 @@
 #pragma once
+
 #include "tool.hpp"
+
+#include "../selectionmanager.hpp"
+#include "../miniframes/paletteframe.hpp"
+#include "../gl/glcanvas.hpp"
 
 class ColorTool : public Tool
 {
 public:
-    ColorTool();
+    ColorTool(GLCanvas& canvas,
+            SelectionManager& selectionManager,
+            const PaletteFrame& palette);
     void OnSelect() override;
     void OnUnselect() override;
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event) override;
@@ -16,4 +23,7 @@ public:
     ~ColorTool() override = default;
 
 private:
+    GLCanvas& m_canvas;
+    SelectionManager& m_selectionManager;
+    const PaletteFrame& m_palette;
 };

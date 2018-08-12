@@ -63,7 +63,7 @@ class GLManager
 
         void AddSceneryTexture(wxString sceneryName);
 
-        void SetTextureTransformationMode(const PolygonSelection& selectedPolygons, bool mode = true);
+        void SetFillPolygonSelection(const PolygonSelection& selectedPolygons, bool mode = true);
 
     private:
         bool m_glReady;

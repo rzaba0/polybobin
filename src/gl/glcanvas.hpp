@@ -62,7 +62,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
 
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) override;
         void SetPolygonsTexture(wxString textureFilename) override;
-        void SetTextureTransformationMode(bool mode = true) override;
+        void SetFillPolygonSelection(bool mode = true) override;
 
         unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
         unsigned GetSceneryCount() const override { return m_map.GetSceneriesCount(); }

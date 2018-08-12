@@ -166,9 +166,9 @@ void GLCanvas::SetPolygonsTexture(wxString textureFilename)
     Refresh();
 }
 
-void GLCanvas::SetTextureTransformationMode(bool mode)
+void GLCanvas::SetFillPolygonSelection(bool mode)
 {
-    m_glManager.SetTextureTransformationMode(m_polygonSelection, mode);
+    m_glManager.SetFillPolygonSelection(m_polygonSelection, mode);
     Refresh();
 }
 
