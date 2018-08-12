@@ -2,6 +2,8 @@
 #include "../constants.hpp"
 #include "image.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 #define BUFFER_OFFSET(i) (static_cast<char*>(0) + (i))
 
@@ -108,8 +110,12 @@ void GLSpawnPoints::SetupShaderProgram()
 
 void GLSpawnPoints::SetupTextures()
 {
+    wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+    wxString gfxSpawnPointsPath(f.GetPath());
+    gfxSpawnPointsPath += "/" + PATH_GFX_SPAWNPOINTS;
+
     Image textureImage;
-    textureImage.OpenAndResize(PATH_GFX_SPAWNPOINTS);
+    textureImage.OpenAndResize(gfxSpawnPointsPath);
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

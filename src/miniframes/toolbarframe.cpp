@@ -1,13 +1,20 @@
 #include "toolbarframe.hpp"
 #include "../constants.hpp"
 #include <utility>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 ToolbarFrame::ToolbarFrame(wxWindow *parent, ToolSelectionCallback toolSelecitoncallback)
     : MiniFrame(parent, ID_FRAME_TOOLBAR, "Toolbar", wxDefaultPosition, wxDefaultSize)
     , m_toolSelectionCallback{std::move(toolSelecitoncallback)}
 {
     wxImage::AddHandler(new wxPNGHandler);
-    wxImage toolsImage(PATH_GFX_TOOLS, wxBITMAP_TYPE_PNG);
+
+    wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+    wxString gfxToolsPath(f.GetPath());
+    gfxToolsPath += "/" + PATH_GFX_TOOLS;
+
+    wxImage toolsImage(gfxToolsPath, wxBITMAP_TYPE_PNG);
 
     wxGridSizer *gridSizer = new wxGridSizer(TOOLBAR_COLUMNS_COUNT);
 

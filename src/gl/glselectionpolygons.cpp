@@ -3,6 +3,8 @@
 #include "image.hpp"
 #include "../utils.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 void GLSelectionPolygons::AddPolygon(PMSPolygonType polygonType, PMSVertex firstVertex)
 {
@@ -119,8 +121,12 @@ void GLSelectionPolygons::SetupShaderProgram()
 
 void GLSelectionPolygons::SetupTexture()
 {
+    wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+    wxString gfxSelectionGridPath(f.GetPath());
+    gfxSelectionGridPath += "/" + PATH_GFX_SELECTION_GRID;
+
     Image textureImage;
-    textureImage.OpenAndResize(PATH_GFX_SELECTION_GRID);
+    textureImage.OpenAndResize(gfxSelectionGridPath);
 
     m_textureWidth = textureImage.GetWidth();
     m_textureHeight = textureImage.GetHeight();

@@ -1,6 +1,8 @@
 #include "paletteframe.hpp"
 #include "../constants.hpp"
 #include <wx/valnum.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 PaletteFrame::PaletteFrame(wxWindow *parent)
     : MiniFrame(parent, ID_FRAME_PALETTE, wxT("Palette"), wxDefaultPosition, wxDefaultSize)
@@ -23,7 +25,11 @@ PaletteFrame::PaletteFrame(wxWindow *parent)
 
     const unsigned int PALETTE_WIDTH = 12,
                        PALETTE_HEIGHT = 6;
-    m_palette = new Palette(this, PALETTE_HEIGHT, PALETTE_WIDTH, PATH_PALETTES_DIRECTORY + "default.txt");
+    wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+    wxString defaultPalettePath(f.GetPath());
+    defaultPalettePath += "/" + PATH_PALETTES_DIRECTORY + "default.txt";
+
+    m_palette = new Palette(this, PALETTE_HEIGHT, PALETTE_WIDTH, defaultPalettePath);
     for (unsigned int i = 0; i < m_palette->GetItemCount(); ++i)
     {
         m_palette->GetItem(i)->Bind(wxEVT_LEFT_DOWN, &PaletteFrame::OnPaletteItemLeftMouseButtonClicked, this);

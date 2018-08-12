@@ -25,6 +25,8 @@ class Settings
         void SaveSettingsToFile();
 
     private:
+        const wxString GetSettingsPath() const;
+
         wxString m_soldatPath;
 
         void LoadDefaultSettings();
