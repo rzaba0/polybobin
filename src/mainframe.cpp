@@ -99,7 +99,7 @@ void MainFrame::OnMenuBarItemClicked(wxCommandEvent &event)
 
         case ID_MENU_FILE_OPEN_COMPILED:
             {
-                wxString path = wxFileSelector(wxT("Open PMS file"), wxEmptyString,
+                wxString path = wxFileSelector(wxT("Open PMS file"), m_settings->GetSoldatPath() + "maps/",
                                 wxEmptyString, wxEmptyString, wxT("*.pms"), wxFD_FILE_MUST_EXIST);
                 if (!path.IsEmpty())
                 {
