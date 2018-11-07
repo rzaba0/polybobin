@@ -35,6 +35,7 @@ target_link_libraries(
     ${polybobin_lib}
     ${wxWidgets_LIBRARIES}
     ${OPENGL_LIBRARIES}
+    ${CONAN_LIBS}
     )
 
 # Build src/app.cpp and link above library.

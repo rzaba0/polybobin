@@ -1,0 +1,7 @@
+[requires]
+wxwidgets/3.1.1@bincrafters/stable
+glm/0.9.9.1@g-truc/stable
+gtest/1.8.0@bincrafters/stable
+[generators]
+cmake
+
