@@ -39,7 +39,9 @@ wxGLContext &Polybobin::GetGLContext(GLCanvas *glCanvas)
 {
     if (!m_glContext)
     {
-        m_glContext = new wxGLContext(glCanvas);
+        wxGLContextAttrs cxtAttrs;
+        cxtAttrs.PlatformDefaults().CoreProfile().OGLVersion(3, 3).EndList();
+        m_glContext = new wxGLContext(glCanvas, NULL, &cxtAttrs);
     }
 
     m_glContext->SetCurrent(*glCanvas);
