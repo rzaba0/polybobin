@@ -7,6 +7,10 @@
 MainFrame::MainFrame(Settings *settings)
     : wxFrame(NULL, wxID_ANY, PROGRAM_NAME, wxDefaultPosition, wxSize(WINDOW_WIDTH, WINDOW_HEIGHT))
 {
+    wxImage::AddHandler(new wxJPEGHandler);
+    wxImage::AddHandler(new wxPNGHandler);
+    wxImage::AddHandler(new wxGIFHandler);
+
     m_preferencesEditor = NULL;
     m_settings = settings;
 

@@ -8,8 +8,6 @@ ToolbarFrame::ToolbarFrame(wxWindow *parent, ToolSelectionCallback toolSeleciton
     : MiniFrame(parent, ID_FRAME_TOOLBAR, "Toolbar", wxDefaultPosition, wxDefaultSize)
     , m_toolSelectionCallback{std::move(toolSelecitoncallback)}
 {
-    wxImage::AddHandler(new wxPNGHandler);
-
     wxFileName f(wxStandardPaths::Get().GetExecutablePath());
     wxString gfxToolsPath(f.GetPath());
     gfxToolsPath += "/" + PATH_GFX_TOOLS;
