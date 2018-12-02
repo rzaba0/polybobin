@@ -6,6 +6,7 @@ void Image::OpenAndResize(wxString path)
     wxImage image;
     wxImage::AddHandler(new wxJPEGHandler);
     wxImage::AddHandler(new wxPNGHandler);
+    wxImage::AddHandler(new wxGIFHandler);
     if (!image.LoadFile(path))
     {
         /**

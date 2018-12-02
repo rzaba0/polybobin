@@ -135,7 +135,7 @@ void SceneryTool::OnCanvasMouseMotion(const wxMouseEvent &event)
 void SceneryTool::OnCanvasRightMouseButtonRelease(const wxMouseEvent &event)
 {
     wxFileDialog pickSceneryDialog(&m_canvas, wxFileSelectorPromptStr,
-        m_settings.GetSoldatPath() + "scenery-gfx\\", wxEmptyString,
+        m_settings.GetSoldatPath() + "scenery-gfx/", wxEmptyString,
         "All files (*.*)|*.*", wxFD_OPEN);
 
     if (pickSceneryDialog.ShowModal() != wxID_CANCEL)
@@ -213,7 +213,7 @@ void SceneryTool::OnSceneryFrameSelect(wxListEvent& event)
         m_newScenery.y = positionOnMap.y;
 
         Image sceneryImage;
-        sceneryImage.OpenAndResize(m_settings.GetSoldatPath() + "scenery-gfx\\" + event.GetItem().GetText());
+        sceneryImage.OpenAndResize(m_settings.GetSoldatPath() + "scenery-gfx/" + event.GetItem().GetText());
 
         m_newScenery.width = sceneryImage.GetWidth();
         m_newScenery.height = sceneryImage.GetHeight();
