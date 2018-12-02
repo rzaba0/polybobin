@@ -427,6 +427,11 @@ void Map::GenerateSectors()
 
 bool Map::IsPolygonInSector(unsigned short polygonIndex, float sectorX, float sectorY, float sectorSize)
 {
+    if (m_polygons[polygonIndex].polygonType == ptNO_COLLIDE)
+    {
+        return false;
+    }
+
     if ((m_polygons[polygonIndex].vertices[0].x < sectorX &&
          m_polygons[polygonIndex].vertices[1].x < sectorX &&
          m_polygons[polygonIndex].vertices[2].x < sectorX) ||
