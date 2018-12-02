@@ -18,6 +18,7 @@ class PaletteFrame: public MiniFrame
         PaletteFrame(wxWindow *parent);
 
         wxColor GetColor() const;
+        void SetColor(const wxColor &color);
 
     private:
         wxColourPickerCtrl *m_colorPicker;

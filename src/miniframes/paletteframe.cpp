@@ -55,6 +55,12 @@ wxColor PaletteFrame::GetColor() const
     return wxColor(color.Red(), color.Green(), color.Blue(), alpha);
 }
 
+void PaletteFrame::SetColor(const wxColor &color)
+{
+    m_colorPicker->SetColour(color);
+    m_opacitySlider->SetValue((color.Alpha() * 100) / 255);
+}
+
 void PaletteFrame::OnOpacitySliderMoved(wxCommandEvent &event)
 {
     int newValue = event.GetSelection();

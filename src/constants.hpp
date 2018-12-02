@@ -21,7 +21,8 @@ const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
                 MOVE_SELECTED_KEY = WXK_SPACE,
                 REMOVE_SELECTED_KEY = WXK_DELETE,
                 TRANSFORM_ROTATE_KEY = WXK_CONTROL,
-                TRANSFORM_SCALE_KEY = WXK_SHIFT;
+                TRANSFORM_SCALE_KEY = WXK_SHIFT,
+                COLOR_PICKER_PIXEL_KEY = WXK_SHIFT;
 
 const float EPSILON = 0.00001f;
 

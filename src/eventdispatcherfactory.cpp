@@ -29,7 +29,7 @@ std::unique_ptr<EventDispatcher> CreateEventDispatcher(GLCanvas& canvas, MainFra
             mainFrame.GetSceneryFrame(), mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(std::make_unique<WaypointTool>());
     toolSet.emplace_back(std::make_unique<SpawnPointTool>(canvas));
-    toolSet.emplace_back(std::make_unique<ColorPickerTool>());
+    toolSet.emplace_back(std::make_unique<ColorPickerTool>(canvas, selectionManager, mainFrame.GetPaletteFrame()));
     toolSet.emplace_back(std::make_unique<SketchTool>()); // TODO: useless tool, it will be deleted
     toolSet.emplace_back(std::make_unique<LightsTool>()); // TODO: useless tool, it will be deleted
     toolSet.emplace_back(std::make_unique<DepthTool>()); // TODO: useless tool, it will be deleted

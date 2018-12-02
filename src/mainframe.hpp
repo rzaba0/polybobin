@@ -24,7 +24,7 @@ class MainFrame: public wxFrame
         MainFrame(Settings *settings);
         ~MainFrame();
         const DisplayFrame& GetDisplayFrame() const { return *m_displayFrame; }
-        const PaletteFrame& GetPaletteFrame() const { return *m_paletteFrame; }
+        PaletteFrame& GetPaletteFrame() const { return *m_paletteFrame; }
         const ToolbarFrame& GetToolbarFrame() const { return *m_toolbarFrame; }
         SceneryFrame& GetSceneryFrame() const { return *m_sceneryFrame; }
         const Settings& GetSettings() const { return *m_settings; }

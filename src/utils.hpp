@@ -21,6 +21,8 @@ namespace Utils
 
     // http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     float Sign(float aX, float aY, float bX, float bY, float cX, float cY);
+
+    float Distance(float x1, float y1, float x2, float y2);
 }
 
 #endif

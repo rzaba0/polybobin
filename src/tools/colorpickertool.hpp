@@ -1,9 +1,17 @@
+#pragma once
+
 #include "tool.hpp"
+
+#include "../selectionmanager.hpp"
+#include "../miniframes/paletteframe.hpp"
+#include "../gl/glcanvas.hpp"
 
 class ColorPickerTool : public Tool
 {
 public:
-    ColorPickerTool();
+    ColorPickerTool(GLCanvas& canvas,
+            SelectionManager& selectionManager,
+            PaletteFrame& palette);
     void OnSelect() override;
     void OnUnselect() override;
     void OnCanvasLeftMouseButtonClick(const wxMouseEvent &event) override;
@@ -15,4 +23,7 @@ public:
     ~ColorPickerTool() override = default;
 
 private:
+    GLCanvas& m_canvas;
+    SelectionManager& m_selectionManager;
+    PaletteFrame& m_palette;
 };
