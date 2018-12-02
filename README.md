@@ -52,5 +52,20 @@ Now open the polybobin solution in build/ directory and build it.<br />
 Building "INSTALL" project will move polybobin's executable file to bin/ directory.<br />
 Building "RUN_TESTS" project will run tests.<br />
 
+
+### Building with Conan
+Conan is a portable package manager for C/C++ libraries. It can be used to download all dependencies needed to build polybobin, without needing to install system packages. Visit https://conan.io/downloads.html to download conan.
+
+Once conan has been installed, follow those steps to build polybobin:
+```
+conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan # add required repository
+mkdir build
+cd build
+conan install ..
+cmake .. -DBUILD_CONAN=1
+```
+
+You should now be able to build polybobin with `make install` on linux or to open generated solution in visual studio on windows.
+
 ### Documentation
 To generate documentation, run `doxygen doxygen.config`.
