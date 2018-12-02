@@ -26,10 +26,16 @@ public:
     virtual unsigned GetSceneryCount() const = 0;
 
     virtual wxRealPoint GetMousePositionOnMap(wxPoint positionOnCanvas) const = 0;
+    virtual wxRealPoint GetMapPositionOnScreen(wxRealPoint mapPosition) const = 0;
 
     virtual void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) = 0;
     virtual void SetPolygonsTexture(wxString textureFilename) = 0;
     virtual void SetFillPolygonSelection(bool mode = true) = 0;
+    virtual void SetTransformFrameVisible(bool mode = true) = 0;
+    virtual void SetTransformFramePosition(wxPoint bottomLeft,
+                                   wxPoint bottomRight,
+                                   wxPoint topLeft,
+                                   wxPoint topRight) = 0;
 
     virtual void HandleLeftMouseButtonClick(const wxMouseEvent& event) = 0;
     virtual void HandleMouseMotion(const wxMouseEvent &event) = 0;

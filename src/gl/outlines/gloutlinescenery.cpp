@@ -13,6 +13,15 @@ GLOutlineScenery::GLOutlineScenery(PMSColor behindAllColor,
 void GLOutlineScenery::EditScenery(unsigned int sceneryIndex, PMSScenery scenery)
 {
     m_sceneryInstances[sceneryIndex] = scenery;
+
+    wxVector<GLfloat> vertices;
+    GenerateGLBufferVertices(m_sceneryInstances, vertices);
+
+    if (vertices.size() > 0)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, GL_OUTLINE_VERTEX_SIZE_BYTES * m_sceneryVerticesCount, &vertices[0]);
+    }
 }
 
 void GLOutlineScenery::ResetSceneries(wxVector<PMSScenery> sceneryInstances)

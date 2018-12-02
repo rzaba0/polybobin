@@ -172,6 +172,21 @@ void GLCanvas::SetFillPolygonSelection(bool mode)
     Refresh();
 }
 
+void GLCanvas::SetTransformFrameVisible(bool mode)
+{
+    m_glManager.SetTransformFrameVisible(mode);
+    Refresh();
+}
+
+void GLCanvas::SetTransformFramePosition(wxPoint bottomLeft,
+                               wxPoint bottomRight,
+                               wxPoint topLeft,
+                               wxPoint topRight)
+{
+    m_glManager.SetTransformFramePosition(bottomLeft, bottomRight, topLeft, topRight);
+    Refresh();
+}
+
 void GLCanvas::Draw()
 {
     Refresh();
@@ -264,6 +279,20 @@ wxRealPoint GLCanvas::GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const
      */
     double x = m_camera.GetX() + double(mousePositionOnCanvas.x) * m_camera.GetWidth(canvasSize) / double(canvasSize.GetWidth());
     double y = m_camera.GetY() + double(mousePositionOnCanvas.y) * m_camera.GetHeight(canvasSize) / double(canvasSize.GetHeight());
+    return {x, y};
+}
+
+wxRealPoint GLCanvas::GetMapPositionOnScreen(wxRealPoint mapPosition) const
+{
+    wxSize canvasSize = GetSize();
+
+    /**
+     * Proportion from which we take the formula:
+     * mousePositionOnCanvas.x : canvasSize.GetWidth() = result.x : m_camera.GetWidth()
+     */
+    double x = (mapPosition.x - m_camera.GetX()) * double(canvasSize.GetWidth()) / m_camera.GetWidth(canvasSize);
+    double y = (mapPosition.y - m_camera.GetY()) * double(canvasSize.GetHeight()) / m_camera.GetHeight(canvasSize);
+
     return {x, y};
 }
 

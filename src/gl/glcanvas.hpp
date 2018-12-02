@@ -63,6 +63,11 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor) override;
         void SetPolygonsTexture(wxString textureFilename) override;
         void SetFillPolygonSelection(bool mode = true) override;
+        void SetTransformFrameVisible(bool mode = true) override;
+        void SetTransformFramePosition(wxPoint bottomLeft,
+                                       wxPoint bottomRight,
+                                       wxPoint topLeft,
+                                       wxPoint topRight) override;
 
         unsigned GetPolygonCount() const override { return m_map.GetPolygonsCount(); }
         unsigned GetSceneryCount() const override { return m_map.GetSceneriesCount(); }
@@ -70,6 +75,7 @@ class GLCanvas: public wxGLCanvas, public Canvas
         void Draw() override;
 
         wxRealPoint GetMousePositionOnMap(wxPoint mousePositionOnCanvas) const override;
+        wxRealPoint GetMapPositionOnScreen(wxRealPoint mapPosition) const override;
     private:
         Camera m_camera;
         GLManager m_glManager;

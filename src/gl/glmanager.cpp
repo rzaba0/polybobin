@@ -12,6 +12,7 @@ GLManager::GLManager(Settings settings, Map &map)
         PMSColor(168, 168, 168, 255),
         PMSColor(210, 210, 210, 255))
     , m_map(map)
+    , m_transformFrameVisible(false)
     , m_textureTransformationMode(false)
 {
     m_glReady = false;
@@ -120,6 +121,10 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
                                      camera.GetY() + camera.GetHeight(canvasSize),
                                      camera.GetY());
 
+    glm::mat4 translation = glm::lookAt(glm::vec3(camera.GetX(), camera.GetY(), 2.0f),
+                              glm::vec3(camera.GetX(), camera.GetY(), 1.0f),
+                              glm::vec3(0, 1, 0));
+
     if (displaySettings.ShouldDisplay(DISPLAY_BACKGROUND))
     {
         m_glBackground.Render(transform);
@@ -172,6 +177,11 @@ void GLManager::Render(Camera camera, wxSize canvasSize, DisplaySettings display
         // TODO:
         //m_glOutlinePolygons.RenderSelected(transform, m_map.GetPolygonsCount() - 1);
     }
+
+    if (m_transformFrameVisible)
+    {
+        m_glTransformFrame.Render(transform, translation);
+    }
 }
 
 void GLManager::SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor)
@@ -186,6 +196,19 @@ void GLManager::SetPolygonsTexture(wxString textureFilename)
     m_glPolygons.ReplaceTexture(m_settings.GetSoldatPath() + "textures/", textureFilename);
 }
 
+void GLManager::SetTransformFrameVisible(bool mode)
+{
+    m_transformFrameVisible = mode;
+}
+
+void GLManager::SetTransformFramePosition(wxPoint bottomLeft,
+                       wxPoint bottomRight,
+                       wxPoint topLeft,
+                       wxPoint topRight)
+{
+    m_glTransformFrame.Move(bottomLeft, bottomRight, topLeft, topRight);
+}
+
 void GLManager::SetupShaders()
 {
     m_glBackground.SetupShaderProgram();
@@ -198,6 +221,8 @@ void GLManager::SetupShaders()
     m_glOutlineSceneryWireframe.SetupShaderProgram();
 
     m_glSelectionPolygons.SetupShaderProgram();
+
+    m_glTransformFrame.SetupShaderProgram();
 }
 
 void GLManager::SetupTextures()
@@ -223,6 +248,8 @@ void GLManager::SetupVertices()
     m_glOutlineSceneryWireframe.SetupVAO(m_map.GetSceneryInstances());
 
     m_glSelectionPolygons.SetupVAO(m_map.GetPolygons());
+
+    m_glTransformFrame.SetupVAO();
 }
 
 void GLManager::AddSceneryTexture(wxString sceneryName)

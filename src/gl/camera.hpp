@@ -19,6 +19,7 @@ class Camera
         float GetX() const { return m_x; }
         float GetY() const { return m_y; }
         float GetZoom() const { return m_zoom; };
+        float GetRealZoom() const { return m_zoom / 100.0f; };
         float GetWidth(wxSize canvasSize) const;
         float GetHeight(wxSize canvasSize) const;
         void Scroll(const wxRealPoint& delta);

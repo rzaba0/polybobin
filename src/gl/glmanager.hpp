@@ -14,6 +14,7 @@
 #include "glpolygons.hpp"
 #include "glscenery.hpp"
 #include "glspawnpoints.hpp"
+#include "gltransformframe.hpp"
 
 #include "outlines/gloutlinepolygons.hpp"
 #include "outlines/gloutlinescenery.hpp"
@@ -56,6 +57,11 @@ class GLManager
 
         void SetBackgroundColors(wxColor backgroundBottomColor, wxColor backgroundTopColor);
         void SetPolygonsTexture(wxString textureFilename);
+        void SetTransformFrameVisible(bool mode);
+        void SetTransformFramePosition(wxPoint bottomLeft,
+                               wxPoint bottomRight,
+                               wxPoint topLeft,
+                               wxPoint topRight);
 
         void SetupShaders();
         void SetupTextures();
@@ -80,6 +86,9 @@ class GLManager
         GLOutlineScenery m_glOutlineSceneryWireframe;
 
         GLSelectionPolygons m_glSelectionPolygons;
+
+        GLTransformFrame m_glTransformFrame;
+        bool m_transformFrameVisible;
 
         bool m_textureTransformationMode;
 };

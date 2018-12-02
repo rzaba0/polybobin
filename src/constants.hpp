@@ -19,9 +19,14 @@ const wxString PATH_GFX_TOOLS = wxT("../gfx/tools.png"),
 const wxKeyCode ADD_SELECTION_KEY = WXK_SHIFT,
                 REMOVE_SELECTION_KEY = WXK_CONTROL,
                 MOVE_SELECTED_KEY = WXK_SPACE,
-                REMOVE_SELECTED_KEY = WXK_DELETE;
+                REMOVE_SELECTED_KEY = WXK_DELETE,
+                TRANSFORM_ROTATE_KEY = WXK_CONTROL,
+                TRANSFORM_SCALE_KEY = WXK_SHIFT;
 
 const float EPSILON = 0.00001f;
+
+const wxColor TRANSFORM_TOOL_FRAME_COLOR = wxColor(238, 238, 238);
+const float TRANSFORM_TOOL_ORIGIN_SIZE = 15.0f;
 
 enum WxWidgetsId
 {

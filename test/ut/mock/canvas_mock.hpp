@@ -3,6 +3,11 @@
 #include <memory>
 #include "canvas.hpp"
 
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+
 class CanvasMock : public Canvas
 {
 public:
@@ -27,10 +32,13 @@ public:
     MOCK_CONST_METHOD0(GetSceneryCount, unsigned(void));
     
     MOCK_CONST_METHOD1(GetMousePositionOnMap, wxRealPoint(wxPoint));
+    MOCK_CONST_METHOD1(GetMapPositionOnScreen, wxRealPoint(wxRealPoint));
 
     MOCK_METHOD2(SetBackgroundColors, void(wxColor, wxColor));
     MOCK_METHOD1(SetPolygonsTexture, void(wxString));
     MOCK_METHOD1(SetFillPolygonSelection, void(bool));
+    MOCK_METHOD1(SetTransformFrameVisible, void(bool));
+    MOCK_METHOD4(SetTransformFramePosition, void(wxPoint, wxPoint, wxPoint, wxPoint));
 
     MOCK_METHOD1(HandleLeftMouseButtonClick, void(const wxMouseEvent&));
     MOCK_METHOD1(HandleMouseMotion, void(const wxMouseEvent&));
